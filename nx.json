@@ -40,5 +40,20 @@
     ],
     "sharedGlobals": []
   },
-  "nxCloudAccessToken": "YThkYmQzYmMtZDFmMy00NWQ4LWE5OTMtZmRmODE3NDVhNmNmfHJlYWQtd3JpdGU="
+  "nxCloudAccessToken": "YThkYmQzYmMtZDFmMy00NWQ4LWE5OTMtZmRmODE3NDVhNmNmfHJlYWQtd3JpdGU=",
+  "generators": {
+    "@nx/angular:application": {
+      "style": "css",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "none"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nx/angular:component": {
+      "style": "css"
+    }
+  }
 }

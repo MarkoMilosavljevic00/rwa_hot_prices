@@ -15,6 +15,7 @@
         "*.jsx"
       ],
       "rules": {
+        "eslint": false,
         "@nx/enforce-module-boundaries": [
           "error",
           {
