@@ -9,5 +9,4 @@ import { UsersModule } from './modules/users/users.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {
-}
+export class AppModule {}
