@@ -1,0 +1,83 @@
+<section fxLayoutAlign="center">
+  <mat-card fxLayout="column">
+    <mat-toolbar class="login-toolbar" color="primary">
+      <mat-card-title>REGISTER</mat-card-title>
+    </mat-toolbar>
+    <mat-card-title fxFlexAlign="center">Welome to Hot Prices</mat-card-title>
+    <mat-card-content>
+      <form
+        fxLayout="column"
+        fxLayoutGap="40px"
+        #form="ngForm"
+        (ngSubmit)="onSubmit(form)"
+      >
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            ngModel
+            name="email"
+            email
+            required
+            #emailInput="ngModel"
+          />
+          <mat-error *ngIf="emailInput.hasError('required')"
+            >Field must not be empty</mat-error
+          >
+          <mat-error *ngIf="emailInput.hasError('email')"
+            >Email is invalid</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            ngModel
+            type="text"
+            name="username"
+            required
+            minlength="5"
+            #usernameInput
+          />
+          <mat-error>Your username has less than 6 characters</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            ngModel
+            type="password"
+            name="password"
+            required
+            minlength="6"
+            #passwordInput
+          />
+          <mat-hint
+            >Please enter a password with at least 6 characters.</mat-hint
+          >
+          <mat-error>Password must be at least 6 characters long.</mat-error>
+        </mat-form-field>
+        <!-- <mat-form-field>
+      <mat-label>Confirm Password</mat-label>
+      <input 
+        matInput
+        ngModel
+        type="password" 
+        name="confirmPassword"
+        required
+        #confirmPasswordInput/>
+      <mat-error *ngIf="confirmPasswordInput.value !== passwordInput.value">Passwordi se ne poklapaju</mat-error>
+    </mat-form-field> -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          Signup
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

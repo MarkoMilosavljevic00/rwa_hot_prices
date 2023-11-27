@@ -1,0 +1,9 @@
+mat-card{
+  width: 500px;
+  border: solid;
+  border-width: 1px;
+}
+
+form{
+  padding: 20px;
+}
