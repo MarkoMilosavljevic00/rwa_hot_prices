@@ -1,7 +1,37 @@
-form{
+/* form{
   padding-top: 40px;
+} */
+
+h1{
+  margin-bottom: 5%;
+  color: #FF5722;
+  font-weight: bold;
 }
 
-mat-card{
-  width: 400px;
+section{
+  margin: 5%;
 }
+
+mat-card-subtitle{
+  padding-inline: 5%;
+  margin-top: 3%;
+}
+
+mat-card-title{
+  font-weight: bold;
+  color: #FF5722;
+  padding: 5%;
+}
+
+mat-card-content{
+  padding: 5%;
+}
+
+.signup-button{
+  margin-bottom: 5%;
+  height: 100%;
+}
+
+/* mat-card{
+  max-width: 400px;
+} */

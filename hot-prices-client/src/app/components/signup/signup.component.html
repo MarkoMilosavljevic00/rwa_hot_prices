@@ -1,6 +1,11 @@
-<section fxLayoutAlign="center">
-  <mat-card fxLayout="column">
-    <mat-toolbar class="login-toolbar" color="primary">
+<section fxLayoutAlign="center" fxLayoutGap="5%">
+  <mat-card
+    fxLayout="column"
+    fxFlex.lt-md="100%"
+    fxFlex.lt-lg="70%"
+    fxFlex.gt-sm="30%"
+  >
+    <mat-toolbar class="login-toolbar" color="warn">
       <mat-card-title>REGISTER</mat-card-title>
     </mat-toolbar>
     <mat-card-title fxFlexAlign="center">Welome to Hot Prices</mat-card-title>
@@ -13,6 +18,7 @@
       >
         <mat-form-field>
           <mat-label>Email</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
           <input
             matInput
             type="email"
@@ -31,19 +37,29 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Username</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
           <input
             matInput
             ngModel
             type="text"
             name="username"
             required
-            minlength="5"
-            #usernameInput
+            minlength="6"
+            #usernameInput="ngModel"
           />
-          <mat-error>Your username has less than 6 characters</mat-error>
+          <mat-hint
+            >Please enter a username with at least 6 characters.</mat-hint
+          >
+          <mat-error *ngIf="usernameInput.hasError('required')"
+            >Field must not be empty</mat-error
+          >
+          <mat-error *ngIf="usernameInput.hasError('minlength')"
+            >Username must be at least 6 characters long.</mat-error
+          >
         </mat-form-field>
         <mat-form-field>
           <mat-label>Password</mat-label>
+          <mat-icon matPrefix>password</mat-icon>
           <input
             matInput
             ngModel
@@ -51,31 +67,39 @@
             name="password"
             required
             minlength="6"
-            #passwordInput
+            #passwordInput="ngModel"
           />
           <mat-hint
             >Please enter a password with at least 6 characters.</mat-hint
           >
-          <mat-error>Password must be at least 6 characters long.</mat-error>
+          <mat-error *ngIf="passwordInput.hasError('required')"
+            >Field must not be empty</mat-error
+          >
+          <mat-error *ngIf="passwordInput.hasError('minlength')"
+            >Password must be at least 6 characters long.</mat-error
+          >
         </mat-form-field>
         <!-- <mat-form-field>
-      <mat-label>Confirm Password</mat-label>
-      <input 
-        matInput
-        ngModel
-        type="password" 
-        name="confirmPassword"
-        required
-        #confirmPasswordInput/>
-      <mat-error *ngIf="confirmPasswordInput.value !== passwordInput.value">Passwordi se ne poklapaju</mat-error>
-    </mat-form-field> -->
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            ngModel
+            type="password"
+            name="confirmPassword"
+            required
+            #confirmPasswordInput
+          />
+          <mat-error *ngIf="confirmPasswordInput.value !== passwordInput.value"
+            >Passwordi se ne poklapaju</mat-error
+          >
+        </mat-form-field> -->
         <button
           mat-raised-button
           color="primary"
           type="submit"
           [disabled]="form.invalid"
         >
-          Signup
+          SIGN UP
         </button>
       </form>
     </mat-card-content>

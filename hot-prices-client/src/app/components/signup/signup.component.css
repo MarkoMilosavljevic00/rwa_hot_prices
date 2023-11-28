@@ -1,9 +1,17 @@
-mat-card{
-  width: 500px;
-  border: solid;
-  border-width: 1px;
+section{
+  margin: 5%;
 }
 
-form{
-  padding: 20px;
+mat-card-subtitle{
+  padding-inline: 5%;
+  margin-top: 3%;
+}
+
+mat-card-title{
+  font-weight: bold;
+  padding: 5%;
+}
+
+mat-card-content{
+  padding: 5%;
 }

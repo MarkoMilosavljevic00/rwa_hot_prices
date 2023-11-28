@@ -5,27 +5,30 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import{MatDatepickerModule} from '@angular/material/datepicker';
 import{MatToolbarModule} from '@angular/material/toolbar';
+import{MatIconModule} from '@angular/material/icon';
+import{MatSidenavModule} from '@angular/material/sidenav';
+import{MatListModule} from '@angular/material/list';
 
 
-
+const modules = [
+  MatButtonModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatCardModule,
+  MatDatepickerModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatSidenavModule,
+  MatListModule,
+]
 
 @NgModule({
   declarations: [],
   imports: [
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatDatepickerModule,
-    MatToolbarModule
+    modules
   ],
   exports: [
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatDatepickerModule,
-    MatToolbarModule
+    modules
   ]
 })
 export class MaterialModule { }

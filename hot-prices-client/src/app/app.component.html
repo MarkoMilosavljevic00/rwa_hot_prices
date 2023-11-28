@@ -1,1 +1,49 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <mat-nav-list fxLayout="column" fxLayoutAlign="start start">
+      <a mat-list-item routerLink="/login">
+        <mat-icon matPrefix>login</mat-icon>
+        Login
+      </a>
+      <a mat-list-item routerLink="/signup">
+        <mat-icon matPrefix>how_to_reg</mat-icon>
+        Signup
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="warn">
+      <div>Hot Prices</div>
+      <div fxHide.gt-xs fxFlex fxLayoutAlign="flex-end">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>
+        <ul fxLayout class="navigation-items">
+          <li>
+            <button mat-button routerLink="/login">
+              <mat-icon matPrefix>login</mat-icon>
+              Login
+            </button>
+          </li>
+          <li>
+            <button mat-button routerLink="/signup">
+              <mat-icon matPrefix>how_to_reg</mat-icon>
+              Signup
+            </button>
+          </li>
+        </ul>
+        <!-- <button mat-button routerLink="/login">
+          <mat-icon matPrefix>login</mat-icon>
+          Login
+        </button>
+        <button mat-button routerLink="/signup">
+          <mat-icon matPrefix>how_to_reg</mat-icon>
+          Signup
+        </button> -->
+      </div>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
