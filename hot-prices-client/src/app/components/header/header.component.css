@@ -1,0 +1,29 @@
+mat-sidenav-container, mat-sidenav-content, mat-sidenav {
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 200px;
+}
+
+mat-toolbar{
+  padding-inline:0%;
+  margin:0px
+}
+
+@media screen and (min-width: 1024px) {
+  .mat-toolbar {
+    padding-inline: 10%;
+  }
+}
+
+.navigation-items{
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.nav-caption {
+  display: inline-block;
+  padding-left: 6px;
+}

@@ -1,0 +1,38 @@
+<section class="container">
+  <mat-card>
+    <mat-card-content
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign.gt-xs="center start"
+      fxLayoutAlign.lt-sm="center center"
+      fxFlex="100%"
+      fxLayoutGap="5%"
+    >
+      <div
+        fxFlex.gt-sm="10%"
+        fxFlex.lt-sm="40%"
+        fxLayout
+        fxLayoutAlign="center center"
+        class="navigation"
+      >
+        <mat-nav-list
+          fxLayout.gt-xs="column"
+          fxLayout.lt-sm="row"
+          fxLayoutAlign="center center"
+        >
+          <a mat-list-item [routerLink]="['profile']">
+            <mat-icon matPrefix>account_circle</mat-icon>
+            Profile
+          </a>
+          <a mat-list-item [routerLink]="['posts']">
+            <mat-icon>local_offer</mat-icon>
+            Posts
+          </a>
+        </mat-nav-list>
+      </div>
+      <div fxFlex="100%" fxLayout="column">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

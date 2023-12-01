@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  openSidenav = false;
+  @Output() closeSidenav = new EventEmitter<void>();
+  @Output() toggleSidenav = new EventEmitter<void>();
 
   onClose(){
     

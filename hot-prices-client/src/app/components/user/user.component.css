@@ -1,0 +1,18 @@
+container{
+  padding-inline:0%;
+  margin:0px
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    padding-inline: 10%;
+  }
+}
+
+mat-card{
+  margin-top: 30px
+}
+
+.navigation{
+  height: 140px;
+}
