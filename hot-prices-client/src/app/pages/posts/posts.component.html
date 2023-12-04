@@ -1,0 +1,72 @@
+<mat-sidenav-container>
+  <mat-sidenav #filterSidenav>Sidenav content</mat-sidenav>
+  <mat-sidenav-content>
+    <section class="page">
+      <nav mat-tab-nav-bar [tabPanel]="tabPanel" color="warn">
+        <a
+          mat-tab-link
+          [routerLink]="['offers']"
+          routerLinkActive
+          #rla1="routerLinkActive"
+          [active]="rla1.isActive"
+          >Offers</a
+        >
+        <a
+          mat-tab-link
+          [routerLink]="['conversations']"
+          routerLinkActive
+          #rla2="routerLinkActive"
+          [active]="rla2.isActive"
+          >Conversations</a
+        >
+        <a
+          mat-tab-link
+          [routerLink]="['coupons']"
+          routerLinkActive
+          #rla3="routerLinkActive"
+          [active]="rla3.isActive"
+          >Coupons</a
+        >
+      </nav>
+      <mat-tab-nav-panel #tabPanel>
+        <div>
+          <mat-toolbar color="warn" fxLayoutAlign="start end" class="page">
+            <form
+              class="example-form"
+              fxFlex="100%"
+              fxLayoutGap="5%"
+              fxLayoutAlign="start center"
+            >
+              <mat-form-field class="example-full-width" fxFlex="70%">
+                <mat-label>Search</mat-label>
+                <input
+                  type="text"
+                  matInput
+                  [formControl]="myControl"
+                  [matAutocomplete]="auto"
+                />
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option
+                    *ngFor="let option of filteredOptions | async"
+                    [value]="option"
+                  >
+                    {{ option }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <button
+                class="filter-button"
+                mat-raised-button
+                fxFlex="30%"
+                (click)="filterSidenav.toggle()"
+              >
+                Filter
+              </button>
+            </form>
+          </mat-toolbar>
+          <router-outlet></router-outlet>
+        </div>
+      </mat-tab-nav-panel>
+    </section>
+  </mat-sidenav-content>
+</mat-sidenav-container>

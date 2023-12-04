@@ -12,6 +12,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const modules = [
   MatButtonModule,
@@ -27,6 +30,9 @@ const modules = [
   MatTabsModule,
   MatDividerModule,
   MatDialogModule,
+  MatAutocompleteModule,
+  MatPaginatorModule,
+  MatGridListModule,
 ];
 
 @NgModule({

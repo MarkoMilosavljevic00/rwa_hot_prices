@@ -1,0 +1,13 @@
+<div class="page" fxLayout="column" fxLayoutAlign="space-between">
+    <mat-list fxLayout="column" fxLayoutGap="2%">
+      <mat-list-item *ngFor="let offer of onePageOffers">
+        <app-offer-item [offer]="offer"></app-offer-item>
+      </mat-list-item>
+    </mat-list>
+
+  <mat-paginator [length]="offers.length"
+                [pageSize]="size"
+                [pageIndex]="page"
+                (page)="getData($event)">
+  </mat-paginator>
+</div>

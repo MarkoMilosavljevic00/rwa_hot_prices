@@ -13,8 +13,8 @@ export interface Post {
   numOfColdReactions: number;
   postedDate: Date;
   status: PostStatus;
-  owner: User;
-  category: Category;
+  owner: string;
+  category: string;
   reactions: Reaction[];
   comments: Comment[];
   reports: Report[];

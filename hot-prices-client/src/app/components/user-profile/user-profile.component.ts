@@ -5,7 +5,7 @@ import {
   MatDialog,
   MatDialogConfig,
 } from '@angular/material/dialog';
-import { DeleteAccDialogComponent } from '../delete-acc-dialog/delete-acc-dialog.component';
+import { YesNoDialog } from '../delete-acc-dialog/yes-no-dialog.component';
 
 // import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
 
@@ -29,7 +29,7 @@ export class UserProfileComponent implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
 
-    this.dialog.open(DeleteAccDialogComponent, dialogConfig);
+    this.dialog.open(YesNoDialog, dialogConfig);
   }
 
   ngOnInit(): void {
@@ -57,7 +57,15 @@ export class UserProfileComponent implements OnInit {
   }
 
   onDeleteAccount() {
-    this.dialog.open(DeleteAccDialogComponent)
-    // implement the logic to delete the user account
+    let dialogRef = this.dialog.open(YesNoDialog, {
+      data: 'Deleting your account will delete all your posts, comments, and conversations.',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result)
+        console.log('Brisanje naloga'); // Brisanje naloga
+      else
+        console.log('Otkazano brisanje naloga'); // Otkazano brisanje naloga
+    });        
   }
 }

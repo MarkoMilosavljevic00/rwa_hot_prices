@@ -1,0 +1,81 @@
+<!-- <mat-card class="offer-card">
+  <mat-card-header>
+    <a [routerLink]="['/offer', offer.id]">
+      <mat-card-title>{{ offer.title }}</mat-card-title>
+    </a>
+    <mat-card-subtitle>
+      <a [routerLink]="['/user', offer.owner]">{{ offer.owner }}</a>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content fxLayout="row">
+    <a [routerLink]="['/offer', offer.id]">
+      <img [src]="offer.imgPaths[0]" class="offer-image" />
+    </a>
+    <div fxLayout="column" class="offer-details">
+      <span>Price: {{ offer.price }}</span>
+      <span *ngIf="offer.oldPrice" class="old-price">Old Price: {{ offer.oldPrice }}</span>
+      <span *ngIf="offer.oldPrice" class="discount">Discount: {{ calculateDiscount() }}%</span>
+      <span>Store: {{ offer.store }}</span>
+      <span>Posted Date: {{ offer.postedDate | date:'dd.MM.yyyy' }}</span>
+      <span>Expiry Date: {{ offer.expiryDate | date:'dd.MM.yyyy' }}</span>
+    </div>
+  </mat-card-content>
+</mat-card> -->
+
+<mat-card
+  fxLayout="row"
+  fxLayoutAlign.gt-xs="start center"
+  fxLayoutAlign.lt-sm="center center"
+  class="offer-card"
+>
+  <mat-card-content
+    fxLayout.gt-xs="row"
+    fxLayout.lt-sm="column"
+    fxFlex="100%"
+  >
+    <div fxFlex="100%" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="2%">
+      <a [routerLink]="['/offer', offer.id]">
+        <img [src]="offer.imgPaths[0]" class="offer-image" />
+      </a>
+      <div fxLayout="column">
+        <mat-card-title [routerLink]="['/offer', offer.id]">
+          <a>{{ offer.title }}</a>
+        </mat-card-title>
+        <mat-card-subtitle
+          fxLayout="row"
+          fxLayoutGap="5%"
+          [routerLink]="['/offer', offer.id]"
+        >
+          <div class="price">{{ offer.price }} $</div>
+          <div class="old-price" *ngIf="offer.oldPrice">
+            {{ offer.oldPrice }} $
+          </div>
+        </mat-card-subtitle>
+        <div *ngIf="offer.oldPrice" class="discount">
+          {{ calculateDiscount() }}% discount
+        </div>
+        <mat-card-subtitle
+          fxFlex="100%"
+          fxLayout="column"
+          fxLayoutAlign="flex-end"
+        >
+          <span>Posted Date: {{ offer.postedDate | date : "dd.MM.yyyy" }}</span>
+          <span>Expiry Date: {{ offer.expiryDate | date : "dd.MM.yyyy" }}</span>
+        </mat-card-subtitle>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="start end" fxFlex="100%">
+        <div fxLayout="column" fxLayoutAlign="end">
+          <span fxLayout="row" fxLayoutGap="10%" fxLayoutAlign="start center">
+            <h3>Shiba Inu</h3>
+            <div mat-card-avatar class="example-header-image"></div>
+          </span>
+        </div>
+        <div fxLayout fxLayoutAlign="end end" fxFlex>
+          <button mat-raised-button color="warn" fxFlex="150px">
+            Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -4,17 +4,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
-import { SignupComponent } from './components/signup/signup.component';
-import { LoginComponent } from './components/login/login.component';
 import { MaterialModule } from './material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
-import { PostsComponent } from './components/posts/posts.component';
-import { UserComponent } from './components/user/user.component';
+
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { DeleteAccDialogComponent } from './components/delete-acc-dialog/delete-acc-dialog.component';
+import { YesNoDialog } from './components/delete-acc-dialog/yes-no-dialog.component';
+import { SignupComponent } from './pages/signup/signup.component';
+import { LoginComponent } from './pages/login/login.component';
+import { PostsComponent } from './pages/posts/posts.component';
+import { UserComponent } from './pages/user/user.component';
+import { AsyncPipe, NgFor } from '@angular/common';
+import { OfferListComponent } from './components/offer-list/offer-list.component';
+import { OfferItemComponent } from './components/offer-item/offer-item.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +30,9 @@ import { DeleteAccDialogComponent } from './components/delete-acc-dialog/delete-
     PostsComponent,
     UserComponent,
     UserProfileComponent,
-    DeleteAccDialogComponent
+    YesNoDialog,
+    OfferListComponent,
+    OfferItemComponent
   ],
   imports: [
     BrowserModule,
@@ -35,6 +41,9 @@ import { DeleteAccDialogComponent } from './components/delete-acc-dialog/delete-
     MaterialModule,
     FlexLayoutModule,
     FormsModule,
+    ReactiveFormsModule,
+    NgFor,
+    AsyncPipe,
   ],
   providers: [],
   bootstrap: [AppComponent],
