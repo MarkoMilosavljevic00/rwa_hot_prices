@@ -1,0 +1,75 @@
+<section fxLayoutAlign="center" fxLayoutGap="5%">
+  <mat-card fxLayout="column" fxHide.lt-sm>
+    <mat-card-title color="warn">Welcome to the Hot Prices</mat-card-title>
+    <mat-card-subtitle>Welcome to the Hot Prices page where you can find the best deals on the web.</mat-card-subtitle>
+    <mat-card-subtitle>To browse existing or add new offers, conversations, or coupons, you need to log in to your user account.</mat-card-subtitle>
+    <mat-card-subtitle>If you don't have a user account, you can create a new one for free today.</mat-card-subtitle>
+    <div fxLayoutAlign="center end" class="signup-button">
+      <button fxFlex="40%" mat-fab extended color="warn" routerLink="/signup">
+        <mat-icon matPrefix>how_to_reg</mat-icon>
+        Sign Up
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card fxLayout="column" fxFlex.lt-md="100%" fxFlex.lt-lg="70%" fxFlex.gt-sm="30%">
+    <mat-toolbar color="warn"> LOGIN </mat-toolbar>
+    <div fxHide.gt-xs>
+      <mat-card-subtitle>Welcome to the Hot Prices page where you can find the best deals on the web.</mat-card-subtitle>
+      <mat-card-subtitle>To browse existing or add new offers, conversations, or coupons, you need to log in to your user account.</mat-card-subtitle>
+      <mat-card-subtitle>If you don't have a user account, you can create a new one for free today.</mat-card-subtitle>
+    </div>
+    <mat-card-content>
+      <form
+        fxLayout="column"
+        fxLayoutGap="40px"
+        #form="ngForm"
+        (ngSubmit)="onSubmit(form)"
+      >
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            ngModel
+            name="email"
+            email
+            required
+            #emailInput="ngModel"
+          />
+          <mat-error *ngIf="emailInput.hasError('email')"
+            >Email is invalid</mat-error
+          >
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            ngModel
+            type="password"
+            name="password"
+            required
+            #passwordInput="ngModel"
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+        >
+          LOGIN
+        </button>
+      </form>
+      
+      <div fxLayoutAlign="center center" fxHide.gt-xs>
+        <mat-card-subtitle>Don't have an account?
+          <button mat-button routerLink="/signup">Signup</button>
+        </mat-card-subtitle>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</section>
+
+<app-posts></app-posts>
