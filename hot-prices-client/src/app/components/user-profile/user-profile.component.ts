@@ -5,7 +5,7 @@ import {
   MatDialog,
   MatDialogConfig,
 } from '@angular/material/dialog';
-import { YesNoDialog } from '../delete-acc-dialog/yes-no-dialog.component';
+import { YesNoDialog } from '../yes-no-dialog/yes-no-dialog.component';
 
 // import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
 

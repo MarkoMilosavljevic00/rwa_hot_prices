@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { OfferListComponent } from './components/offer-list/offer-list.component';
+import { ConversationListComponent } from './components/conversation/conversation-list/conversation-list.component';
+import { CouponListComponent } from './components/coupon/coupon-list/coupon-list.component';
+import { OfferListComponent } from './components/offer/offer-list/offer-list.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PostsComponent } from './pages/posts/posts.component';
@@ -16,8 +18,8 @@ const routes: Routes = [
     component: PostsComponent,
     children: [
       { path: 'offers', component: OfferListComponent },
-      { path: 'conversations', component: PostsComponent },
-      { path: 'coupons', component: PostsComponent },
+      { path: 'conversations', component: ConversationListComponent },
+      { path: 'coupons', component: CouponListComponent },
     ],
   },
   {
@@ -25,9 +27,11 @@ const routes: Routes = [
     component: UserComponent,
     children: [
       { path: 'profile', component: UserProfileComponent },
-      { path: 'offers', component: PostsComponent },
-      { path: 'conversations', component: PostsComponent },
-      { path: 'coupons', component: PostsComponent },
+      { path: 'posts', component: PostsComponent, children: [
+        { path: 'offers', component: OfferListComponent },
+        { path: 'conversations', component: ConversationListComponent },
+        { path: 'coupons', component: CouponListComponent },
+      ]},
     ],
   },
 ];

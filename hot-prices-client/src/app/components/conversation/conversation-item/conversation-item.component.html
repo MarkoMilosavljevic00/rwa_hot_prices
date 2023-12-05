@@ -1,0 +1,48 @@
+<mat-card
+  fxLayout="row"
+  fxLayoutAlign.gt-xs="start center"
+  fxLayoutAlign.lt-sm="center center"
+  class="offer-card"
+>
+  <mat-card-content
+    fxLayout="column"
+    fxLayoutGap="1%"
+    fxLayoutAlign.gt-xs="start"
+    fxLayoutAlign.lt-sm="center center"
+    fxFlex="100%"
+    class="text-container"
+  >
+    <div fxLayout.gt-xs="row" fxLayout.lt-sm="column" fxLayout="space-between">
+      <div
+        class="user-avatar"
+        routerLink="/user"
+        fxLayout="row"
+        fxLayoutGap="3%"
+        fxLayoutAlign="end center"
+        fxFlex
+        fxFlexOrder.gt-xs="2"
+      >
+        <h3 class="clickable-text">Shiba Inu</h3>
+        <div mat-card-avatar class="example-header-image"></div>
+      </div>
+      <div fxLayout="column">
+        <mat-card-title
+          class="clickable-text"
+          [routerLink]="['/conversation', conversation.id]"
+        >
+          <a>{{ conversation.title }}</a>
+        </mat-card-title>
+        <mat-card-subtitle
+          >{{ conversation.content | slice : 0 : 100 }}...</mat-card-subtitle
+        >
+      </div>
+    </div>
+    <div fxLayout fxLayoutAlign="start end" fxFlex="100%">
+      <button mat-raised-button color="warn" fxFlex="150px">Details</button>
+    </div>
+    <mat-card-subtitle fxLayoutAlign="end"
+      >Posted Date:
+      {{ conversation.postedDate | date : "dd.MM.yyyy" }}</mat-card-subtitle
+    >
+  </mat-card-content>
+</mat-card>

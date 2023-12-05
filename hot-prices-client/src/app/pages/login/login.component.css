@@ -32,6 +32,11 @@ mat-card-content{
   height: 100%;
 }
 
+.text-container{
+  max-width: 100px;
+  word-wrap: break-word;
+}
+
 /* mat-card{
   max-width: 400px;
 } */

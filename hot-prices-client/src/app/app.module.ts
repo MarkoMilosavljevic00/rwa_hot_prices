@@ -11,14 +11,18 @@ import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { YesNoDialog } from './components/delete-acc-dialog/yes-no-dialog.component';
+import { YesNoDialog } from './components/yes-no-dialog/yes-no-dialog.component';
 import { SignupComponent } from './pages/signup/signup.component';
 import { LoginComponent } from './pages/login/login.component';
 import { PostsComponent } from './pages/posts/posts.component';
 import { UserComponent } from './pages/user/user.component';
 import { AsyncPipe, NgFor } from '@angular/common';
-import { OfferListComponent } from './components/offer-list/offer-list.component';
-import { OfferItemComponent } from './components/offer-item/offer-item.component';
+import { OfferListComponent } from './components/offer/offer-list/offer-list.component';
+import { OfferItemComponent } from './components/offer/offer-item/offer-item.component';
+import { ConversationListComponent } from './components/conversation/conversation-list/conversation-list.component';
+import { ConversationItemComponent } from './components/conversation/conversation-item/conversation-item.component';
+import { CouponListComponent } from './components/coupon/coupon-list/coupon-list.component';
+import { CouponItemComponent } from './components/coupon/coupon-item/coupon-item.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { OfferItemComponent } from './components/offer-item/offer-item.component
     UserProfileComponent,
     YesNoDialog,
     OfferListComponent,
-    OfferItemComponent
+    OfferItemComponent,
+    ConversationListComponent,
+    ConversationItemComponent,
+    CouponListComponent,
+    CouponItemComponent
   ],
   imports: [
     BrowserModule,

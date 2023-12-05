@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { OfferType } from 'src/app/enums/offer-type.enum';
-import { PostStatus } from 'src/app/enums/post-status.enum';
+import { Coupon } from 'src/app/models/coupon';
 import { Offer } from 'src/app/models/offer';
-import { OFFERS } from './offer.model';
+import { COUPONS } from './coupons';
 
 @Component({
-  selector: 'app-offer-list',
-  templateUrl: './offer-list.component.html',
-  styleUrls: ['./offer-list.component.css'],
+  selector: 'app-coupon-list',
+  templateUrl: './coupon-list.component.html',
+  styleUrls: ['./coupon-list.component.css']
 })
-export class OfferListComponent implements OnInit {
-  offers: Offer[] = OFFERS
-  onePageOffers: Offer[] = [];
+export class CouponListComponent  implements OnInit {
+  coupons: Coupon[] = COUPONS
+  onePageCoupons: Coupon[] = [];
 
   page = 0;
   size = 5;
@@ -25,7 +24,7 @@ export class OfferListComponent implements OnInit {
       startingIndex = obj.pageIndex * obj.pageSize,
       endingIndex = startingIndex + obj.pageSize;
 
-    this.onePageOffers = this.offers.filter(() => {
+    this.onePageCoupons = this.coupons.filter(() => {
       index++;
       return index > startingIndex && index <= endingIndex ? true : false;
     });

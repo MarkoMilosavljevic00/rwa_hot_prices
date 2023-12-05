@@ -7,11 +7,13 @@ mat-card-title {
   color: black;
   font-weight: bold;
   font-size: 1.5rem;
+  margin:0px;
+  padding:0px;
   text-decoration: none;
   cursor: pointer;
 }
 
-mat-card-title:hover {
+.clickable-text:hover {
   color: #FF5722;
 }
 
@@ -41,6 +43,15 @@ mat-card-title:hover {
 .example-header-image {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
   background-size: cover;
+}
+
+.user-avatar{
+  cursor: pointer;
+}
+
+.text-container{
+  max-width: 100%;
+  text-wrap: balance;
 }
 
 /* .offer-details {
