@@ -1,0 +1,16 @@
+<mat-card fxFlex="70%" fxLayoutAlign="center center">
+  <mat-card-content fxLayout="column">
+    <mat-card-title>Comments</mat-card-title>
+    <mat-divider></mat-divider>
+    <div>
+      <app-comment-list></app-comment-list>
+    </div>
+    <mat-card-content fxLayout="row" fxLayoutAlign="center center">
+      <mat-form-field fxFlex="80%">
+        <mat-label>Leave a comment</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" fxFlex="20%">Comment</button>
+    </mat-card-content>
+  </mat-card-content>
+</mat-card>

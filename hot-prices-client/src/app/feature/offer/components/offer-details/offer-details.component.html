@@ -1,0 +1,146 @@
+<mat-card *ngIf="offer" fxLayout="column" fxFlex="100%">
+  <mat-toolbar color="warn" class="row-1">
+    <app-user-avatar
+      [name]="'Shiba Inu'"
+      [imgSrc]="'https://material.angular.io/assets/img/examples/shiba1.jpg'"
+      [nameFirst]="false"
+    ></app-user-avatar>
+    <div fxLayoutAlign="end start" fxFlex>
+      <mat-icon class="clickable">edit</mat-icon>
+      <mat-icon class="clickable">delete</mat-icon>
+      <mat-icon class="clickable">report</mat-icon>
+    </div>
+  </mat-toolbar>
+
+  <mat-card-content fxLayout="column" fxLayoutGap="12px">
+    <div fxLayoutAlign="end end">
+      <mat-card-subtitle class="date">
+        Posted on {{ offer.postedDate | date : "dd.MM.yyyy" }}
+      </mat-card-subtitle>
+    </div>
+
+    <div class="row-2">
+      <mat-card-title class="post-title">
+        {{ offer.title }}
+      </mat-card-title>
+    </div>
+
+    <div class="row-image" fxLayoutAlign="center">
+      <p-galleria
+        [value]="images"
+        [showIndicators]="true"
+        [showThumbnails]="false"
+        fxFlex="50%"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item.itemImageSrc" fxFlex="100%" class="image" />
+        </ng-template>
+      </p-galleria>
+    </div>
+
+    <div
+      class="row-4"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="16px"
+    >
+      <div
+        *ngIf="isOnline()"
+        fxFlex
+        fxLayout="column"
+        fxLayoutAlign="center center"
+      >
+        <button mat-fab extended class="get-offer-button" color="warn">
+          <mat-icon>add_shopping_cart</mat-icon>
+          Get Offer
+        </button>
+        <mat-card-subtitle class="date">
+          Expires {{ offer.expiryDate | date : "dd.MM.yyyy" }}
+        </mat-card-subtitle>
+      </div>
+      <div fxFlex fxLayout="column">
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
+          <div
+            fxLayout="row"
+            fxLayoutGap="6px"
+            [routerLink]="['/offer', offer.id]"
+          >
+            <div class="price">{{ offer.price }}$</div>
+            <div class="old-price" *ngIf="offer.oldPrice">
+              {{ offer.oldPrice }}$
+            </div>
+          </div>
+
+          <div *ngIf="offer.oldPrice" class="discount">
+            {{ calculateDiscount(offer.price, offer.oldPrice) }}% DISCOUNT
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isOnline()" fxFlex fxLayoutAlign="center center">
+        <div class="temperature-button" fxLayoutAlign="space-between center">
+          <mat-icon class="fire-icon">whatshot</mat-icon>
+          <span class="hot-number">{{ offer.numOfHotReactions }}</span>
+          <span class="temperature-number"
+            >{{ offer.numOfHotReactions - offer.numOfColdReactions }}°</span
+          >
+          <span class="cold-number">{{ offer.numOfColdReactions }}</span>
+          <mat-icon class="snowflake-icon">ac_unit</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row-5" fxLayout="column">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Description </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>{{ offer.description }}</p>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion *ngIf="offer.specifications">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Specifications </mat-panel-title>
+          </mat-expansion-panel-header>
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="specName">
+              <mat-header-cell *matHeaderCellDef>
+                Specification Name
+              </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element.key }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="specValue">
+              <mat-header-cell *matHeaderCellDef> Value </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element.value }}
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row
+              *matHeaderRowDef="displayedColumns"
+            ></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </table>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion *ngIf="offer.store">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Store </mat-panel-title>
+          </mat-expansion-panel-header>
+          <p>{{ offer.store }}</p>
+          <p *ngIf="offer.location">
+            <mat-icon>location_on</mat-icon>
+            {{ offer.location }}
+          </p>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </mat-card-content>
+</mat-card>

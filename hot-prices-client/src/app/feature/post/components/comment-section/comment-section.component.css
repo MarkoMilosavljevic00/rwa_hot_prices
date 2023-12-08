@@ -1,0 +1,11 @@
+mat-card{
+  margin-top: 2%;
+  text-wrap: wrap;
+  border: 1px solid #ccc;
+}
+
+@media screen and (max-width: 768px) {
+  mat-card{
+    padding-inline: 0%;
+  }
+}

@@ -1,0 +1,153 @@
+mat-card{
+  margin-top: 2%;
+  width: 60%;
+  text-wrap: wrap;
+  border: 1px solid #ccc;
+}
+
+@media screen and (max-width: 768px) {
+  mat-card{
+    width: 100%;
+    padding-inline: 0%;
+  }
+}
+
+mat-icon{
+  cursor: pointer;
+}
+
+app-user-avatar{
+  margin-top: 12px;
+  margin-left: 12px;
+}
+
+p-galeria{
+  max-width: 500px;
+  max-height: 500px;
+  min-width: 400px;
+  min-height: 400px;
+}
+
+.row-image{
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.image {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+}
+
+.get-offer-button{
+  height: 55px;
+  width: 160px;
+}
+
+.date{
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* .row-4{
+  border-radius: 20px;
+  border: 3px solid #FF5722;
+  padding: 10px;
+} */
+
+/* mat-accordion{
+  width: 60%;
+}
+
+@media screen and (max-width: 768px) {
+  mat-accordion{
+    width: 100%;
+  }
+} */
+
+/* .row-3{
+  size: 100px;
+} */
+
+.text-padding{
+  padding-inline: 5%;
+}
+
+.avatar-image {
+  background-size: cover;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+.clickable:hover {
+  color: #FF5722;
+}
+
+.post-title{
+  padding-inline: 5%;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.price{
+  color: #FF5722;
+  font-size: 1.2rem;
+}
+
+.old-price {
+  text-decoration: line-through;
+  font-size: 1rem;
+  color: #999;
+}
+
+.discount {
+  font-size: 1.5rem;
+  color: red;
+  font-weight: bold;
+}
+
+.temperature-button {
+  display: flex;
+  border: 1px solid #FF5722;
+  border-radius: 20px;
+  width: 120px;
+  height: 40px;
+  transition: width 0.3s ease-in-out;
+  color:#FF5722;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.temperature-button .hot-number,
+.temperature-button .cold-number {
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease-in-out, display 0s 0.3s;
+}
+
+.temperature-button:hover .hot-number,
+.temperature-button:hover .cold-number {
+  opacity: 1;
+  display: inline-block;
+  transition: opacity 0.3s ease-in-out, display 0s;
+}
+
+.temperature-button:hover {
+  width: 200px;
+}
+
+.temperature-number {
+  padding: 10px 10px;
+  background-color: #FF5722;
+  color: white;
+}
+
+.fire-icon, .hot-number {
+  color: red;
+}
+
+.snowflake-icon, .cold-number {
+  color: blue;
+}

@@ -1,18 +1,22 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { UserModule } from './modules/user/user.module';
-import { SharedModule } from './modules/shared/shared.module';
-import { PostModule } from './modules/post/post.module';
+import { SharedModule } from './shared/shared.module';
+import { FeatureModule } from './feature/feature.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
-    UserModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
     SharedModule,
-    PostModule,
+    FeatureModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,0 +1,31 @@
+<mat-list fxLayout="column" fxLayoutGap="2%">
+  <mat-list-item
+    *ngFor="
+      let comment of comments.slice(0, showAllComments ? comments.length : 3)
+    "
+  >
+    <app-comment [comment]="comment"></app-comment>
+  </mat-list-item>
+  <div
+    *ngIf="comments.length > 3 && !showAllComments"
+    (click)="showMoreComments()"
+    fxLayoutAlign="center center"
+    class="clickable"
+  >
+    <button mat-icon-button>
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <span>Show more</span>
+  </div>
+  <div
+    *ngIf="comments.length > 3 && showAllComments"
+    (click)="showLessComments()"
+    fxLayoutAlign="center center"
+    class="clickable"
+  >
+    <button mat-icon-button>
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <span>Show less</span>
+  </div>
+</mat-list>

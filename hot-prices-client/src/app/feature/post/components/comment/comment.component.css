@@ -1,0 +1,23 @@
+.clickable{
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.clickable:hover {
+  color: #FF5722;
+}
+
+mat-card{
+  margin-top: 2%;
+  width: 100%;
+  text-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+@media screen and (max-width: 768px) {
+  mat-card{
+    width: 100%;
+    padding-inline: 0%;
+    font-size: 0.7rem;
+  }
+}
