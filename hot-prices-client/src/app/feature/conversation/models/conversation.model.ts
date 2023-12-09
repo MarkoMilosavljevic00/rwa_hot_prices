@@ -1,4 +1,4 @@
-import { Post } from "./post";
+import { Post } from "../../post/models/post";
 
 
 export interface Conversation extends Post {

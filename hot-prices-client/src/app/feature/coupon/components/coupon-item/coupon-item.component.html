@@ -18,7 +18,7 @@
       >
         <div fxLayout="column" fxLayoutAlign="end">
           <app-user-avatar
-            [name]="offer.owner"
+            [name]="coupon.owner"
             [imgSrc]="
               'https://material.angular.io/assets/img/examples/shiba1.jpg'
             "
@@ -27,21 +27,25 @@
         </div>
         <div fxLayout="column" fxLayoutAlign="end end" fxFlex fxHide.lt-sm>
           <app-date-display
-            [date]="offer.postedDate"
+            [date]="coupon.postedDate"
             [isPostedDate]="true"
           ></app-date-display>
           <app-date-display
-            *ngIf="offer.expiryDate"
-            [date]="offer.expiryDate"
+            *ngIf="coupon.expiryDate"
+            [date]="coupon.expiryDate"
             [isPostedDate]="false"
           ></app-date-display>
         </div>
       </div>
       <a
-        [routerLink]="['/details/offer', offer.id]"
+        [routerLink]="['/details/coupon', coupon.id]"
         fxLayoutAlign="center center"
       >
-        <img [src]="offer.imgPaths[0]" class="offer-image" />
+        <img
+          [routerLink]="['/details/coupon', coupon.id]"
+          [src]="coupon.imgPaths[0]"
+          class="offer-image"
+        />
       </a>
       <div
         fxLayout="column"
@@ -52,18 +56,18 @@
       >
         <mat-card-title
           class="clickable-text"
-          [routerLink]="['/details/offer', offer.id]"
+          [routerLink]="['/details/coupon', coupon.id]"
         >
-          <a fxLayoutAlign="center center">{{ offer.title }}</a>
+          <a fxLayoutAlign="center center">{{ coupon.title }}</a>
         </mat-card-title>
-        <mat-card-subtitle fxLayout="row" fxLayoutGap="5%">
-          <div class="price">{{ offer.price }}$</div>
-          <div class="old-price" *ngIf="offer.oldPrice">
-            {{ offer.oldPrice }}$
-          </div>
+        <mat-card-subtitle
+          fxLayout="row"
+          fxLayoutGap="5%"
+          [routerLink]="['/coupon', coupon.id]"
+        >
         </mat-card-subtitle>
-        <div *ngIf="offer.oldPrice" class="discount">
-          {{ calculateDiscount(offer.price, offer.oldPrice) }}% DISCOUNT
+        <div *ngIf="coupon.discount" class="discount">
+          {{ coupon.discount }}% discount
         </div>
         <mat-card-subtitle
           fxFlex="100%"
@@ -72,10 +76,10 @@
         >
           <div fxLayout fxLayoutAlign="start end" fxFlex="100%">
             <button
-              [routerLink]="['/details/offer', offer.id]"
               mat-raised-button
               color="warn"
               fxFlex="150px"
+              [routerLink]="['/details/coupon', coupon.id]"
             >
               Details
             </button>

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Offer } from 'src/app/feature/post/models/offer';
+import { calculateDiscount, formatPostTime } from 'src/app/common/helpers/helpers';
+import { Offer } from '../../models/offer.model';
 
 
 @Component({
@@ -10,11 +11,5 @@ import { Offer } from 'src/app/feature/post/models/offer';
 export class OfferItemComponent {
   @Input() offer!: Offer;
 
-  calculateDiscount(): number {
-    if(this.offer.oldPrice) {
-      const discount = ((this.offer.oldPrice - this.offer.price) / this.offer.oldPrice) * 100;
-      return Math.round(discount);
-    }
-    else return 0;
-  }
+  calculateDiscount = calculateDiscount;
 }

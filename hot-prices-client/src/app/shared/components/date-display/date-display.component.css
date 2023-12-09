@@ -1,0 +1,11 @@
+:host{
+  display: flex;
+  flex-direction: column;
+}
+
+.date{
+  margin: 6px;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #6c757d;
+}

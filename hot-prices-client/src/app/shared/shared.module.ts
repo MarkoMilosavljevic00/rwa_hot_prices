@@ -12,6 +12,7 @@ import { MaterialModule } from './material.module';
 import { RouterModule } from '@angular/router';
 import { PrimengModule } from './primeng.module';
 import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
+import { DateDisplayComponent } from './components/date-display/date-display.component';
 
 
 
@@ -21,6 +22,7 @@ import { UserAvatarComponent } from './components/user-avatar/user-avatar.compon
     SidenavComponent,
     YesNoDialogComponent,
     UserAvatarComponent,
+    DateDisplayComponent,
   ],
   imports: [
     CommonModule,
@@ -38,6 +40,7 @@ import { UserAvatarComponent } from './components/user-avatar/user-avatar.compon
     SidenavComponent,
     YesNoDialogComponent,
     UserAvatarComponent,
+    DateDisplayComponent,
     CommonModule,
     MaterialModule,
     PrimengModule,

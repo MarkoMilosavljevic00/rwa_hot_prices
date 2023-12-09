@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Conversation } from '../../../models/conversation';
+import { formatPostTime } from 'src/app/common/helpers/helpers';
+import { Conversation } from '../../models/conversation.model';
 
 @Component({
   selector: 'app-conversation-item',
@@ -8,4 +9,11 @@ import { Conversation } from '../../../models/conversation';
 })
 export class ConversationItemComponent {
   @Input() conversation!: Conversation;
+
+  getPostTime() {
+    if(!this.conversation) 
+      return 'Just posted';
+    else
+      return formatPostTime(this.conversation.postedDate);
+  }
 }

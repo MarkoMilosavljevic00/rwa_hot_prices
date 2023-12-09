@@ -1,5 +1,5 @@
 import { PostStatus } from "src/app/common/enums/post-status.enum";
-import { Conversation } from "../../../models/conversation";
+import { Conversation } from "../../models/conversation.model";
 
 
 export const CONVERSATIONS: Conversation[] = [

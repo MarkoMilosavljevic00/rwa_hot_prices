@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Coupon } from '../../../models/coupon';
+import { Coupon } from '../../models/coupon.model';
 import { COUPONS } from './coupons';
 
 @Component({

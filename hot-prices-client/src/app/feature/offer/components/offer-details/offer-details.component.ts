@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormRecord } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Offer } from '../../../post/models/offer';
 import { OFFERS } from '../offer-list/offer.model';
-import { calculateDiscount } from 'src/app/common/helpers/helpers';
+import { calculateDiscount, formatPostTime } from 'src/app/common/helpers/helpers';
 import { OfferType } from 'src/app/common/enums/offer-type.enum';
+import { Offer } from '../../models/offer.model';
 
 export interface ImageInfo {
   itemImageSrc: string;
@@ -25,20 +25,6 @@ export class OfferDetailsComponent implements OnInit {
   dataSource: any;
   specifications: Record<string, string> = {};
   calculateDiscount = calculateDiscount;
-  responsiveOptions: any[] = [
-    {
-        breakpoint: '1024px',
-        numVisible: 5
-    },
-    {
-        breakpoint: '768px',
-        numVisible: 3
-    },
-    {
-        breakpoint: '560px',
-        numVisible: 1
-    }
-];
 
   constructor(private route: ActivatedRoute) {
   }
@@ -65,7 +51,6 @@ export class OfferDetailsComponent implements OnInit {
         this.specifications = this.offer?.specifications || {};
         this.dataSource = new MatTableDataSource(Object.entries(this.specifications).map(([key, value]) => ({ key, value })));
       });
-    
   }
 
   isOnline(): boolean {

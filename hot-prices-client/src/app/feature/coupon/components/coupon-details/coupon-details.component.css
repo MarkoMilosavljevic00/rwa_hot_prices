@@ -50,6 +50,26 @@ app-user-avatar{
   font-style: italic;
 }
 
+/* .row-4{
+  border-radius: 20px;
+  border: 3px solid #FF5722;
+  padding: 10px;
+} */
+
+/* mat-accordion{
+  width: 60%;
+}
+
+@media screen and (max-width: 768px) {
+  mat-accordion{
+    width: 100%;
+  }
+} */
+
+/* .row-3{
+  size: 100px;
+} */
+
 .text-padding{
   padding-inline: 5%;
 }

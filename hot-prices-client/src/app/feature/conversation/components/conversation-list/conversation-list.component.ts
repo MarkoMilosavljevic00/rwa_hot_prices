@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Conversation } from '../../../models/conversation';
+import { Conversation } from '../../models/conversation.model';
 import { CONVERSATIONS } from './conversations.model';
 
 @Component({

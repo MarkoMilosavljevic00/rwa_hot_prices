@@ -49,7 +49,7 @@ mat-card-title {
 
 .text-container{
   max-width: 100%;
-  text-wrap: balance;
+  white-space: normal;
 }
 
 /* .offer-details {

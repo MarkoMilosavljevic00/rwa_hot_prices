@@ -1,6 +1,6 @@
 
 import { OfferType } from 'src/app/common/enums/offer-type.enum';
-import { Post } from './post';
+import { Post } from '../../post/models/post';
 
 export interface Offer extends Post {
   type: OfferType;

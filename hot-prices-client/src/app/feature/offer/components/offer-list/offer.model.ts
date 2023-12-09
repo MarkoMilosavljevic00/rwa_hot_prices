@@ -1,6 +1,6 @@
 import { OfferType } from 'src/app/common/enums/offer-type.enum';
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
-import { Offer } from 'src/app/feature/post/models/offer';
+import { Offer } from '../../models/offer.model';
 
 export const OFFERS: Offer[] = [
   {
@@ -76,7 +76,7 @@ export const OFFERS: Offer[] = [
     numOfColdReactions: 3,
     postedDate: new Date('2023-12-02T10:15:00'),
     status: PostStatus.Available,
-    owner: 'Bing',
+    owner: 'Nidza',
     category: 'Beverage',
     reactions: [],
     comments: [],

@@ -1,8 +1,8 @@
 <div class="page" fxLayout="column" fxFlex="100%">
-  <mat-card *ngIf="offer" fxLayout="column" fxFlex="100%">
+  <mat-card *ngIf="coupon" fxLayout="column" fxFlex="100%">
     <mat-toolbar color="warn" class="row-1">
       <app-user-avatar
-        [name]="offer.owner"
+        [name]="coupon.owner"
         [imgSrc]="'https://material.angular.io/assets/img/examples/shiba1.jpg'"
         [nameFirst]="false"
       ></app-user-avatar>
@@ -16,14 +16,14 @@
     <mat-card-content fxLayout="column" fxLayoutGap="12px">
       <div fxLayoutAlign="end end">
         <app-date-display
-          [date]="offer.postedDate"
+          [date]="coupon.postedDate"
           [isPostedDate]="true"
         ></app-date-display>
       </div>
 
       <div class="row-2">
         <mat-card-title class="post-title">
-          {{ offer.title }}
+          {{ coupon.title }}
         </mat-card-title>
       </div>
 
@@ -41,25 +41,27 @@
       </div>
 
       <div
+        *ngIf="!isExpired()"
         class="row-4"
         fxLayout="column"
         fxLayoutAlign="center center"
         fxLayoutGap="16px"
       >
         <div
-          *ngIf="isOnline()"
+          *ngIf="coupon.isOnline"
           fxFlex
           fxLayout="column"
           fxLayoutAlign="center center"
         >
-          <a [href]="offer.link" target="_blank">
+          <a [href]="coupon.link" target="_blank">
             <button mat-fab extended class="get-offer-button" color="warn">
               <mat-icon>add_shopping_cart</mat-icon>
               Get Offer
             </button>
           </a>
           <app-date-display
-            [date]="offer.expiryDate"
+            *ngIf="coupon.expiryDate"
+            [date]="coupon.expiryDate"
             [isExpiringDate]="true"
           ></app-date-display>
         </div>
@@ -69,32 +71,33 @@
             fxLayoutAlign="center center"
             fxLayoutGap="12px"
           >
-            <div
-              fxLayout="row"
-              fxLayoutGap="6px"
-            >
-              <div class="price">{{ offer.price }}$</div>
-              <div class="old-price" *ngIf="offer.oldPrice">
-                {{ offer.oldPrice }}$
-              </div>
-            </div>
-
-            <div *ngIf="offer.oldPrice" class="discount">
-              {{ calculateDiscount(offer.price, offer.oldPrice) }}% DISCOUNT
+            <div *ngIf="coupon.discount" class="discount">
+              {{ coupon.discount }}% DISCOUNT
             </div>
           </div>
         </div>
         <div fxFlex fxLayoutAlign="center center">
           <div class="temperature-button" fxLayoutAlign="space-between center">
             <mat-icon class="fire-icon">whatshot</mat-icon>
-            <span class="hot-number">{{ offer.numOfHotReactions }}</span>
+            <span class="hot-number">{{ coupon.numOfHotReactions }}</span>
             <span class="temperature-number"
-              >{{ offer.numOfHotReactions - offer.numOfColdReactions }}°</span
+              >{{ coupon.numOfHotReactions - coupon.numOfColdReactions }}°</span
             >
-            <span class="cold-number">{{ offer.numOfColdReactions }}</span>
+            <span class="cold-number">{{ coupon.numOfColdReactions }}</span>
             <mat-icon class="snowflake-icon">ac_unit</mat-icon>
           </div>
         </div>
+      </div>
+
+      <div
+        *ngIf="isExpired()"
+        class="row-4"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="16px"
+        class="discount"
+      >
+        EXPIRED
       </div>
 
       <mat-divider></mat-divider>
@@ -105,49 +108,18 @@
             <mat-expansion-panel-header>
               <mat-panel-title> Description </mat-panel-title>
             </mat-expansion-panel-header>
-            <p>{{ offer.description }}</p>
+            <p>{{ coupon.description }}</p>
           </mat-expansion-panel>
         </mat-accordion>
-        <mat-accordion *ngIf="offer.specifications">
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title> Specifications </mat-panel-title>
-            </mat-expansion-panel-header>
-            <table mat-table [dataSource]="dataSource">
-              <ng-container matColumnDef="specName">
-                <mat-header-cell *matHeaderCellDef>
-                  Specification Name
-                </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                  {{ element.key }}
-                </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="specValue">
-                <mat-header-cell *matHeaderCellDef> Value </mat-header-cell>
-                <mat-cell *matCellDef="let element">
-                  {{ element.value }}
-                </mat-cell>
-              </ng-container>
-
-              <mat-header-row
-                *matHeaderRowDef="displayedColumns"
-              ></mat-header-row>
-              <mat-row
-                *matRowDef="let row; columns: displayedColumns"
-              ></mat-row>
-            </table>
-          </mat-expansion-panel>
-        </mat-accordion>
-        <mat-accordion *ngIf="offer.store">
+        <mat-accordion *ngIf="coupon.store">
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title> Store </mat-panel-title>
             </mat-expansion-panel-header>
-            <p>{{ offer.store }}</p>
-            <p *ngIf="offer.location">
+            <p>{{ coupon.store }}</p>
+            <p *ngIf="coupon.location">
               <mat-icon>location_on</mat-icon>
-              {{ offer.location }}
+              {{ coupon.location }}
             </p>
           </mat-expansion-panel>
         </mat-accordion>

@@ -1,5 +1,5 @@
 import { PostStatus } from "src/app/common/enums/post-status.enum";
-import { Coupon } from "../../../models/coupon";
+import { Coupon } from "../../models/coupon.model";
 
 export const COUPONS: Coupon[] = [
   {
@@ -9,12 +9,14 @@ export const COUPONS: Coupon[] = [
     numOfHotReactions: 10,
     numOfColdReactions: 2,
     postedDate: new Date("2023-12-04T15:48:07"),
-    status: PostStatus.Available,
+    status: PostStatus.Expired,
     owner: "Bing",
     category: "Fashion",
     reactions: [],
     comments: [],
     reports: [],
+    description: "Get 10% off on your first order at Zalando",
+    isOnline: true,
     store: "Zalando",
     code: "ZALANDO10",
     link: "https://www.zalando.com/coupon",
@@ -34,6 +36,8 @@ export const COUPONS: Coupon[] = [
     reactions: [],
     comments: [],
     reports: [],
+    description: "Get a free Big Mac with any purchase at McDonald's",
+    isOnline: true,
     store: "McDonald's",
     code: "BIGMAC",
     link: "https://www.mcdonalds.com/coupon",
@@ -53,7 +57,9 @@ export const COUPONS: Coupon[] = [
     reactions: [],
     comments: [],
     reports: [],
+    description: "Get 50% off on your first month of Netflix",
     store: "Netflix",
+    isOnline: true,
     code: "NETFLIX50",
     link: "https://www.netflix.com/coupon",
     discount: 50,
@@ -72,7 +78,9 @@ export const COUPONS: Coupon[] = [
     reactions: [],
     comments: [],
     reports: [],
+    description: "Get 20% off on Nike shoes at Foot Locker",
     store: "Foot Locker",
+    isOnline: true,
     code: "NIKE20",
     link: "https://www.footlocker.com/coupon",
     discount: 20,

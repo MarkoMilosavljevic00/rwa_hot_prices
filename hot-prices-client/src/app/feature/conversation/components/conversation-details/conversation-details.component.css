@@ -1,0 +1,32 @@
+mat-card{
+  margin-top: 2%;
+  width: 80vw;
+  white-space: normal;
+  border: 1px solid #ccc;
+}
+
+@media screen and (max-width: 1024px) {
+  mat-card{
+    width: 100vw;
+  }
+}
+
+mat-card-content{
+  padding-inline: 24px;
+}
+
+app-user-avatar{
+  margin-top: 12px;
+  margin-left: 12px;
+}
+
+.post-title{
+  padding-inline: 5%;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.post-content{
+  font-size: 1.1rem;
+  padding: 30px;
+}

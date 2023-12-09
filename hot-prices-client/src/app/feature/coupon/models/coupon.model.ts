@@ -1,6 +1,8 @@
-import { Post } from './post';
+import { Post } from "../../post/models/post";
 
 export interface Coupon extends Post {
+  description: string;
+  isOnline: boolean;
   store?: string;
   code?: string;
   link?: string;

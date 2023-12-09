@@ -1,11 +1,16 @@
 mat-card{
   margin-top: 2%;
-  text-wrap: wrap;
+  width: 70vw;
+  white-space: normal;
   border: 1px solid #ccc;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   mat-card{
-    padding-inline: 0%;
+    width: 100vw;
   }
+}
+
+.send-button{
+  height: 50px;
 }

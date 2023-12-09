@@ -1,0 +1,35 @@
+<div class="page" fxLayout="column" fxFlex="100%">
+  <mat-card *ngIf="conversation" fxLayout="column" fxFlex="100%">
+    <mat-toolbar color="warn" class="row-1">
+      <app-user-avatar
+        [name]="conversation.owner"
+        [imgSrc]="'https://material.angular.io/assets/img/examples/shiba1.jpg'"
+        [nameFirst]="false"
+      ></app-user-avatar>
+      <div fxLayoutAlign="end start" fxFlex>
+        <mat-icon class="clickable">edit</mat-icon>
+        <mat-icon class="clickable">delete</mat-icon>
+        <mat-icon class="clickable">report</mat-icon>
+      </div>
+    </mat-toolbar>
+
+    <mat-card-content fxLayout="column" fxLayoutGap="12px">
+      <div fxLayoutAlign="end end">
+        <app-date-display
+          [date]="conversation.postedDate"
+          [isPostedDate]="true"
+        ></app-date-display>
+      </div>
+
+      <div>
+        <mat-card-title class="post-title">
+          {{ conversation.title }}
+        </mat-card-title>
+      </div>
+
+      <div class="post-content">
+        {{ conversation.content }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

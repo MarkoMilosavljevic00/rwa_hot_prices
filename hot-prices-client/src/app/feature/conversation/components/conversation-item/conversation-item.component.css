@@ -1,6 +1,7 @@
 mat-card {
   border: 1px solid #ccc;
   padding-inline: 10px;
+  white-space: normal;
 }
 
 mat-card-title {
@@ -47,11 +48,6 @@ mat-card-title {
 
 .user-avatar{
   cursor: pointer;
-}
-
-.text-container{
-  max-width: 100%;
-  text-wrap: balance;
 }
 
 /* .offer-details {
