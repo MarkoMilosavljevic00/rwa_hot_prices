@@ -38,11 +38,11 @@
         </div>
       </div>
       <a
-        [routerLink]="['/details/coupon', coupon.id]"
+        [routerLink]="['/posts/details/coupon', coupon.id]"
         fxLayoutAlign="center center"
       >
         <img
-          [routerLink]="['/details/coupon', coupon.id]"
+          [routerLink]="['/posts/details/coupon', coupon.id]"
           [src]="coupon.imgPaths[0]"
           class="offer-image"
         />
@@ -56,7 +56,7 @@
       >
         <mat-card-title
           class="clickable-text"
-          [routerLink]="['/details/coupon', coupon.id]"
+          [routerLink]="['/posts/details/coupon', coupon.id]"
         >
           <a fxLayoutAlign="center center">{{ coupon.title }}</a>
         </mat-card-title>
@@ -79,7 +79,7 @@
               mat-raised-button
               color="warn"
               fxFlex="150px"
-              [routerLink]="['/details/coupon', coupon.id]"
+              [routerLink]="['/posts/details/coupon', coupon.id]"
             >
               Details
             </button>

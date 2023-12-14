@@ -1,0 +1,15 @@
+mat-hint{
+  font-size: 0.9rem;
+  color: rgb(133, 130, 130);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+p-editor{
+  width: 100%;
+  border: 1px solid #ccc;
+}
+
+.send-button{
+  height: 50px;
+}

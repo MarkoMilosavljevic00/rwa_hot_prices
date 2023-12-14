@@ -38,7 +38,7 @@
         </div>
       </div>
       <a
-        [routerLink]="['/details/offer', offer.id]"
+        [routerLink]="['/posts/details/offer', offer.id]"
         fxLayoutAlign="center center"
       >
         <img [src]="offer.imgPaths[0]" class="offer-image" />
@@ -52,7 +52,7 @@
       >
         <mat-card-title
           class="clickable-text"
-          [routerLink]="['/details/offer', offer.id]"
+          [routerLink]="['/posts/details/offer', offer.id]"
         >
           <a fxLayoutAlign="center center">{{ offer.title }}</a>
         </mat-card-title>
@@ -72,7 +72,7 @@
         >
           <div fxLayout fxLayoutAlign="start end" fxFlex="100%">
             <button
-              [routerLink]="['/details/offer', offer.id]"
+              [routerLink]="['/posts/details/offer', offer.id]"
               mat-raised-button
               color="warn"
               fxFlex="150px"

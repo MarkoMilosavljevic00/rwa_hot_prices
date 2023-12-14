@@ -1,6 +1,6 @@
 mat-card{
   margin-top: 2%;
-  width: 70vw;
+  width: 80vw;
   white-space: normal;
   border: 1px solid #ccc;
 }
@@ -11,13 +11,11 @@ mat-card{
   }
 }
 
-mat-hint{
-  font-size: 0.9rem;
-  color: rgb(133, 130, 130);
-  font-style: italic;
-  margin-bottom: 10px;
+mat-card-title{
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
-.send-button{
-  height: 50px;
+mat-toolbar{
+  margin-bottom: 16px;
 }

@@ -6,7 +6,6 @@ export const CONVERSATIONS: Conversation[] = [
   {
     id: 1,
     title: "What is the best programming language to learn in 2023?",
-    imgPaths: ["https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_1/re/1024x1024/qt/60/4254964_1.jpg", "https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_2/re/1024x1024/qt/60/4254964_2.jpg"],
     numOfHotReactions: 12,
     numOfColdReactions: 3,
     postedDate: new Date("2023-12-04T15:48:07"),
@@ -21,7 +20,6 @@ export const CONVERSATIONS: Conversation[] = [
   {
     id: 2,
     title: "How to make the perfect pizza at home?",
-    imgPaths: ["https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_3/re/1024x1024/qt/60/4254964_3.jpg", "https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_4/re/1024x1024/qt/60/4254964_4.jpg"],
     numOfHotReactions: 10,
     numOfColdReactions: 5,
     postedDate: new Date("2023-12-03T12:30:00"),
@@ -36,7 +34,6 @@ export const CONVERSATIONS: Conversation[] = [
   {
     id: 3,
     title: "What are the best coffee shops in London?",
-    imgPaths: ["https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_5/re/1024x1024/qt/60/4254964_5.jpg", "https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_6/re/1024x1024/qt/60/4254964_6.jpg"],
     numOfHotReactions: 8,
     numOfColdReactions: 7,
     postedDate: new Date("2023-12-02T10:15:00"),
@@ -51,7 +48,6 @@ export const CONVERSATIONS: Conversation[] = [
   {
     id: 4,
     title: "How to get fit and healthy in 2023?",
-    imgPaths: ["https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_7/re/1024x1024/qt/60/4254964_7.jpg", "https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_8/re/1024x1024/qt/60/4254964_8.jpg"],
     numOfHotReactions: 9,
     numOfColdReactions: 6,
     postedDate: new Date("2023-12-01T16:45:00"),
@@ -66,7 +62,6 @@ export const CONVERSATIONS: Conversation[] = [
   {
     id: 5,
     title: "What are the best songs of 2023?",
-    imgPaths: ["https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_9/re/1024x1024/qt/60/4254964_9.jpg", "https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_10/re/1024x1024/qt/60/4254964_10.jpg"],
     numOfHotReactions: 11,
     numOfColdReactions: 4,
     postedDate: new Date("2023-11-30T18:00:00"),
@@ -81,7 +76,6 @@ export const CONVERSATIONS: Conversation[] = [
   {
     id: 6,
     title: "What are the best books of 2023?",
-    imgPaths: ["https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_11/re/1024x1024/qt/60/4254964_11.jpg", "https://images.hotukdeals.com/threads/raw/9Z0jX/4254964_12/re/1024x1024/qt/60/4254964_12.jpg"],
     numOfHotReactions: 7,
     numOfColdReactions: 8,
     postedDate: new Date("2023-11-29T14:30:00"),

@@ -5,9 +5,9 @@
 }
 
 mat-toolbar{
-  margin-top: 20px;
-  height: 100px;
+  height:100px;
 }
+
 
 mat-sidenav-container, mat-sidenav-content, mat-sidenav {
   height: 100%;
@@ -18,9 +18,21 @@ mat-sidenav {
   width: 200px;
 }
 
-.filter-button{
+.add-new-button{
   align-self: center;
-  margin-bottom:20px;
+  /* margin-block: 10px; */
+  height: 100px;
+  width: 100px;
+}
+
+.add-new-icon{
+  height: 40px;
+  width: 40px; 
+  font-size: 40px;
+}
+
+.filter-button{
+  align-self: flex-start;
   height: 50px;
 }
 

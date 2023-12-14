@@ -13,11 +13,11 @@ const routes: Routes = [
     component: UserComponent,
     children: [
       { path: 'profile', component: UserProfileComponent },
-      { path: 'posts', component: PostsComponent, children: [
-        { path: 'offers', component: OfferListComponent },
-        { path: 'conversations', component: ConversationListComponent },
-        { path: 'coupons', component: CouponListComponent },
-      ]},
+      {
+        path: 'posts',
+        loadChildren: () =>
+          import('../post/post.module').then((m) => m.PostModule),
+      },
     ],
   },
 ];

@@ -23,7 +23,7 @@
       <mat-card-title
         class="clickable-text"
         fxFlex
-        [routerLink]="['/details/conversation', conversation.id]"
+        [routerLink]="['/posts/details/conversation', conversation.id]"
       >
         <a>{{ conversation.title }}</a>
       </mat-card-title>
@@ -37,7 +37,7 @@
           mat-raised-button
           color="warn"
           fxFlex="150px"
-          [routerLink]="['/details/conversation', conversation.id]"
+          [routerLink]="['/posts/details/conversation', conversation.id]"
         >
           Details
         </button>

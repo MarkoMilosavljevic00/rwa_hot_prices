@@ -13,6 +13,9 @@ import { RouterModule } from '@angular/router';
 import { PrimengModule } from './primeng.module';
 import { UserAvatarComponent } from './components/user-avatar/user-avatar.component';
 import { DateDisplayComponent } from './components/date-display/date-display.component';
+import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
+import { CheckTextLengthDirective } from './directives/check-text-length.directive';
+import { EditorComponent } from './components/editor/editor.component';
 
 
 
@@ -23,6 +26,9 @@ import { DateDisplayComponent } from './components/date-display/date-display.com
     YesNoDialogComponent,
     UserAvatarComponent,
     DateDisplayComponent,
+    NoSanitizePipe,
+    CheckTextLengthDirective,
+    EditorComponent
   ],
   imports: [
     CommonModule,
@@ -49,6 +55,9 @@ import { DateDisplayComponent } from './components/date-display/date-display.com
     ReactiveFormsModule,
     NgFor,
     AsyncPipe,
+    NoSanitizePipe,
+    CheckTextLengthDirective,
+    EditorComponent
   ],
   schemas: [NO_ERRORS_SCHEMA]
 })

@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { FeatureModule } from './feature/feature.module';
+import { PreloadAllModules } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,8 @@ import { FeatureModule } from './feature/feature.module';
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
-    FeatureModule,
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA]
 })

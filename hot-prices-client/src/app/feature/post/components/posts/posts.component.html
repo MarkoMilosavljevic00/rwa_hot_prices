@@ -29,7 +29,20 @@
         >
       </nav>
       <mat-tab-nav-panel #tabPanel>
-        <div>
+        <div fxLayout="column">
+          <div fxFlex fxLayoutAlign.gt-xs="end end" fxLayoutAlign.lt-sm="center center">
+            <button
+              class="add-new-button"
+              mat-button
+              color="warn"
+              fxFlex.gt-xs="30%"
+              fxFlex.lt-sm="70%"
+              (click)="onAddNewFormular()"
+            >
+              <mat-icon fxLayoutAlign="center center" class="add-new-icon">add_circle</mat-icon>
+              <span>Add New {{ currentPostType }}</span>
+            </button>
+          </div>
           <mat-toolbar color="warn" fxLayoutAlign="start end" class="page">
             <form
               class="example-form"

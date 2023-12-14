@@ -6,10 +6,11 @@ import { OfferListComponent } from './components/offer-list/offer-list.component
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 import { OfferItemComponent } from './components/offer-item/offer-item.component';
 import { RouterModule } from '@angular/router';
+import { OfferFormularComponent } from './components/offer-formular/offer-formular.component';
 // import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
-  declarations: [OfferListComponent, OfferItemComponent, OfferDetailsComponent],
+  declarations: [OfferListComponent, OfferItemComponent, OfferDetailsComponent, OfferFormularComponent],
   imports: [RouterModule, SharedModule],
   exports: [OfferListComponent, OfferItemComponent, OfferDetailsComponent],
   schemas: [NO_ERRORS_SCHEMA],

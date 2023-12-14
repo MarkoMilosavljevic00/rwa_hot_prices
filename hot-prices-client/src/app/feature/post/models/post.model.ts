@@ -6,7 +6,6 @@ import { Report } from "./report";
 export interface Post {
   id: number;
   title: string;
-  imgPaths: string[];
   numOfHotReactions: number;
   numOfColdReactions: number;
   postedDate: Date;

@@ -5,14 +5,24 @@
     <div>
       <app-comment-list></app-comment-list>
     </div>
-    <mat-card-content fxLayout.gt-xs="row" fxLayout.lt-sm="column" fxLayoutAlign="center center">
-      <mat-form-field fxFlex="90%">
-        <mat-label>Leave a comment</mat-label>
-        <textarea class="comment-input" matInput></textarea>
-      </mat-form-field>
-      <button class="send-button" mat-raised-button color="primary" fxFlex="10%">
-        <mat-icon>send</mat-icon>
-      </button>
+    <mat-card-content
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxFlex="100%"
+    >
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <app-editor [maxLength]="300" (onContentChange)="newContent = $event">
+        </app-editor>
+        <button
+          class="send-button"
+          mat-raised-button
+          type="submit"
+          color="primary"
+          (click)="addNewComment()"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
     </mat-card-content>
   </mat-card-content>
 </mat-card>

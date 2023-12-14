@@ -30,6 +30,7 @@ export class OfferDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.route.snapshot.url);
     this.offer = OFFERS.find(offer => offer.id === +this.route.snapshot.params['id']);
     this.images = this.offer?.imgPaths.map(imgPath => {
       return {

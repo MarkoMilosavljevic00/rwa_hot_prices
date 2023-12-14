@@ -21,3 +21,8 @@ mat-card{
     font-size: 0.7rem;
   }
 }
+
+mat-card-content{
+  width: 100%;
+}
+

@@ -1,4 +1,4 @@
-import { Post } from "./post";
+import { Post } from "./post.model";
 import { User } from "../../user/models/user.model";
 
 export interface Comment {

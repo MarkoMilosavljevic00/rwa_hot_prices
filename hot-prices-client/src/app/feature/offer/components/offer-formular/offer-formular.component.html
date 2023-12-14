@@ -1,0 +1,130 @@
+<form
+  fxLayout="column"
+  fxLayoutGap="40px"
+  [formGroup]="offerForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div fxLayout="column" formGroupName="basicInformation">
+    <!-- <mat-card-title>Basic information</mat-card-title> -->
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" />
+      <mat-error
+        *ngIf="offerForm.get('basicInformation.title')?.hasError('required')"
+        >Field must not be empty</mat-error
+      >
+    </mat-form-field>
+
+    <!-- <h2>Description</h2> -->
+    <app-editor [maxLength]="300" (onContentChange)="description = $event">
+    </app-editor>
+
+    <div class="card flex justify-content-center">
+      <p-toast></p-toast>
+      <p-fileUpload
+        name="demo[]"
+        url="https://www.primefaces.org/cdn/api/upload.php"
+        (onUpload)="onUpload($event)"
+        [multiple]="true"
+        accept="image/*"
+        [maxFileSize]="1000000"
+      >
+        <ng-template pTemplate="content">
+          <ul *ngIf="uploadedFiles.length">
+            <li *ngFor="let file of uploadedFiles">
+              {{ file.name }} - {{ file.size }} bytes
+            </li>
+          </ul>
+        </ng-template>
+      </p-fileUpload>
+    </div>
+  </div>
+
+  <p-treeSelect
+    containerStyleClass="w-full"
+    formControlName="selectedNodes"
+    [options]="options"
+    placeholder="Select Item"
+  ></p-treeSelect>
+
+  <mat-radio-group aria-label="Sale Type" formControlName="saleType">
+    <mat-radio-button value="online">Online</mat-radio-button>
+    <mat-radio-button value="offline">Offline</mat-radio-button>
+  </mat-radio-group>
+  
+  <mat-form-field *ngIf="offerForm.get('saleType')?.value === 'online'">
+    <mat-label>Link</mat-label>
+    <input matInput formControlName="link">
+  </mat-form-field>
+  
+  <mat-form-field *ngIf="offerForm.get('saleType')?.value === 'offline'">
+    <mat-label>Location</mat-label>
+    <input matInput formControlName="location">
+  </mat-form-field>
+
+  <!-- <mat-form-field>
+    <app-editor></app-editor>
+  </mat-form-field> -->
+  <!-- <mat-form-field>
+    <mat-label>Username</mat-label>
+    <mat-icon matPrefix>person</mat-icon>
+    <input
+      matInput
+      ngModel
+      type="text"
+      name="username"
+      required
+      minlength="6"
+      #usernameInput="ngModel"
+    />
+    <mat-hint>Please enter a username with at least 6 characters.</mat-hint>
+    <mat-error *ngIf="usernameInput.hasError('required')"
+      >Field must not be empty</mat-error
+    >
+    <mat-error *ngIf="usernameInput.hasError('minlength')"
+      >Username must be at least 6 characters long.</mat-error
+    >
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Password</mat-label>
+    <mat-icon matPrefix>password</mat-icon>
+    <input
+      matInput
+      ngModel
+      type="password"
+      name="password"
+      required
+      minlength="6"
+      #passwordInput="ngModel"
+    />
+    <mat-hint>Please enter a password with at least 6 characters.</mat-hint>
+    <mat-error *ngIf="passwordInput.hasError('required')"
+      >Field must not be empty</mat-error
+    >
+    <mat-error *ngIf="passwordInput.hasError('minlength')"
+      >Password must be at least 6 characters long.</mat-error
+    >
+  </mat-form-field> -->
+  <!-- <mat-form-field>
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            ngModel
+            type="password"
+            name="confirmPassword"
+            required
+            #confirmPasswordInput
+          />
+          <mat-error *ngIf="confirmPasswordInput.value !== passwordInput.value"
+            >Passwordi se ne poklapaju</mat-error
+          >
+        </mat-form-field> -->
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    [disabled]="offerForm.invalid"
+  >
+    SIGN UP
+  </button>
+</form>

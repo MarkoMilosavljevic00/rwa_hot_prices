@@ -1,5 +1,5 @@
 import { Role } from "../../../common/enums/role.enum";
-import { Post } from "../../post/models/post";
+import { Post } from "../../post/models/post.model";
 import { Reaction } from "../../post/models/reaction";
 import { Report } from "../../post/models/report";
 

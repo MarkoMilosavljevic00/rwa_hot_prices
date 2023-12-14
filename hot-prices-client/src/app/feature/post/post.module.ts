@@ -3,12 +3,12 @@ import { PostRoutingModule } from './post-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { PostsComponent } from './components/posts/posts.component';
 import { RouterModule } from '@angular/router';
-// import { NgImageSliderModule } from 'ng-image-slider';
 import { OfferModule } from '../offer/offer.module';
 import { PostDetailComponent } from './components/post-detail/post-detail.component';
 import { CommentComponent } from './components/comment/comment.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
 import { CommentSectionComponent } from './components/comment-section/comment-section.component';
+import { PostFormularComponent } from './components/post-formular/post-formular.component';
 
 
 
@@ -19,6 +19,7 @@ import { CommentSectionComponent } from './components/comment-section/comment-se
     CommentComponent,
     CommentListComponent,
     CommentSectionComponent,
+    PostFormularComponent,
   ],
   imports: [
     SharedModule,

@@ -1,0 +1,18 @@
+<div fxLayout="column" fxLayoutAlign="start start">
+  <mat-hint>
+    <mat-icon>info</mat-icon>
+    <span>
+      Limited number of characters: [{{
+        textLength <= maxLength ? textLength : maxLength
+      }}/{{ maxLength }}]
+    </span>
+  </mat-hint>
+
+  <p-editor
+    [style]="{ height: height }"
+    (onTextChange)="onTextChange()"
+    [(ngModel)]="content"
+    required
+  >
+  </p-editor>
+</div>

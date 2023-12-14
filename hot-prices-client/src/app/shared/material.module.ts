@@ -17,6 +17,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
+import { MatRadioModule } from '@angular/material/radio';
 
 const modules = [
   MatButtonModule,
@@ -37,6 +38,7 @@ const modules = [
   MatGridListModule,
   MatExpansionModule,
   MatTableModule,
+  MatRadioModule,
 ];
 
 @NgModule({
