@@ -16,6 +16,7 @@ import { DateDisplayComponent } from './components/date-display/date-display.com
 import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 import { CheckTextLengthDirective } from './directives/check-text-length.directive';
 import { EditorComponent } from './components/editor/editor.component';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 
@@ -40,6 +41,7 @@ import { EditorComponent } from './components/editor/editor.component';
     ReactiveFormsModule,
     NgFor,
     AsyncPipe,
+    MatNativeDateModule,
   ],
   exports:[
     HeaderComponent,

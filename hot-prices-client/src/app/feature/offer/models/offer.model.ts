@@ -1,10 +1,10 @@
 
-import { OfferType } from 'src/app/common/enums/offer-type.enum';
+import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { Post } from '../../post/models/post.model';
 
 export interface Offer extends Post {
   imgPaths: string[];
-  type: OfferType;
+  type: SaleType;
   description: string;
   store?: string;
   link?: string;

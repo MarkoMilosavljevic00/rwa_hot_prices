@@ -1,4 +1,4 @@
-import { OfferType } from 'src/app/common/enums/offer-type.enum';
+import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
 import { Offer } from '../../models/offer.model';
 
@@ -24,7 +24,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Online,
+    type: SaleType.Online,
     store: 'Amazon',
     location: 'USA',
     link: 'https://www.amazon.com/Samsung-Galaxy-S21',
@@ -55,7 +55,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Online,
+    type: SaleType.Online,
     store: 'Domino’s',
     link: 'https://www.dominos.com/coupons',
     specifications: { Size: 'Large', Toppings: 'Any', Crust: 'Any' },
@@ -81,7 +81,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Offline,
+    type: SaleType.Offline,
     store: 'Starbucks',
     link: undefined,
     specifications: { Coffee: 'Any size and flavor', Purchase: 'Minimum $5' },
@@ -104,7 +104,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Offline,
+    type: SaleType.Offline,
     store: 'Foot Locker',
     link: undefined,
     specifications: { Shoes: 'Nike brand only', Size: 'Any' },
@@ -127,7 +127,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Online,
+    type: SaleType.Online,
     store: 'Spotify',
     link: 'https://www.spotify.com/premium',
     specifications: {
@@ -153,7 +153,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Online,
+    type: SaleType.Online,
     store: 'Barnes & Noble',
     link: 'https://www.barnesandnoble.com/b/buy-2-get-the-3rd-free/_/N-2q0o',
     specifications: {
@@ -179,7 +179,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Online,
+    type: SaleType.Online,
     store: 'Netflix',
     link: 'https://www.netflix.com/signup',
     specifications: {
@@ -206,7 +206,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Online,
+    type: SaleType.Online,
     store: 'Walmart',
     link: 'https://www.walmart.com/free-shipping',
     specifications: { Orders: 'Over $50', Shipping: 'Standard delivery' },
@@ -229,7 +229,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Offline,
+    type: SaleType.Offline,
     store: 'Supercuts',
     link: undefined,
     specifications: { Haircut: 'Any style', 'Color service': 'Any type' },
@@ -252,7 +252,7 @@ export const OFFERS: Offer[] = [
     reactions: [],
     comments: [],
     reports: [],
-    type: OfferType.Offline,
+    type: SaleType.Offline,
     store: 'The Zoo',
     link: undefined,
     specifications: {

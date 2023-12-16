@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <form
   fxLayout="column"
   fxLayoutGap="40px"
@@ -5,7 +7,7 @@
   (ngSubmit)="onSubmit()"
 >
   <div fxLayout="column" formGroupName="basicInformation">
-    <!-- <mat-card-title>Basic information</mat-card-title> -->
+    <mat-card-title>Title</mat-card-title>
     <mat-form-field>
       <mat-label>Title</mat-label>
       <input matInput formControlName="title" />
@@ -15,12 +17,12 @@
       >
     </mat-form-field>
 
-    <!-- <h2>Description</h2> -->
+    <mat-card-title>Description</mat-card-title>
     <app-editor [maxLength]="300" (onContentChange)="description = $event">
     </app-editor>
 
+    <mat-card-title>Images</mat-card-title>
     <div class="card flex justify-content-center">
-      <p-toast></p-toast>
       <p-fileUpload
         name="demo[]"
         url="https://www.primefaces.org/cdn/api/upload.php"
@@ -40,28 +42,131 @@
     </div>
   </div>
 
+  <mat-card-title>Category</mat-card-title>
   <p-treeSelect
     containerStyleClass="w-full"
     formControlName="selectedNodes"
-    [options]="options"
-    placeholder="Select Item"
+    [options]="categoryOptions"
+    placeholder="Select Category"
   ></p-treeSelect>
 
-  <mat-radio-group aria-label="Sale Type" formControlName="saleType">
+  <mat-card-title>Sale Type</mat-card-title>
+  <p-selectButton
+    [options]="saleTypeOptions"
+    formControlName="saleType"
+  ></p-selectButton>
+  <!-- <mat-radio-group aria-label="Sale Type" formControlName="saleType">
     <mat-radio-button value="online">Online</mat-radio-button>
     <mat-radio-button value="offline">Offline</mat-radio-button>
-  </mat-radio-group>
-  
+  </mat-radio-group> -->
+
+  <mat-card-title>Point of Sale</mat-card-title>
   <mat-form-field *ngIf="offerForm.get('saleType')?.value === 'online'">
     <mat-label>Link</mat-label>
-    <input matInput formControlName="link">
+    <input matInput formControlName="link" />
   </mat-form-field>
-  
   <mat-form-field *ngIf="offerForm.get('saleType')?.value === 'offline'">
     <mat-label>Location</mat-label>
-    <input matInput formControlName="location">
+    <input matInput formControlName="location" />
   </mat-form-field>
 
+  <mat-card-title>Store</mat-card-title>
+  <mat-form-field>
+    <mat-label>Store</mat-label>
+    <input matInput formControlName="store" />
+  </mat-form-field>
+
+  <mat-card-title>Specifications</mat-card-title>
+  <div
+    formArrayName="specifications"
+    *ngFor="let spec of specifications.controls; index as i"
+  >
+    <div [formGroupName]="i">
+      <mat-form-field>
+        <mat-label>Key</mat-label>
+        <input matInput formControlName="key" required />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Value</mat-label>
+        <input matInput formControlName="value" required />
+      </mat-form-field>
+      <button mat-button (click)="deleteSpecification(i)">Delete</button>
+    </div>
+  </div>
+  <button
+    mat-button
+    (click)="addSpecification()"
+    [disabled]="!specifications.valid || specifications.controls.length >= 5"
+  >
+    Add Specification
+  </button>
+
+  <mat-card-title>Discount Information</mat-card-title>
+  <p-selectButton
+    [options]="discountOptions"
+    formControlName="discountOptions"
+    optionLabel="label"
+    optionValue="value"
+    (onChange)="onDiscountOptionChange($event.value)"
+  ></p-selectButton>
+
+  <mat-card-title>Price</mat-card-title>
+  <mat-form-field floatLabel="always">
+    <mat-label>Amount</mat-label>
+    <input
+      matInput
+      type="number"
+      placeholder="0"
+      formControlName="price"
+      (change)="onPriceChange($event)"
+    />
+    <span matTextPrefix>$&nbsp;</span>
+    <span matTextSuffix>.00</span>
+  </mat-form-field>
+
+  <mat-card-title>Old Price</mat-card-title>
+  <mat-form-field floatLabel="always">
+    <mat-label>Amount</mat-label>
+    <input
+      matInput
+      type="number"
+      placeholder="0"
+      formControlName="oldPrice"
+      (change)="onOldPriceChange($event)"
+    />
+    <span matTextPrefix>$&nbsp;</span>
+    <span matTextSuffix>.00</span>
+  </mat-form-field>
+
+  <mat-card-title>Discount</mat-card-title>
+  <mat-form-field floatLabel="always">
+    <mat-label>Percentage</mat-label>
+    <input
+      matInput
+      type="number"
+      placeholder="0"
+      formControlName="discount"
+      (change)="onDiscountChange($event)"
+    />
+    <span matTextSuffix>%</span>
+  </mat-form-field>
+
+  <mat-card-title>Expiry Date Activated</mat-card-title>
+  <p-selectButton
+    [options]="expiryDateOptions"
+    formControlName="expiryDateOptions"
+    optionLabel="label"
+    optionValue="value"
+    (onChange)="onExpiryDateOptionChange($event.value)"
+  ></p-selectButton>
+
+  <mat-card-title>Expiry Date</mat-card-title>
+  <p-calendar
+    formControlName="expiryDate"
+    [minDate]="minExpiryDate"
+    [readonlyInput]="true"
+    (onInput)="onExpiryDateChange($event)"
+  ></p-calendar>
   <!-- <mat-form-field>
     <app-editor></app-editor>
   </mat-form-field> -->

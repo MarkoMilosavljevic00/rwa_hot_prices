@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { OFFERS } from '../offer-list/offer.model';
 import { calculateDiscount, formatPostTime } from 'src/app/common/helpers/helpers';
-import { OfferType } from 'src/app/common/enums/offer-type.enum';
+import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { Offer } from '../../models/offer.model';
 
 export interface ImageInfo {
@@ -55,7 +55,7 @@ export class OfferDetailsComponent implements OnInit {
   }
 
   isOnline(): boolean {
-    return this.offer?.type === OfferType.Online;
+    return this.offer?.type === SaleType.Online;
   }
 
   editOffer(){
