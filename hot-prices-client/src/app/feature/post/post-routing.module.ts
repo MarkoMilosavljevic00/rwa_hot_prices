@@ -10,6 +10,8 @@ import { ConversationDetailsComponent } from '../conversation/components/convers
 import { CouponDetailsComponent } from '../coupon/components/coupon-details/coupon-details.component';
 import { PostFormularComponent } from './components/post-formular/post-formular.component';
 import { OfferFormularComponent } from '../offer/components/offer-formular/offer-formular.component';
+import { ConversationFormularComponent } from '../conversation/components/conversation-formular/conversation-formular.component';
+import { CouponFormularComponent } from '../coupon/components/coupon-formular/coupon-formular.component';
 
 const routes: Routes = [
   {
@@ -31,12 +33,12 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'post-formular',
+    path: 'formular',
     component: PostFormularComponent,
     children: [
       { path: 'offer', component: OfferFormularComponent },
-      { path: 'conversation', component: ConversationDetailsComponent },
-      { path: 'coupon', component: CouponDetailsComponent },
+      { path: 'conversation', component: ConversationFormularComponent },
+      { path: 'coupon', component: CouponFormularComponent },
     ],
   },
 ];

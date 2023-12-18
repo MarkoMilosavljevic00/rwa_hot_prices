@@ -54,7 +54,7 @@ export class PostsComponent implements OnInit, OnChanges {
 
   onAddNewFormular() {
     this.router.navigate([
-      `/posts/post-formular/${this.routeMappingService.mapPostTypeToUrl(
+      `/posts/formular/${this.routeMappingService.mapPostTypeToUrl(
         this.currentPostType
       )}`,
     ]);

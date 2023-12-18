@@ -8,8 +8,8 @@ export class FormControlService {
 
   constructor() { }
 
-  toggleFormControl<T>(form: FormGroup, controlName: string, isActivated: boolean, defaultValue?: T) {
-    if (isActivated) {
+  toggleFormControl<T>(form: FormGroup, controlName: string, condition: boolean, defaultValue?: T) {
+    if (condition) {
       form.get(controlName)?.enable();
       form.get(controlName)?.setValue(defaultValue);
     } else {

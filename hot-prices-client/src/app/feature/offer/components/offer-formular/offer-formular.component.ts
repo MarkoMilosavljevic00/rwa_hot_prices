@@ -17,6 +17,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Option } from 'src/app/common/interfaces/option.interface';
 import { YES_NO_OPTIONS } from 'src/app/common/constants';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
+import { FileUploadEvent } from 'primeng/fileupload';
 
 @Component({
   selector: 'app-offer-formular',
@@ -24,6 +25,8 @@ import { FormControlService } from 'src/app/shared/services/form-control.service
   styleUrls: ['./offer-formular.component.css'],
 })
 export class OfferFormularComponent implements OnInit {
+  SaleType = SaleType;
+
   description: string;
   offerForm: FormGroup;
   uploadedFiles: any[];
@@ -35,13 +38,6 @@ export class OfferFormularComponent implements OnInit {
   discount: number;
   expiryDateOptions: Option[];
   minExpiryDate: Date;
-
-  constructor(
-    private messageService: MessageService,
-    private categoryService: CategoryService,
-    private discountCalculatorService: DiscountCalculatorService,
-    public formControlService: FormControlService
-  ) {}
 
   get specifications(): FormArray {
     return this.offerForm.get('specifications') as FormArray;
@@ -63,19 +59,24 @@ export class OfferFormularComponent implements OnInit {
     return this.offerForm.get('expiryDate');
   }
 
+  constructor(
+    private messageService: MessageService,
+    private categoryService: CategoryService,
+    private discountCalculatorService: DiscountCalculatorService,
+    public formControlService: FormControlService
+  ) {}
+
   ngOnInit(): void {
     this.offerForm = new FormGroup({
-      basicInformation: new FormGroup({
-        title: new FormControl(' ', {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-      }),
-      selectedNodes: new FormControl(null, {
+      title: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      saleType: new FormControl(''),
+      selectedCategory: new FormControl(null, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      saleType: new FormControl(SaleType.Online),
       store: new FormControl(''),
       link: new FormControl(''),
       location: new FormControl(''),
@@ -95,11 +96,10 @@ export class OfferFormularComponent implements OnInit {
     this.minExpiryDate = new Date();
   }
 
-  onUpload(event: any) {
+  onUpload(event: FileUploadEvent) {
     for (let file of event.files) {
       this.uploadedFiles.push(file);
     }
-
     this.messageService.add({
       severity: 'info',
       summary: 'File Uploaded',
@@ -132,12 +132,15 @@ export class OfferFormularComponent implements OnInit {
       const spec = new FormGroup({
         key: new FormControl('', Validators.required),
         value: new FormControl('', Validators.required),
+        isDeleteEnabled: new FormControl(false),
       });
 
-      if (this.specifications.controls.length > 0)
+      if (this.specifications.controls.length > 0) {
         this.specifications.controls[
           this.specifications.controls.length - 1
         ].disable();
+      }
+
       this.specifications.push(spec);
     }
   }
@@ -167,6 +170,14 @@ export class OfferFormularComponent implements OnInit {
       'expiryDate',
       isExpiryDateActivated,
       new Date()
+    );
+  }
+
+  onSaleTypeOptionChange(saleType: SaleType) {
+    this.formControlService.toggleFormControl<SaleType>(
+      this.offerForm,
+      'link',
+      saleType === SaleType.Online,
     );
   }
 

@@ -1,0 +1,68 @@
+<p-toast></p-toast>
+
+<form
+  fxLayout="column"
+  fxLayoutGap="40px"
+  [formGroup]="conversationForm"
+  (ngSubmit)="onSubmit()"
+>
+  <section fxLayout="column">
+    <mat-card-title>Informations</mat-card-title>
+    <mat-divider></mat-divider>
+    <div
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign="center center"
+    >
+      <mat-card-subtitle fxFlex="15%">Title: </mat-card-subtitle>
+      <span fxFlex>
+        <mat-form-field fxFlex class="centered-field">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" />
+          <mat-error
+            *ngIf="
+              conversationForm.get('title')?.hasError('required') &&
+              conversationForm.get('title')?.touched
+            "
+            >Field must not be empty</mat-error
+          >
+        </mat-form-field>
+      </span>
+    </div>
+
+    <div
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign="start center"
+    >
+      <mat-card-subtitle fxFlex="15%">Category: </mat-card-subtitle>
+      <p-treeSelect
+        class="centered-field"
+        containerStyleClass="w-full"
+        formControlName="selectedNodes"
+        [options]="categoryOptions"
+        placeholder="Select Category"
+      ></p-treeSelect>
+    </div>
+
+    <div
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign="center center"
+    >
+      <mat-card-subtitle>Content: </mat-card-subtitle>
+      <app-editor
+        fxFlex="100%"
+        [maxLength]="300"
+        (onContentChange)="content = $event"
+      >
+      </app-editor>
+    </div>
+
+    <div fxFlex fxLayoutAlign="center center">
+      <button mat-fab extended class="submit-button" color="warn" fxFlex.lt-sm="100%">
+        SUBMIT CONVERSATION
+      </button>
+    </div>
+  </section>
+</form>

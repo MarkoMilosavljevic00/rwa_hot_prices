@@ -6,9 +6,10 @@ import { RouterModule } from '@angular/router';
 import { CouponListComponent } from './components/coupon-list/coupon-list.component';
 import { CouponItemComponent } from './components/coupon-item/coupon-item.component';
 import { CouponDetailsComponent } from './components/coupon-details/coupon-details.component';
+import { CouponFormularComponent } from './components/coupon-formular/coupon-formular.component';
 
 @NgModule({
-  declarations: [CouponListComponent, CouponItemComponent, CouponDetailsComponent],
+  declarations: [CouponListComponent, CouponItemComponent, CouponDetailsComponent, CouponFormularComponent],
   imports: [RouterModule, SharedModule],
   exports: [CouponListComponent, CouponItemComponent, CouponDetailsComponent],
   schemas: [NO_ERRORS_SCHEMA],

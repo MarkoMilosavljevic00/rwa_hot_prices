@@ -3,7 +3,7 @@
 <form
   fxLayout="column"
   fxLayoutGap="40px"
-  [formGroup]="offerForm"
+  [formGroup]="couponForm"
   (ngSubmit)="onSubmit()"
 >
   <section fxLayout="column">
@@ -21,8 +21,8 @@
           <input matInput formControlName="title" />
           <mat-error
             *ngIf="
-              offerForm.get('title')?.hasError('required') &&
-              offerForm.get('title')?.touched
+              couponForm.get('title')?.hasError('required') &&
+              couponForm.get('title')?.touched
             "
             >Field must not be empty</mat-error
           >
@@ -65,59 +65,6 @@
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
     >
-      <mat-card-subtitle fxFlex="15%">Specifications:</mat-card-subtitle>
-      <div
-        fxFlex="90%"
-        class="centered-field"
-        fxLayout="column"
-        fxLayoutAlign="center center"
-      >
-        <div
-          formArrayName="specifications"
-          *ngFor="let spec of specifications.controls; index as i"
-        >
-          <span
-            fxLayout.gt-xs="row"
-            fxLayout.lt-sm="column"
-            fxLayoutGap="2%"
-            [formGroupName]="i"
-          >
-            <mat-form-field>
-              <mat-label>Key</mat-label>
-              <input matInput formControlName="key" required />
-            </mat-form-field>
-            <mat-form-field>
-              <mat-label>Value</mat-label>
-              <input matInput formControlName="value" required />
-            </mat-form-field>
-            <button
-              mat-raised-button
-              [disabled]="i === specifications.controls.length - 1"
-              color="warn"
-              (click)="deleteSpecification(i)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </span>
-        </div>
-        <button
-          mat-raised-button
-          color="warn"
-          (click)="addSpecification()"
-          [disabled]="
-            !specifications.valid || specifications.controls.length >= 5
-          "
-        >
-          Add Specification
-        </button>
-      </div>
-    </div>
-
-    <div
-      fxLayout.gt-xs="row"
-      fxLayout.lt-sm="column"
-      fxLayoutAlign="center center"
-    >
       <mat-card-subtitle fxFlex="15%">Upload Images: </mat-card-subtitle>
       <p-fileUpload
         name="demo[]"
@@ -137,6 +84,37 @@
           </ul>
         </ng-template>
       </p-fileUpload>
+    </div>
+  </section>
+
+  <section>
+    <mat-card-title>Code Informations</mat-card-title>
+    <mat-divider></mat-divider>
+
+    <div
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign="start center"
+    >
+      <mat-card-subtitle fxFlex="15%"> Code Exists: </mat-card-subtitle>
+      <p-selectButton
+        class="centered-field"
+        [options]="multipleDiscountOptions"
+        formControlName="multipleDiscountOptions"
+        (onChange)="onCodeOptionChange($event.value)"
+      ></p-selectButton>
+    </div>
+
+    <div
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign="start center"
+    >
+      <mat-card-subtitle fxFlex="15%"> Code: </mat-card-subtitle>
+      <mat-form-field class="centered-field" fxFlex>
+        <mat-label>Code</mat-label>
+        <input matInput formControlName="code" />
+      </mat-form-field>
     </div>
   </section>
 
@@ -195,7 +173,7 @@
   </section>
 
   <section>
-    <mat-card-title>Price Information</mat-card-title>
+    <mat-card-title>Discount Information</mat-card-title>
     <mat-divider></mat-divider>
 
     <div
@@ -203,84 +181,91 @@
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
     >
-      <mat-card-subtitle fxFlex="15%">Price: </mat-card-subtitle>
-      <mat-form-field fxFlex class="centered-field">
-        <mat-label>Amount</mat-label>
-        <input
-          matInput
-          type="number"
-          placeholder="0"
-          formControlName="price"
-          (change)="onPriceChange($event)"
-        />
-        <span matTextPrefix>$&nbsp;</span>
-        <span matTextSuffix>.00</span>
-      </mat-form-field>
-    </div>
-
-    <div
-      fxLayout.gt-xs="row"
-      fxLayout.lt-sm="column"
-      fxLayoutAlign="start center"
-    >
-      <mat-card-subtitle fxFlex="15%"> Discount Exists: </mat-card-subtitle>
+      <mat-card-subtitle fxFlex="15%"> Multiple discounts: </mat-card-subtitle>
       <p-selectButton
         class="centered-field"
-        [options]="discountOptions"
-        formControlName="discountOptions"
+        [options]="multipleDiscountOptions"
+        formControlName="multipleDiscountOptions"
         optionLabel="label"
         optionValue="value"
-        (onChange)="onDiscountOptionChange($event.value)"
+        (onChange)="onMultipleDiscountOptionChange($event.value)"
       ></p-selectButton>
     </div>
 
     <div
+      *ngIf="multipleDiscounts"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
-      fxLayoutAlign="start center"
+      fxLayoutAlign="center center"
     >
-      <mat-card-subtitle fxFlex="15%"> Discount Info: </mat-card-subtitle>
-      <span
-        fxFlex
-        fxLayout.gt-xs="row"
-        fxLayout.lt-sm="column"
-        fxLayoutGap="2%"
+      <mat-card-subtitle fxFlex="15%">Discounts:</mat-card-subtitle>
+      <div
+        fxFlex="90%"
         class="centered-field"
+        fxLayout="column"
+        fxLayoutAlign="center center"
       >
-        <mat-form-field fxFlex>
-          <mat-label>Old Price</mat-label>
-          <input
-            matInput
-            type="number"
-            placeholder="0"
-            formControlName="oldPrice"
-            (change)="onOldPriceChange($event)"
-          />
-          <span matTextPrefix>$&nbsp;</span>
-          <span matTextSuffix>.00</span>
-        </mat-form-field>
-        <mat-form-field fxFlex class="two-centered-fields">
-          <mat-label>Discount</mat-label>
-          <input
-            matInput
-            type="number"
-            placeholder="0"
-            formControlName="discount"
-            (change)="onDiscountChange($event)"
-          />
-          <span matTextSuffix>%</span>
-        </mat-form-field>
-      </span>
+        <div
+          formArrayName="discounts"
+          *ngFor="let discount of discounts.controls; index as i"
+        >
+          <span
+            fxLayout.gt-xs="row"
+            fxLayout.lt-sm="column"
+            fxLayoutGap="2%"
+            [formGroupName]="i"
+          >
+            <mat-form-field>
+              <mat-label>Item</mat-label>
+              <input matInput formControlName="item" />
+            </mat-form-field>
+            <mat-form-field fxFlex>
+              <mat-label>Discount</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="0"
+                formControlName="itemDiscount"
+              />
+              <span matTextSuffix>%</span>
+            </mat-form-field>
+            <button
+              mat-raised-button
+              [disabled]="i === discounts.controls.length - 1"
+              color="warn"
+              (click)="deleteDiscount(i)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </div>
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="addDiscount()"
+          [disabled]="lastTwoFieldsEmpty() || this.discounts.controls.length > 10"
+        >
+          Add Discount
+        </button>
+      </div>
     </div>
+
     <div
+      *ngIf="!multipleDiscounts"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
     >
-      <mat-card-subtitle fxFlex="15%"> Location: </mat-card-subtitle>
+      <mat-card-subtitle fxFlex="15%">Discount: </mat-card-subtitle>
       <mat-form-field class="centered-field" fxFlex>
-        <mat-label>Location</mat-label>
-        <input matInput formControlName="location" />
+        <mat-label>Discount</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          formControlName="discount"
+        />
+        <span matTextSuffix>%</span>
       </mat-form-field>
     </div>
   </section>
@@ -322,14 +307,8 @@
   </section>
 
   <div fxFlex fxLayoutAlign="center center">
-    <button
-      mat-fab
-      extended
-      class="submit-button"
-      color="warn"
-      fxFlex.lt-sm="100%"
-    >
-      SUBMIT OFFER
+    <button mat-fab extended class="submit-button" color="warn" fxFlex.lt-sm="100%">
+      SUBMIT COUPON
     </button>
   </div>
 </form>
