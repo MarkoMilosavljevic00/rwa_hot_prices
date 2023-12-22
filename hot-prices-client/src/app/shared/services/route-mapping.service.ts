@@ -16,13 +16,15 @@ export class RouteMappingService {
     ]);
   }
 
-  mapUrlToPostType(urlString: string, plural: boolean = false): PostType {
+  mapUrlToPostType(urlString: string, plural: boolean = false, offset: number = 1): PostType {
     if (!urlString || urlString.trim() === '') {
       return PostType.Offer;
     } else {
       const segments = urlString.split('/');
-      let currentUrl = segments[segments.length - 1];
+      let currentUrl;
+      currentUrl = segments[segments.length - offset];
       currentUrl = plural ? currentUrl.substring(0, currentUrl.length - 1) : currentUrl;
+      console.log(currentUrl);
       return this.postsRouteToPostType.get(currentUrl) || PostType.Offer;
     }
   }
@@ -35,5 +37,14 @@ export class RouteMappingService {
       }
     });
     return result;
+  }
+
+  getIdFromUrl(urlString: string, offset: number = 1): number {
+    if (!urlString || urlString.trim() === '') {
+      return 0;
+    } else {
+      const segments = urlString.split('/');
+      return Number(segments[segments.length - offset]);
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Conversation } from '../../models/conversation.model';
-import { CONVERSATIONS } from './conversations.model';
+import { CONVERSATIONS } from '../../services/conversations.model';
 
 @Component({
   selector: 'app-conversation-list',

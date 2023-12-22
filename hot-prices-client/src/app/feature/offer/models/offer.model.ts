@@ -6,11 +6,12 @@ export interface Offer extends Post {
   imgPaths: string[];
   type: SaleType;
   description: string;
+  price: number;
+  oldPrice?: number;
+  discount?: number;
   store?: string;
   link?: string;
   location?: string;
   specifications?: Record<string, string>;
-  oldPrice?: number;
-  price: number;
   expiryDate: Date;
 }

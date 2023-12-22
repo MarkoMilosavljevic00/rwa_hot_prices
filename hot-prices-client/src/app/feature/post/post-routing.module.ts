@@ -37,10 +37,13 @@ const routes: Routes = [
     component: PostFormularComponent,
     children: [
       { path: 'offer', component: OfferFormularComponent },
+      { path: 'offer/:id', component: OfferFormularComponent },
       { path: 'conversation', component: ConversationFormularComponent },
+      { path: 'conversation/:id', component: ConversationFormularComponent },
       { path: 'coupon', component: CouponFormularComponent },
+      { path: 'coupon/:id', component: CouponFormularComponent },
     ],
-  },
+},
 ];
 
 @NgModule({

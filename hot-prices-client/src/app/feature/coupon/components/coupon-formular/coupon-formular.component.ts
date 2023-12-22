@@ -8,6 +8,10 @@ import { Option } from 'src/app/common/interfaces/option.interface';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { DiscountCalculatorService } from 'src/app/shared/services/discount-calculator.service';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
+import { Coupon } from '../../models/coupon.model';
+import { ActivatedRoute } from '@angular/router';
+import { COUPONS } from '../../services/coupons';
+import { CouponDto } from '../../models/coupon.dto';
 
 @Component({
   selector: 'app-coupon-formular',
@@ -15,21 +19,22 @@ import { FormControlService } from 'src/app/shared/services/form-control.service
   styleUrls: ['./coupon-formular.component.css'],
 })
 export class CouponFormularComponent implements OnInit {
-  SaleType = SaleType;
+  coupon?: Coupon;
+  couponForm: FormGroup;
 
   description: string;
-  couponForm: FormGroup;
-  uploadedFiles: any[];
-  categoryOptions: TreeNode[];
-  discountsRecord: Record<string, string>;
-  saleTypeOptions: SaleType[];
-  multipleDiscountOptions: Option[];
-  discount: number;
-  multipleDiscounts: boolean;
-  expiryDateOptions: Option[];
   minExpiryDate: Date;
 
-  get discounts(): FormArray {
+  uploadedFiles: File[];
+  categoryOptions: TreeNode[];
+  saleTypeOptions: SaleType[];
+  multipleDiscountOptions: Option[];
+  expiryDateOptions: Option[];
+  codeOptions: Option[];
+
+  SaleType = SaleType;
+
+  get discountsFormArray(): FormArray {
     return this.couponForm.get('discounts') as FormArray;
   }
 
@@ -37,44 +42,100 @@ export class CouponFormularComponent implements OnInit {
     return this.couponForm.get('discount');
   }
 
+  get multipleDiscountsControl() {
+    return this.couponForm.get('multipleDiscountOptionSelected');
+  }
+
   get expiryDateControl() {
     return this.couponForm.get('expiryDate');
+  }
+
+  get descriptionControl(){
+    return this.couponForm.get('description');
   }
 
   constructor(
     private messageService: MessageService,
     private categoryService: CategoryService,
-    private discountCalculatorService: DiscountCalculatorService,
-    public formControlService: FormControlService
+    public formControlService: FormControlService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.initFormGroup();
+    this.initInnerElementsValues();
+    this.patchValues();
+  }
+
+  private initFormGroup() {
     this.couponForm = new FormGroup({
       title: new FormControl('', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      selectedCategory: new FormControl(null, {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
+      description: new FormControl(),
+      selectedCategory: new FormControl(),
       saleType: new FormControl(SaleType.Online),
       store: new FormControl(''),
       link: new FormControl(''),
+      codeOptionSelected: new FormControl(true, { nonNullable: false }),
       code: new FormControl(''),
       location: new FormControl(''),
+      multipleDiscountOptionSelected: new FormControl(false, {
+        nonNullable: false,
+      }),
       discounts: new FormArray([]),
-      multipleDiscountOptions: new FormControl(false, { nonNullable: false }),
       discount: new FormControl(0),
       expiryDateOptions: new FormControl(true, { nonNullable: false }),
       expiryDate: new FormControl(new Date()),
     });
+  }
+
+  private initInnerElementsValues() {
     this.uploadedFiles = [];
-    this.categoryOptions = this.categoryService.getCategoriesAsTreeNodes();
+    this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
     this.saleTypeOptions = Object.values(SaleType);
+    this.codeOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.multipleDiscountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.expiryDateOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.minExpiryDate = new Date();
+  }
+
+  patchValues() {
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.coupon = COUPONS.find((coupon) => coupon.id.toString() === id);
+        this.couponForm.patchValue({
+          title: this.coupon?.title,
+          selectedCategory: this.categoryService.convertCategoryToTreeNode(
+            this.coupon!.category
+          ),
+          description: this.coupon?.description,
+          store: this.coupon?.store,
+          link: this.coupon?.link,
+          code: this.coupon?.code,
+          location: this.coupon?.location,
+          saleType: this.coupon?.saleType,
+          multipleDiscountOptionSelected: this.coupon?.discounts !== undefined,
+          discount: this.coupon?.discount,
+          expiryDateOptions: this.coupon?.expiryDate !== undefined,
+          expiryDate: this.coupon?.expiryDate,
+        });
+        this.patchDiscounts(this.coupon?.discounts);
+      }
+    });
+  }
+
+  patchDiscounts(discounts?: Record<string, number>) {
+    if (discounts) {
+      this.multipleDiscountsControl?.setValue(true);
+      for (const key in discounts) {
+        if (discounts.hasOwnProperty(key)) {
+          this.addDiscount(key, discounts[key]);
+        }
+      }
+    }
   }
 
   onUpload(event: FileUploadEvent) {
@@ -89,45 +150,65 @@ export class CouponFormularComponent implements OnInit {
   }
 
   onSubmit() {
-    const discountsArray = this.discounts.controls.map(
-      (control) => control.value
-    );
-    console.log(discountsArray);
-    const discountsRecord: Record<string, string> = discountsArray.reduce(
-      (acc: Record<string, string>, curr: { key: string; value: string }) => {
-        if (curr.key && curr.value) {
-          acc[curr.key] = curr.value;
-        }
-        return acc;
-      },
-      {}
-    );
+    let { discount, discountsRecord } = this.getDiscount();
 
-    console.log(discountsRecord);
-    console.log(this.couponForm.value);
+    const coupon: CouponDto = {
+      title: this.couponForm.value.title,
+      category: this.categoryService.convertTreeNodeToCategory(
+        this.couponForm.value.selectedCategory
+      ),
+      description: this.couponForm.value.description,
+      saleType: this.couponForm.value.saleType,
+      store: this.couponForm.value.store,
+      link: this.couponForm.value.link,
+      code: this.couponForm.value.code,
+      location: this.couponForm.value.location,
+      discount: discount,
+      discounts: discountsRecord ?? undefined,
+      expiryDate: this.couponForm.value.expiryDate,
+    };
+
+    console.log(coupon);
   }
 
-  addDiscount() {
-    if (this.discounts.valid && this.discounts.controls.length < 5) {
+  private getDiscount() {
+    let discount: number;
+    let discountsRecord: Record<string, number> | null;
+    if (this.multipleDiscountsControl?.value) {
+      discountsRecord =
+        this.formControlService.transformFormArrayToRecord<number>(
+          this.discountsFormArray,
+          null
+        ) || {};
+      discount = Math.max(...Object.values(discountsRecord));
+    } else {
+      discount = this.discountControl?.value;
+      discountsRecord = null;
+    }
+    return { discount, discountsRecord };
+  }
+
+  addDiscount(item?: string, itemDiscount?: number) {
+    if (
+      this.discountsFormArray.valid &&
+      this.discountsFormArray.controls.length < 10
+    ) {
       const discount = new FormGroup({
-        item: new FormControl(''),
-        itemDiscount: new FormControl(''),
+        key: new FormControl(item ?? ''),
+        value: new FormControl(itemDiscount ?? ''),
       });
 
-      if (this.discounts.controls.length > 0) {
-        this.discounts.controls[this.discounts.controls.length - 1].disable();
+      if (this.discountsFormArray.controls.length > 0) {
+        this.discountsFormArray.controls[
+          this.discountsFormArray.controls.length - 1
+        ].disable();
       }
-
-      this.discounts.push(discount);
+      this.discountsFormArray.push(discount);
     }
   }
 
   deleteDiscount(index: number) {
-    this.discounts.removeAt(index);
-  }
-
-  onMultipleDiscountOptionChange(isDiscountActivated: boolean) {
-    this.multipleDiscounts = isDiscountActivated;
+    this.discountsFormArray.removeAt(index);
   }
 
   onExpiryDateOptionChange(isExpiryDateActivated: boolean) {
@@ -140,10 +221,11 @@ export class CouponFormularComponent implements OnInit {
   }
 
   onCodeOptionChange(codeExists: boolean) {
-    this.formControlService.toggleFormControl<Date>(
+    this.formControlService.toggleFormControl<boolean>(
       this.couponForm,
       'code',
-      codeExists
+      codeExists,
+      false
     );
   }
 
@@ -166,13 +248,14 @@ export class CouponFormularComponent implements OnInit {
     }
   }
 
-  lastTwoFieldsEmpty() {
-    // Vrati tacno ako je poslednji element u nizu prazan (prazan string) ili ako je poslednji element u nizu prazan objekat
+  isLastTwoFieldsEmpty() {
     return (
-      this.discounts.controls[this.discounts.controls.length - 1]?.value.item ===
-        '' ||
-      this.discounts.controls[this.discounts.controls.length - 1]?.value
-        .itemDiscount === ''
+      this.discountsFormArray.controls[
+        this.discountsFormArray.controls.length - 1
+      ]?.value.key === '' ||
+      this.discountsFormArray.controls[
+        this.discountsFormArray.controls.length - 1
+      ]?.value.value === ''
     );
   }
 }

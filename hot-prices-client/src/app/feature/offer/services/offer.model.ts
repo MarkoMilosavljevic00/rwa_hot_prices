@@ -1,13 +1,13 @@
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
-import { Offer } from '../../models/offer.model';
+import { Offer } from '../models/offer.model';
 
 export const OFFERS: Offer[] = [
   {
     id: 1,
     title: '50% off on Samsung Galaxy S21',
     description:
-      'The Samsung Galaxy S21 is a 5G smartphone with a 6.2-inch Dynamic AMOLED 2X display, a 64MP triple camera, and a 4000mAh battery.',
+      '<h2><strong>The Samsung Galax</strong><span style="color: rgb(0, 138, 0);">y S21 is a 5G smartph</span>one with a 6<span class="ql-font-serif">.2-inch</span> Dynamic AMOLED 2X display, a </h2><ul><li>64MP triple camera, an<strong>d a </strong></li><li class="ql-align-center"><strong>4000mAh battery.</strong></li><li class="ql-align-center"><strong><span class="ql-cursor">﻿</span></strong><img src="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAeCAYAAAA/xX6fAAAACXBIWXMAAAsSAAALEgHS3X78AAADZklEQVRIiZVXS0wTURS98+nMlNIWdUeRlgllow5ujC4MNnFjYgSCbBQ/hbjRRGCpRiPGDUt140YNMVFjjAoYjKIhhYif+Am48UMEplCkfEI/JIKa1NyxM7wOnc7MSSZ9895978y9c++ZWyqTyYBViEGpHgCUS56OeXiOG2dZ9kFqceqs1TNMCcWgtB0AwtnLq85PRKc0G5qmMwLPjzpYtjOxEL1vm1AMSgGCxJ9vI0lIgmGYvwLPD7Msez4xL78yJBSDUglBUl3oKXft3AE/43MQGVp3Xg4cDvYXz3HPWYZtX5qXZYWwonJbOPte6gruJnDvzi2Yjc9BfWOT1S0g8Pysw8H2IaH1rAGAMl8pDEWeKeOKqmqYlKN2tgNtyxoA2lpPaeOOC2fsblcIB60aezxuONhQq93X1+6HkhJvwT0kOI5L2PKwOXwk597r9UD76ZN2jlA8HLFq3BI+um4ufOywZTKWYSaRMGHFuLGhDtzuYmUci82AnK1Df/lmy6QURSUte9jWuha6q9euQ8flTu3ealhpmn5jyUMsdJ+vVBmn08vQ/3IAunv7IJlMKXPV0lYI1ew2JaQoiCPhpJkh6V3/iwFIpdKQSCQVUhXtreZeUhT9QZE2MSgZFj9Z6Iia0D6Yjs0oWhrwl8PE91FtzUwIMqtLlFoWSWPv1godk6WszKeEGEOIhDIh4oWEAL8ooIq3GJQiALBHb4SFPvJx2PAQPfCdBqokJdx6YNGvpuMbVA/zJo6+0M1QSAhoilohPewAgIt6o9FPr7Xa+/L1m5IsKlZWVrUxyhtmKgJDHAhK6whdRUWDy0uxEGv00GShIw41teQQkh9gMnlUIei6fTe/p9nfiH6BLIWHj3pzyPTAzOx58lSbzRdWhqG7wejzRBb6f8IeQzIVpEeFhEAlzJE3MlmwFN6+e29KiCJAloheCGiKfgy6nmbErJchYdRE5QP2Nr+X54tID2F87DO2g80AIFs+yQTYwbmLXTdVMtC/w/Gxz10AgMSXCqmPGVBVsAzcLldlanH6BGlu2Ahn28YrAHA837pRSJ2C8IPnuL1qW6iHlc4bm+IuvfTpCVG6nIJwIF/zS8LyfwsxKIWyHiuJpRJiQjgF4VxyYQrXzIGEdi5snP3ilijj3PTHvdF3w9b+TAb+Afl3jDi6Q4zhAAAAAElFTkSuQmCC"></li></ul>',
     imgPaths: [
       'https://images.hotukdeals.com/threads/raw/rIwn3/4254964_1/re/1024x1024/qt/60/4254964_1.jpg',
       'https://primefaces.org/cdn/primeng/images/galleria/galleria1.jpg',
@@ -20,7 +20,11 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-12-04T15:48:07'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Electronics',
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -51,7 +55,11 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-12-03T12:30:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Food',
+    category: {
+      id: 2,
+      name: 'Kategorija 2',
+      imgPaths: ['path3', 'path4'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -77,7 +85,11 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-12-02T10:15:00'),
     status: PostStatus.Available,
     owner: 'Nidza',
-    category: 'Beverage',
+    category: {
+      id: 3,
+      name: 'Kategorija 3',
+      imgPaths: ['path5', 'path6'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -100,7 +112,11 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-12-01T16:45:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Sports',
+    category: {
+      id: 4,
+      name: 'Kategorija 4',
+      imgPaths: ['path7', 'path8'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -123,7 +139,11 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-11-30T18:00:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Music',
+    category: {
+      id: 5,
+      name: 'Kategorija 5',
+      imgPaths: ['path9', 'path10'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -149,7 +169,16 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-11-29T14:30:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Books',
+    category: {
+      id: 6,
+      name: 'Dete 1',
+      imgPaths: ['path11', 'path12'],
+      parent: {
+        id: 1,
+        name: 'Kategorija 1',
+        imgPaths: ['path1', 'path2'],
+      },
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -175,7 +204,16 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-11-28T20:00:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Entertainment',
+    category: {
+      id: 6,
+      name: 'Dete 1',
+      imgPaths: ['path11', 'path12'],
+      parent: {
+        id: 1,
+        name: 'Kategorija 1',
+        imgPaths: ['path1', 'path2'],
+      },
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -202,7 +240,16 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-11-27T09:00:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Shopping',
+    category: {
+      id: 6,
+      name: 'Dete 1',
+      imgPaths: ['path11', 'path12'],
+      parent: {
+        id: 1,
+        name: 'Kategorija 1',
+        imgPaths: ['path1', 'path2'],
+      },
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -225,7 +272,16 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-11-26T13:00:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Beauty',
+    category: {
+      id: 6,
+      name: 'Dete 1',
+      imgPaths: ['path11', 'path12'],
+      parent: {
+        id: 1,
+        name: 'Kategorija 1',
+        imgPaths: ['path1', 'path2'],
+      },
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -248,7 +304,16 @@ export const OFFERS: Offer[] = [
     postedDate: new Date('2023-11-25T15:00:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Fun',
+    category: {
+      id: 6,
+      name: 'Dete 1',
+      imgPaths: ['path11', 'path12'],
+      parent: {
+        id: 1,
+        name: 'Kategorija 1',
+        imgPaths: ['path1', 'path2'],
+      },
+    },
     reactions: [],
     comments: [],
     reports: [],

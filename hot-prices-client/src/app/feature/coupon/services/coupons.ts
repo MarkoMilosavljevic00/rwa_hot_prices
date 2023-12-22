@@ -1,5 +1,5 @@
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
-import { Coupon } from '../../models/coupon.model';
+import { Coupon } from '../models/coupon.model';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 
 export const COUPONS: Coupon[] = [
@@ -15,7 +15,11 @@ export const COUPONS: Coupon[] = [
     postedDate: new Date('2023-12-04T15:48:07'),
     status: PostStatus.Expired,
     owner: 'Bing',
-    category: 'Fashion',
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -40,7 +44,11 @@ export const COUPONS: Coupon[] = [
     postedDate: new Date('2023-12-03T12:30:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Food',
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -51,6 +59,11 @@ export const COUPONS: Coupon[] = [
     link: 'https://www.mcdonalds.com/coupon',
     saleType: SaleType.Online,
     discount: undefined,
+    discounts: {
+      Display: 20,
+      Camera: 30,
+      Battery: 40,
+    },
     expiryDate: new Date('2023-12-10'),
   },
   {
@@ -65,7 +78,11 @@ export const COUPONS: Coupon[] = [
     postedDate: new Date('2023-12-02T10:15:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Entertainment',
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -90,7 +107,11 @@ export const COUPONS: Coupon[] = [
     postedDate: new Date('2023-12-01T16:45:00'),
     status: PostStatus.Available,
     owner: 'Bing',
-    category: 'Sports',
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],

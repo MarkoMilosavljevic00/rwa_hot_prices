@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
 import { Coupon } from '../../models/coupon.model';
-import { COUPONS } from '../coupon-list/coupons';
+import { COUPONS } from '../../services/coupons';
 
 export interface ImageInfo {
   itemImageSrc: string;

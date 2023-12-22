@@ -1,5 +1,5 @@
 import { PostStatus } from "src/app/common/enums/post-status.enum";
-import { Conversation } from "../../models/conversation.model";
+import { Conversation } from "../models/conversation.model";
 
 
 export const CONVERSATIONS: Conversation[] = [
@@ -11,7 +11,21 @@ export const CONVERSATIONS: Conversation[] = [
     postedDate: new Date("2023-12-04T15:48:07"),
     status: PostStatus.Available,
     owner: "Bing",
-    category: "Programming",
+    category: {
+      id: 10,
+      name: 'Dete 5',
+      imgPaths: ['path19', 'path20'],
+      parent: {
+        id: 2,
+        name: 'Kategorija 2',
+        imgPaths: ['path3', 'path4'],
+        parent: {
+          id: 1,
+          name: 'Kategorija 1',
+          imgPaths: ['path1', 'path2'],
+        }
+      },
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -25,7 +39,11 @@ export const CONVERSATIONS: Conversation[] = [
     postedDate: new Date("2023-12-03T12:30:00"),
     status: PostStatus.Available,
     owner: "Bing",
-    category: "Food",
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -39,7 +57,11 @@ export const CONVERSATIONS: Conversation[] = [
     postedDate: new Date("2023-12-02T10:15:00"),
     status: PostStatus.Available,
     owner: "Bing",
-    category: "Beverage",
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -53,7 +75,11 @@ export const CONVERSATIONS: Conversation[] = [
     postedDate: new Date("2023-12-01T16:45:00"),
     status: PostStatus.Available,
     owner: "Bing",
-    category: "Health",
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -67,7 +93,11 @@ export const CONVERSATIONS: Conversation[] = [
     postedDate: new Date("2023-11-30T18:00:00"),
     status: PostStatus.Available,
     owner: "Bing",
-    category: "Music",
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],
@@ -81,7 +111,11 @@ export const CONVERSATIONS: Conversation[] = [
     postedDate: new Date("2023-11-29T14:30:00"),
     status: PostStatus.Available,
     owner: "Bing",
-    category: "Books",
+    category: {
+      id: 1,
+      name: 'Kategorija 1',
+      imgPaths: ['path1', 'path2'],
+    },
     reactions: [],
     comments: [],
     reports: [],

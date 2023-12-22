@@ -56,6 +56,7 @@
         [maxLength]="300"
         [height]="'150px'"
         (onContentChange)="description = $event"
+        [content]="offerForm.get('description')?.value"
       >
       </app-editor>
     </div>
@@ -74,7 +75,7 @@
       >
         <div
           formArrayName="specifications"
-          *ngFor="let spec of specifications.controls; index as i"
+          *ngFor="let spec of specificationsFormArray.controls; index as i"
         >
           <span
             fxLayout.gt-xs="row"
@@ -92,7 +93,7 @@
             </mat-form-field>
             <button
               mat-raised-button
-              [disabled]="i === specifications.controls.length - 1"
+              [disabled]="i === specificationsFormArray.controls.length - 1"
               color="warn"
               (click)="deleteSpecification(i)"
             >
@@ -105,7 +106,8 @@
           color="warn"
           (click)="addSpecification()"
           [disabled]="
-            !specifications.valid || specifications.controls.length >= 5
+            !specificationsFormArray.valid ||
+            specificationsFormArray.controls.length >= 5
           "
         >
           Add Specification
@@ -227,7 +229,7 @@
       <p-selectButton
         class="centered-field"
         [options]="discountOptions"
-        formControlName="discountOptions"
+        formControlName="discountOptionSelected"
         optionLabel="label"
         optionValue="value"
         (onChange)="onDiscountOptionChange($event.value)"
@@ -271,17 +273,6 @@
           <span matTextSuffix>%</span>
         </mat-form-field>
       </span>
-    </div>
-    <div
-      fxLayout.gt-xs="row"
-      fxLayout.lt-sm="column"
-      fxLayoutAlign="start center"
-    >
-      <mat-card-subtitle fxFlex="15%"> Location: </mat-card-subtitle>
-      <mat-form-field class="centered-field" fxFlex>
-        <mat-label>Location</mat-label>
-        <input matInput formControlName="location" />
-      </mat-form-field>
     </div>
   </section>
 

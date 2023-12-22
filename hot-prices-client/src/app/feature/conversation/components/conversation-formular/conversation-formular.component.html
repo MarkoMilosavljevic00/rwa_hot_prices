@@ -39,7 +39,7 @@
       <p-treeSelect
         class="centered-field"
         containerStyleClass="w-full"
-        formControlName="selectedNodes"
+        formControlName="selectedCategory"
         [options]="categoryOptions"
         placeholder="Select Category"
       ></p-treeSelect>
@@ -54,7 +54,9 @@
       <app-editor
         fxFlex="100%"
         [maxLength]="300"
+        formControlName="content"
         (onContentChange)="content = $event"
+        [content]="contentControl?.value"
       >
       </app-editor>
     </div>

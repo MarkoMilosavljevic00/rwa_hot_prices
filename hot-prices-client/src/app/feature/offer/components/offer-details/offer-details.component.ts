@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormRecord } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
-import { OFFERS } from '../offer-list/offer.model';
+import { OFFERS } from '../../services/offer.model';
 import { calculateDiscount, formatPostTime } from 'src/app/common/helpers/helpers';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { Offer } from '../../models/offer.model';
@@ -30,7 +30,6 @@ export class OfferDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.url);
     this.offer = OFFERS.find(offer => offer.id === +this.route.snapshot.params['id']);
     this.images = this.offer?.imgPaths.map(imgPath => {
       return {
@@ -57,17 +56,4 @@ export class OfferDetailsComponent implements OnInit {
   isOnline(): boolean {
     return this.offer?.type === SaleType.Online;
   }
-
-  editOffer(){
-
-  }
-
-  deleteOffer(){
-
-  }
-
-  reportOffer(){
-    
-  }
-
 }

@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { formatPostTime } from 'src/app/common/helpers/helpers';
 import { Conversation } from '../../models/conversation.model';
-import { CONVERSATIONS } from '../conversation-list/conversations.model';
+import { CONVERSATIONS } from '../../services/conversations.model';
 
 export interface ImageInfo {
   itemImageSrc: string;

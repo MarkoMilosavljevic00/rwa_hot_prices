@@ -6,7 +6,7 @@ export interface Coupon extends Post {
   imgPaths: string[];
   isOnline: boolean;
   saleType: SaleType;
-  discounts?: Record<string, string>;
+  discounts?: Record<string, number>;
   store?: string;
   code?: string;
   link?: string;

@@ -105,14 +105,14 @@ export class CategoryService {
     return this.categories;
   }
 
-  convertToTreeNode(category: Category, keyPrefix = ''): TreeNode {
+  convertCategoryToTreeNode(category: Category, keyPrefix = ''): TreeNode {
     let node: TreeNode = {
       key: keyPrefix + category.id,
       label: category.name,
       data: category,
       icon: 'pi pi-fw pi-inbox', // Ovde možete postaviti ikonicu koju želite da koristite za kategorije
       children: category.children?.map((child, index) =>
-        this.convertToTreeNode(child, keyPrefix + category.id + '-')
+        this.convertCategoryToTreeNode(child, keyPrefix + category.id + '-')
       ),
       leaf: category.children?.length === 0,
     };
@@ -120,7 +120,14 @@ export class CategoryService {
     return node;
   }
 
-  getCategoriesAsTreeNodes() {
-    return this.categories.map((category) => this.convertToTreeNode(category));
+  convertTreeNodeToCategory(treeNode: TreeNode): Category {
+    return treeNode.data;
+  }
+
+
+  getAllCategoriesAsTreeNodes() {
+    return this.categories.map((category) =>
+      this.convertCategoryToTreeNode(category)
+    );
   }
 }

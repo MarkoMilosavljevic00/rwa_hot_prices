@@ -10,7 +10,11 @@
       fxLayoutAlign="center center"
       fxFlex="100%"
     >
-      <div fxLayout="row" fxLayoutAlign="center center">
+      <div
+        fxLayout.gt-xs="row"
+        fxLayout.lt-sm="column"
+        fxLayoutAlign="center center"
+      >
         <app-editor [maxLength]="300" (onContentChange)="newContent = $event">
         </app-editor>
         <button

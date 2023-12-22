@@ -1,3 +1,29 @@
 app-comment-section{
   justify-content: center;
 }
+
+mat-card{
+  margin-top: 2%;
+  width: 80vw;
+  white-space: normal;
+  border: 1px solid #ccc;
+}
+
+@media screen and (max-width: 1024px) {
+  mat-card{
+    width: 100vw;
+  }
+}
+
+mat-card-content{
+  padding-inline: 6px;
+}
+
+mat-icon{
+  cursor: pointer;
+}
+
+app-user-avatar{
+  margin-top: 12px;
+  margin-left: 12px;
+}

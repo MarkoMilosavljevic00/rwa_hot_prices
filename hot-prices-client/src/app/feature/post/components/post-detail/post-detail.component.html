@@ -1,4 +1,22 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
-  <router-outlet></router-outlet>
+  <div fxLayout="column" fxFlex="100%">
+    <mat-card *ngIf="post" fxLayout="column" fxFlex="100%">
+      <mat-toolbar color="warn" class="row-1">
+        <app-user-avatar
+          [name]="post.owner"
+          [imgSrc]="
+            'https://material.angular.io/assets/img/examples/shiba1.jpg'
+          "
+          [nameFirst]="false"
+        ></app-user-avatar>
+        <div fxLayoutAlign="end start" fxFlex>
+          <mat-icon class="clickable" (click)="onEditPost()">edit</mat-icon>
+          <mat-icon class="clickable">delete</mat-icon>
+          <mat-icon class="clickable">report</mat-icon>
+        </div>
+      </mat-toolbar>
+      <router-outlet></router-outlet>
+    </mat-card>
+  </div>
   <app-comment-section></app-comment-section>
 </div>
