@@ -1,13 +1,16 @@
 <div
   class="avatar clickable"
-  routerLink="/user"
+  [routerLink]="['/user/profile', id]"
   [fxLayout]="nameFirst ? 'row' : 'row-reverse'"
   fxLayoutGap="10%"
-  fxLayoutAlign="center center"
+  fxLayoutAlign="end center"
 >
   <h3>{{ name }}</h3>
-  <img
-    [src]="imgSrc"
+  <p-avatar
+    [image]="imgSrc"
+    shape="circle"
+    size="large"
     mat-card-avatar
-  />
+  >
+  </p-avatar>
 </div>

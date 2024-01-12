@@ -7,16 +7,13 @@ import { Report } from './report.entity';
 import { User } from './user.entity';
 
 @Entity()
-@TableInheritance({ column: { type: "varchar", name: "type" } })
+@TableInheritance({ column: { type: "varchar", name: "postType" } })
 export class Post {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false})
   title: string;
-
-  @Column('varchar', { array: true })
-  imgPaths: string[];
 
   @Column({ nullable: false })
   numOfHotReactions: number;
@@ -31,8 +28,11 @@ export class Post {
   })
   postedDate: Date;
 
-  @Column({type: 'enum', enum: PostStatus})
-  status: PostStatus;
+  // @Column({type: 'enum', enum: PostStatus})
+  // status: PostStatus;
+
+  @Column({ type: 'boolean' })
+  restricted: boolean;
 
   @ManyToOne(() => User, user => user.posts)
   owner: User;

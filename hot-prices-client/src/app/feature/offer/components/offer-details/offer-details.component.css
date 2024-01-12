@@ -72,23 +72,6 @@ app-user-avatar{
   font-weight: bold;
 }
 
-.price{
-  color: #FF5722;
-  font-size: 1.2rem;
-}
-
-.old-price {
-  text-decoration: line-through;
-  font-size: 1rem;
-  color: #999;
-}
-
-.discount {
-  font-size: 1.5rem;
-  color: red;
-  font-weight: bold;
-}
-
 .temperature-button {
   display: flex;
   border: 1px solid #FF5722;

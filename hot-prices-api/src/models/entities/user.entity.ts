@@ -14,8 +14,8 @@ import { Report } from './report.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ nullable: false, unique: true })
   email: string;
@@ -28,6 +28,13 @@ export class User {
 
   @Column({ type: 'enum', enum: Role, default: Role.User })
   role: Role;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  registrationDate: Date;
 
   @Column()
   imgPath: string;

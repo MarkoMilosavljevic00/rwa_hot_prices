@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+  <app-editor
+    [maxLength]="data.maxLength"
+    (onContentChange)="input = $event"
+    [content]="input"
+  ></app-editor>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onSubmit()">Submit</button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+</mat-dialog-actions>

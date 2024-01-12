@@ -1,0 +1,77 @@
+<mat-card
+  fxLayout="row"
+  fxLayoutAlign.gt-xs="start center"
+  fxLayoutAlign.lt-sm="center center"
+>
+  <mat-card-content
+    fxLayout.gt-xs="column"
+    fxLayout.lt-sm="column"
+    fxFlex="100%"
+  >
+    <div fxLayout="column" fxLayoutAlign="end end" fxFlex fxHide.lt-sm>
+      <app-date-display
+        [date]="report.reportDate!"
+        [isDateFormat]="true"
+        textBeforeDate="Reported on"
+      ></app-date-display>
+    </div>
+    <div
+      fxFlex="100%"
+      class="text-container"
+      fxLayout="column"
+      fxLayoutAlign.lt-sm="center center"
+      fxLayoutAlign.gt-xs="center center"
+    >
+      <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+        <mat-card-subtitle
+          fxFlex
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          fxLayoutGap="12px"
+        >
+          <span><strong>Reported by:</strong></span>
+          <app-user-avatar
+            [name]="report.reportedBy?.username"
+            [imgSrc]="
+              'https://material.angular.io/assets/img/examples/shiba1.jpg'
+            "
+            [nameFirst]="false"
+          ></app-user-avatar>
+        </mat-card-subtitle>
+        <mat-card-subtitle
+          fxFlex
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          fxLayoutGap="12px"
+        >
+          <span><strong>Reported user:</strong></span>
+          <app-user-avatar
+            [name]="report.reportedUser?.username"
+            [imgSrc]="
+              'https://material.angular.io/assets/img/examples/shiba1.jpg'
+            "
+            [nameFirst]="false"
+          ></app-user-avatar>
+        </mat-card-subtitle>
+        <mat-card-subtitle
+          fxFlex
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          fxLayoutGap="12px"
+        >
+          <span><strong>Reason:</strong></span>
+        </mat-card-subtitle>
+      </div>
+
+      <mat-card-actions
+        fxFlex="100%"
+        fxLayout="column"
+        fxLayoutAlign="flex-end"
+      >
+        <div fxLayout fxLayoutAlign="start end" fxFlex="100%">
+          <button mat-raised-button color="warn" fxFlex="150px">Details</button>
+        </div>
+      </mat-card-actions>
+    </div>
+  </mat-card-content>
+</mat-card>

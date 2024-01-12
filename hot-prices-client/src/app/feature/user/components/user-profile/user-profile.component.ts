@@ -1,13 +1,8 @@
-import { DialogRef } from '@angular/cdk/dialog';
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import {
-  MatDialog,
-  MatDialogConfig,
-} from '@angular/material/dialog';
-import { YesNoDialogComponent } from 'src/app/shared/components/yes-no-dialog/yes-no-dialog.component';
-
-// import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
+import { User } from '../../models/user.model';
+import { UserService } from '../../service/user.service';
+import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -15,57 +10,21 @@ import { YesNoDialogComponent } from 'src/app/shared/components/yes-no-dialog/ye
   styleUrls: ['./user-profile.component.css'],
 })
 export class UserProfileComponent implements OnInit {
-  username: string = '';
-  email: string = '';
-  newUsername: string = '';
-  pictureSrc: string = 'assets/default-user.jpg';
-  num: number = 0;
+  user?: User;
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private userService: UserService,
+    private routeMappingService: RouteMappingService,
+    private router: Router
+  ) {}
 
-  openDialog() {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-
-    this.dialog.open(YesNoDialogComponent, dialogConfig);
-  }
-
-  ngOnInit(): void {
-    this.username = 'John Doe'; // get the username from the backend
-    this.email = 'john@gmail.com';
-    this.newUsername = this.username;
-  }
-
-  changeImage() {
-    // implement the logic to change the user image
-  }
-
-  onFileSelected($event: any) {}
-
-  onChangeUsername(usernameForm: NgForm) {
-    // implement the logic to change the username
-    // this.username = usernameForm.value.username;
-    // console.log("Novi username:" + this.username);
-    console.log(usernameForm);
-  }
-
-  onChangePassword(passwordForm: NgForm) {
-    // open a dialog to enter the current and new passwords
-    // this.dialog.open(PasswordDialogComponent);
-  }
-
-  onDeleteAccount() {
-    let dialogRef = this.dialog.open(YesNoDialogComponent, {
-      data: 'Deleting your account will delete all your posts, comments, and conversations.',
+  ngOnInit() {
+    let id = this.routeMappingService.getSegmentFromBottom(this.router.url, 1);
+    if (isNaN(+id)) {
+      id = '5';
+    }
+    this.userService.getUser(+id).subscribe((user) => {
+      this.user = user;
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result)
-        console.log('Brisanje naloga'); // Brisanje naloga
-      else
-        console.log('Otkazano brisanje naloga'); // Otkazano brisanje naloga
-    });        
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { CommentService } from '../../comment.service';
-import { Comment } from '../../models/comment';
+import { CommentTest } from '../../models/comment.model';
 
 @Component({
   selector: 'app-comment-list',
@@ -8,7 +8,7 @@ import { Comment } from '../../models/comment';
   styleUrls: ['./comment-list.component.css'],
 })
 export class CommentListComponent implements OnInit, OnChanges {
-  comments: Comment[] = [];
+  comments: CommentTest[] = [];
   showAllComments = false; // Dodaj ovo kao promenljivu u tvom kodu
 
   constructor(private commentService: CommentService) {}

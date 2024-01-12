@@ -16,16 +16,27 @@ export class RouteMappingService {
     ]);
   }
 
+  getPostTypesValuesLowerCase(): string[] {
+    return Object.values(PostType).map((value): string => value.toLowerCase());
+  }
+
+  getSegmentFromBottom(urlString: string, offset: number): string {
+    const segments = urlString.split('/');
+    return segments[segments.length - offset];
+  }
+
+  isEditMode(urlString: string): boolean {
+      const lastSegment = this.getSegmentFromBottom(urlString, 1);
+      return !this.getPostTypesValuesLowerCase().includes(lastSegment.toLowerCase());
+  }
+
   mapUrlToPostType(urlString: string, plural: boolean = false, offset: number = 1): PostType {
     if (!urlString || urlString.trim() === '') {
       return PostType.Offer;
     } else {
-      const segments = urlString.split('/');
-      let currentUrl;
-      currentUrl = segments[segments.length - offset];
-      currentUrl = plural ? currentUrl.substring(0, currentUrl.length - 1) : currentUrl;
-      console.log(currentUrl);
-      return this.postsRouteToPostType.get(currentUrl) || PostType.Offer;
+      let segment = this.getSegmentFromBottom(urlString, 1);
+      segment = plural ? segment.substring(0, segment.length - 1) : segment;
+      return this.postsRouteToPostType.get(segment) || PostType.Offer;
     }
   }
 

@@ -9,6 +9,8 @@ export class DateDisplayComponent {
   @Input() date: Date = new Date();
   @Input() isPostedDate: boolean = false;
   @Input() isExpiringDate: boolean = false;
+  @Input() isDateFormat: boolean = false;
+  @Input() textBeforeDate: string;
 
   formatDate(date: Date): string {
     const formattedDate = new Date(date).toLocaleDateString('en-GB', {

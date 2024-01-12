@@ -1,21 +1,32 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Post } from "./post.entity";
 import { User } from "./user.entity";
+import { Report } from "./report.entity";
 
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'text' })
   content: string;
 
-  @Column('varchar', { array: true })
-  imgPaths: string[];
+  @Column({
+    type: 'timestamptz',
+    nullable: false,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  postedDate: Date;
+
+  @Column({ type: 'boolean' })
+  restricted: boolean;
 
   @ManyToOne(() => Post, post => post.comments)
   post: Post;
 
   @ManyToOne(() => User, user => user.comments)
   owner: User;
+
+  @OneToMany(() => Report, report => report.comment)
+  reports: Report[];
 }

@@ -5,9 +5,10 @@ import { RouteMappingService } from 'src/app/shared/services/route-mapping.servi
 
 @Component({
   templateUrl: './post-formular.component.html',
-  styleUrls: ['./post-formular.component.css']
+  styleUrls: ['./post-formular.component.css'],
 })
 export class PostFormularComponent {
+  editMode: boolean = false;
   postType: PostType = PostType.Offer;
 
   constructor(
@@ -16,18 +17,28 @@ export class PostFormularComponent {
   ) {}
 
   ngOnInit() {
-    this.postType = this.routeMappingService.mapUrlToPostType(
-      this.router.url,
-      false
-    );
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.postType = this.routeMappingService.mapUrlToPostType(
-          event.url,
-          false
-        );
-      }
-    });
+    this.editMode = this.routeMappingService.isEditMode(this.router.url);
+    if (this.editMode) {
+      this.postType = this.routeMappingService.mapUrlToPostType(
+        this.router.url,
+        false,
+        2
+      );
+    }
+    else{
+      this.postType = this.routeMappingService.mapUrlToPostType(
+        this.router.url,
+        false,
+        1
+      );
+    }
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationEnd) {
+    //     this.postType = this.routeMappingService.mapUrlToPostType(
+    //       event.url,
+    //       false
+    //     );
+    //   }
+    // });
   }
-
 }

@@ -1,0 +1,35 @@
+mat-card {
+  border: 1px solid #ccc;
+  padding-inline: 10px;
+}
+
+mat-card-title {
+  color: black;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+mat-card-subtitle{
+  margin-top: 20px;
+}
+
+.description{
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 100%  
+}
+
+.clickable-text:hover {
+  color: #FF5722;
+}
+
+.user-avatar{
+  cursor: pointer;
+}
+
+.text-container{
+  max-width: 100%;
+  white-space: normal;
+}

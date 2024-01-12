@@ -33,7 +33,7 @@
     fxLayoutGap="16px"
   >
     <div
-      *ngIf="coupon.isOnline"
+      *ngIf="coupon.saleType === SaleType.Online"
       fxFlex
       fxLayout="column"
       fxLayoutAlign="center center"
@@ -50,13 +50,10 @@
         [isExpiringDate]="true"
       ></app-date-display>
     </div>
-    <div fxFlex fxLayout="column">
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
-        <div *ngIf="coupon.discount" class="discount">
-          {{ coupon.discount }}% DISCOUNT
-        </div>
-      </div>
-    </div>
+    <!-- <app-price
+      [discount]="coupon.discount!"
+      [multipleDiscounts]="coupon.discounts ? true : false"
+    ></app-price> -->
     <div fxFlex fxLayoutAlign="center center">
       <div class="temperature-button" fxLayoutAlign="space-between center">
         <mat-icon class="fire-icon">whatshot</mat-icon>

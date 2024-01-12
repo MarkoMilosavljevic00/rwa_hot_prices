@@ -15,7 +15,7 @@ import { Post } from "./post.entity";
 @Tree("closure-table")
 export class Category {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column({ nullable: false})
   name: string
@@ -23,7 +23,7 @@ export class Category {
   @Column({ nullable: true})
   description: string;
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, nullable: true },)
   imgPaths: string[];
 
   @TreeChildren()

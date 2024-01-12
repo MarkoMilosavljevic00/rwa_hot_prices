@@ -1,7 +1,6 @@
 import { Role } from "../../../common/enums/role.enum";
 import { Post } from "../../post/models/post.model";
-import { Reaction } from "../../post/models/reaction";
-import { Report } from "../../post/models/report";
+import { Reaction } from "../../post/models/reaction.model";
 
 export interface User {
   id: string;
@@ -9,10 +8,16 @@ export interface User {
   email: string;
   password: string;
   role: Role;
-  imgPath?: string;
+  registrationDate: Date;
+  imgPath: string;
   posts?: Post[];
   reactions?: Reaction[];
   comments?: Comment[];
   submittedReports?: Report[];
   receivedReports?: Report[];
+}
+
+export interface UserTest {
+  id?: number;
+  username?: string;
 }

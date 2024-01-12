@@ -22,8 +22,8 @@ export const typeOrmConfig: ConnectionOptions = {
     Post,
     Offer,
     Conversation,
-    Comment,
     Coupon,
+    Comment,
     Category,
     Report
   ],

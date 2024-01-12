@@ -20,13 +20,25 @@
           fxLayout.lt-sm="row"
           fxLayoutAlign="center center"
         >
-          <a mat-list-item [routerLink]="['profile']">
+          <a
+            mat-list-item
+            [routerLink]="['users']"
+            routerLinkActive
+            #rla1="routerLinkActive"
+            [activated]="rla1.isActive"
+          >
             <mat-icon matPrefix>account_circle</mat-icon>
-            Profile
+            Users
           </a>
-          <a mat-list-item [routerLink]="['posts/offers']">
-            <mat-icon>local_offer</mat-icon>
-            Posts
+          <a
+            mat-list-item
+            [routerLink]="['reports']"
+            routerLinkActive
+            #rla2="routerLinkActive"
+            [activated]="rla2.isActive"
+          >
+            <mat-icon matPrefix>report</mat-icon>
+            Reports
           </a>
         </mat-nav-list>
       </div>

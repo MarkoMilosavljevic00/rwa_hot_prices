@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormRecord } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
-import { formatPostTime } from 'src/app/common/helpers/helpers';
 import { Conversation } from '../../models/conversation.model';
 import { CONVERSATIONS } from '../../services/conversations.model';
 
@@ -29,13 +28,6 @@ export class ConversationDetailsComponent implements OnInit {
         this.conversation = CONVERSATIONS.find(conversation => conversation.id === +params['id'])
       });
     
-  }
-
-  getPostTime() {
-    if(!this.conversation) 
-      return 'Just posted';
-    else
-      return formatPostTime(this.conversation.postedDate);
   }
 
   editOffer(){

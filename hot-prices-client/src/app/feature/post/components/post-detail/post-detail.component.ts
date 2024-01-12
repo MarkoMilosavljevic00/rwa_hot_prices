@@ -8,6 +8,9 @@ import { CONVERSATIONS } from 'src/app/feature/conversation/services/conversatio
 import { COUPONS } from 'src/app/feature/coupon/services/coupons';
 import { Coupon } from 'src/app/feature/coupon/models/coupon.model';
 import { Conversation } from 'src/app/feature/conversation/models/conversation.model';
+import { Report, ReportTest } from '../../models/report.model';
+import { MatDialog } from '@angular/material/dialog';
+import { InputDialogComponent } from 'src/app/shared/components/input-dialog/input-dialog.component';
 
 @Component({
   selector: 'app-post-detail',
@@ -22,7 +25,8 @@ export class PostDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private routeMappingService: RouteMappingService
+    private routeMappingService: RouteMappingService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -77,5 +81,25 @@ export class PostDetailComponent implements OnInit {
         this.currentPostType
       )}/${this.post?.id}`,
     ]);
+  }
+
+  onReportPost() {
+    const dialogRef = this.dialog.open(InputDialogComponent, {
+      data: {
+        title: 'Report Post',
+        message: 'Please enter your report:',
+        maxLength: 300,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        const report: ReportTest = {
+          id: 1,
+          description: result,
+        };
+        console.log(report);
+      } else console.log('Otkazan report');
+    });
   }
 }

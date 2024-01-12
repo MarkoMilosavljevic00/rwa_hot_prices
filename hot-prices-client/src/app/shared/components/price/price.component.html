@@ -1,0 +1,15 @@
+<div class="container" fxFlex fxLayout="column">
+  <div fxLayout="column" [fxLayoutAlign]="'start '+ align" fxLayoutGap="12px">
+    <div fxLayout="row" fxLayoutGap="6px">
+      <div class="price" *ngIf="price">{{ price }}$</div>
+      <div class="old-price" *ngIf="oldPrice">
+        {{ oldPrice }}$
+      </div>
+    </div>
+
+    <div *ngIf="discount" class="discount">
+      <span *ngIf="multipleDiscounts">to</span>
+    {{ discount }}% DISCOUNT
+    </div>
+  </div>
+</div>

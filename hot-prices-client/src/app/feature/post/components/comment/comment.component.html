@@ -11,8 +11,11 @@
   </mat-toolbar>
   <mat-card-content fxLayout="column">
     <div class="ql-editor" [innerHTML]="comment.content | noSanitize"></div>
-    <mat-card-subtitle fxLayoutAlign="end end">
-      {{ getPostTime() }}
-    </mat-card-subtitle>
+    <div fxFlex fxLayoutAlign="end end">
+      <app-date-display
+        [date]="comment.postedDate"
+        [isPostedDate]="true"
+      ></app-date-display>
+    </div>
   </mat-card-content>
 </mat-card>

@@ -17,6 +17,8 @@ import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
 import { CheckTextLengthDirective } from './directives/check-text-length.directive';
 import { EditorComponent } from './components/editor/editor.component';
 import { MatNativeDateModule } from '@angular/material/core';
+import { PriceComponent } from './components/price/price.component';
+import { InputDialogComponent } from './components/input-dialog/input-dialog.component';
 
 
 
@@ -29,7 +31,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     DateDisplayComponent,
     NoSanitizePipe,
     CheckTextLengthDirective,
-    EditorComponent
+    EditorComponent,
+    PriceComponent,
+    InputDialogComponent
   ],
   imports: [
     CommonModule,
@@ -49,6 +53,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     YesNoDialogComponent,
     UserAvatarComponent,
     DateDisplayComponent,
+    PriceComponent,
     CommonModule,
     MaterialModule,
     PrimengModule,

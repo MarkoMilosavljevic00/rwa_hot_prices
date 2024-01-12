@@ -1,144 +1,71 @@
 <div fxLayout="column">
-  <mat-toolbar
-    class="login-toolbar"
-    color="warn"
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-  >
-    <div fxLayout="column">
-      <span>
-        <b>{{ username }}</b>
-      </span>
-      <span class="email-text">{{ email }}</span>
+  <div fxFlex fxLayoutAlign="end end" fxLayoutGap="5px" class="clickable">
+    <span> Ban </span>
+    <mat-icon>group_remove</mat-icon>
+  </div>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <img
+      mat-card-image
+      class="profile-picture"
+      [src]="
+        user
+          ? user.imgPath
+          : 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg'
+      "
+    />
+    <div
+      class="generals"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+    >
+      <div class="username" mat-typography mat-display-2>
+        {{ user?.username }}
+      </div>
+      <div class="email">{{ user?.email }}</div>
     </div>
-    <a class="click-region" (click)="fileInput.click()">
-      <img
-        mat-card-image
-        class="profile-picture"
-        [src]="pictureSrc"
-        alt="User image"
-        fxFlex="100px"
-      />
-      <mat-icon class="edit-icon" color="warn">edit</mat-icon>
-    </a>
-    <input type="file" #fileInput fxHide (change)="onFileSelected($event)" />
-  </mat-toolbar>
-  <div fxLayout="column" fxLayoutAlign="center" class="container">
-    <h2><b>EDIT PROFILE</b></h2>
-    <br>
-    <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="5%">
-      <form
-        fxLayout.gt-xs="row"
-        fxLayout.lt-sm="column"
-        fxLayoutAlign="start start"
-        fxLayoutGap="5%"
-        fxLayoutGap.lt-sm="13%"
-        #changeUsernameForm="ngForm"
-        (ngSubmit)="onChangeUsername(changeUsernameForm)"
-      >
-        <mat-form-field fxFlex="40%">
-          <mat-label>Username</mat-label>
-          <input
-            name="username"
-            minlength="6"
-            required
-            matInput
-            ngModel
-            #usernameInput="ngModel"
-            [(ngModel)]="username"
-          />
-          <mat-hint
-            >Please enter a username with at least 6 characters.</mat-hint
-          >
-          <mat-error *ngIf="usernameInput.hasError('required')"
-            >Field must not be empty</mat-error
-          >
-          <mat-error *ngIf="usernameInput.hasError('minlength')"
-            >Username must be at least 6 characters long.</mat-error
-          >
-        </mat-form-field>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="changeUsernameForm.invalid"
-        >
-          Change Username
-        </button>
-      </form>
+    <div fxLayout="column" fxLayoutAlign="center center" class="stats">
+      <div class="stat-padding">Number of:</div>
 
-      <form
-        fxLayout.gt-xs="row"
-        fxLayout.lt-sm="column"
-        fxLayoutAlign="start start"
-        fxLayoutGap="5%"
-        fxLayoutGap.lt-sm="13%"
-        #changePasswordForm="ngForm"
-        (ngSubmit)="onChangePassword(changePasswordForm)"
-      >
-        <div fxLayout="column" fxFlex="40%">
-          <mat-form-field>
-            <mat-label>Current Password</mat-label>
-            <input
-              matInput
-              ngModel
-              type="password"
-              name="password"
-              required
-              #passwordInput="ngModel"
-            />
-            <mat-hint
-              >Please enter your current password.</mat-hint
-            >
-            <mat-error *ngIf="newPasswordInput.hasError('required')"
-              >Field must not be empty</mat-error
-            >
-          </mat-form-field>
-          <mat-form-field fxFlex="50%">
-            <mat-label>New Password</mat-label>
-            <input
-              type="password"
-              name="password"
-              matInput
-              required
-              minlength="6"
-              ngModel
-              #newPasswordInput="ngModel"
-            />
-            <mat-hint
-              >Please enter a password with at least 6 characters.</mat-hint
-            >
-            <mat-error *ngIf="newPasswordInput.hasError('required')"
-              >Field must not be empty</mat-error
-            >
-            <mat-error *ngIf="newPasswordInput.hasError('minlength')"
-              >Password must be at least 6 characters long.</mat-error
-            >
-          </mat-form-field>
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+        <span class="stat-label" mat-typography mat-body-2>Posts</span>
+        <span class="stat-number" mat-typography mat-display-1> 5 </span>
+      </div>
+      <div fxLayout="row" fxLayoutGap="20px">
+        <div
+          class="hot"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          fxLayoutGap="5px"
+        >
+          <mat-icon>whatshot</mat-icon>
+          <span
+            fxLayoutAlign="center center"
+            class="stat-label"
+            mat-typography
+            mat-body-2
+          >
+            Hot Reactions</span
+          >
+          <span class="stat-number" mat-typography mat-display-1> 19 </span>
         </div>
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          [disabled]="changePasswordForm.invalid"
+        <div
+          class="cold"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          fxLayoutGap="5px"
         >
-          Change Password
-        </button>
-      </form>
-
-      <div
-        fxLayout="row"
-        fxLayoutAlign="start center"
-        fxLayoutGap="5%"
-        (click)="onDeleteAccount()"
-      >
-        <button
-          mat-raised-button
-          color="warn"
-          type="submit"
-        >
-          Delete Account
-        </button>
+          <mat-icon>ac_unit</mat-icon>
+          <span
+            fxLayoutAlign="center center"
+            class="stat-label"
+            mat-typography
+            mat-body-2
+          >
+            Cold Reactions</span
+          >
+          <span class="stat-number" mat-typography mat-display-1> 5 </span>
+        </div>
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Comment } from './models/comment';
+import { CommentTest } from './models/comment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
-  comments: Comment[] = [
+  comments: CommentTest[] = [
     {
       id: 0,
       content:
@@ -43,11 +43,11 @@ export class CommentService {
     },
   ];
 
-  getAllComments(): Comment[] {
+  getAllComments(): CommentTest[] {
     return this.comments;
   }
 
-  addComment(comment: Comment) {
+  addComment(comment: CommentTest) {
     this.comments.push(comment);
   }
 

@@ -31,9 +31,9 @@
             [isPostedDate]="true"
           ></app-date-display>
           <app-date-display
-            *ngIf="offer.expiryDate"
+            *ngIf="offer && offer.expiryDate"
             [date]="offer.expiryDate"
-            [isPostedDate]="false"
+            [isExpiringDate]="true"
           ></app-date-display>
         </div>
       </div>
@@ -41,7 +41,7 @@
         [routerLink]="['/posts/details/offer', offer.id]"
         fxLayoutAlign="center center"
       >
-        <img [src]="offer.imgPaths[0]" class="offer-image" />
+        <img [src]="setFirstImage()" class="offer-image" />
       </a>
       <div
         fxLayout="column"
@@ -56,15 +56,12 @@
         >
           <a fxLayoutAlign="center center">{{ offer.title }}</a>
         </mat-card-title>
-        <mat-card-subtitle fxLayout="row" fxLayoutGap="5%">
-          <div class="price">{{ offer.price }}$</div>
-          <div class="old-price" *ngIf="offer.oldPrice">
-            {{ offer.oldPrice }}$
-          </div>
-        </mat-card-subtitle>
-        <div *ngIf="offer.oldPrice" class="discount">
-          {{ calculateDiscount(offer.price, offer.oldPrice) }}% DISCOUNT
-        </div>
+        <app-price
+          [price]="offer.price"
+          [oldPrice]="offer.oldPrice!"
+          [discount]="offer.discount!"
+          [align]="'start'"
+        ></app-price>
         <mat-card-subtitle
           fxFlex="100%"
           fxLayout="column"

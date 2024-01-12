@@ -8,12 +8,4 @@ import { User } from '../../models/user.model';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent {
-  user: User = {
-    id: '1',
-    email: 'user@gmail.com',
-    username: 'user1',
-    password: '123456',
-    role: Role.User,
-    imgPath: 'https://www.w3schools.com/howto/img_avatar.png',
-  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Offer } from '../../models/offer.model';
 import { OFFERS } from '../../services/offer.model';
+import { OfferService } from '../../services/offer.service';
 
 @Component({
   selector: 'app-offer-list',
@@ -8,17 +9,32 @@ import { OFFERS } from '../../services/offer.model';
   styleUrls: ['./offer-list.component.css'],
 })
 export class OfferListComponent implements OnInit {
-  offers: Offer[] = OFFERS
+  offers: Offer[] = [];
   onePageOffers: Offer[] = [];
 
   page = 0;
   size = 5;
 
+  constructor(private offerService: OfferService) {}
+
   ngOnInit() {
-    this.getData({ pageIndex: this.page, pageSize: this.size });
+    this.loadOffers();
   }
 
-  getData(obj: any) {
+  private loadOffers() {
+    this.offerService.getOffers().subscribe((offers) => {
+      this.offers = offers;
+      this.offers.forEach((offer) => {
+        offer.postedDate = new Date(offer.postedDate);
+        if (offer.expiryDate) {
+          offer.expiryDate = new Date(offer.expiryDate);
+        }
+      });
+      this.getData({ pageIndex: this.page, pageSize: this.size });
+    });
+  }
+
+  getData(obj: {pageIndex: number, pageSize: number}) {
     let index = 0,
       startingIndex = obj.pageIndex * obj.pageSize,
       endingIndex = startingIndex + obj.pageSize;

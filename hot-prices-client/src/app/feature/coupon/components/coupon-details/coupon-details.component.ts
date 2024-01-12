@@ -3,6 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
 import { Coupon } from '../../models/coupon.model';
 import { COUPONS } from '../../services/coupons';
+import { SaleType } from 'src/app/common/enums/sale-type.enum';
 
 export interface ImageInfo {
   itemImageSrc: string;
@@ -17,6 +18,8 @@ export interface ImageInfo {
 export class CouponDetailsComponent implements OnInit {
   coupon?: Coupon;
   images: any[] | undefined;
+
+  SaleType = SaleType;
 
   constructor(private route: ActivatedRoute) {
   }

@@ -4,7 +4,7 @@ import { Post } from '../../post/models/post.model';
 
 export interface Offer extends Post {
   imgPaths: string[];
-  type: SaleType;
+  saleType: SaleType;
   description: string;
   price: number;
   oldPrice?: number;
@@ -13,5 +13,5 @@ export interface Offer extends Post {
   link?: string;
   location?: string;
   specifications?: Record<string, string>;
-  expiryDate: Date;
+  expiryDate?: Date;
 }

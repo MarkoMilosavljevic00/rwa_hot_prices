@@ -10,6 +10,7 @@
     <mat-card-title>Basic Informations</mat-card-title>
     <mat-divider></mat-divider>
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
@@ -31,6 +32,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -46,6 +48,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
@@ -62,18 +65,21 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
     >
       <mat-card-subtitle fxFlex="15%">Specifications:</mat-card-subtitle>
       <div
+        class="margin"
         fxFlex="90%"
         class="centered-field"
         fxLayout="column"
         fxLayoutAlign="center center"
       >
         <div
+          class="margin"
           formArrayName="specifications"
           *ngFor="let spec of specificationsFormArray.controls; index as i"
         >
@@ -116,15 +122,18 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
     >
       <mat-card-subtitle fxFlex="15%">Upload Images: </mat-card-subtitle>
       <p-fileUpload
-        name="demo[]"
-        url="https://www.primefaces.org/cdn/api/upload.php"
-        (onUpload)="onUpload($event)"
+        name="images[]"
+        [url]="fileService.UPLOAD_IMAGES_URL"
+        #fileUpload
+        (onUpload)="onUploadImages($event)"
+        (onSelect)="onSelectImages($event, fileUpload)"
         [multiple]="true"
         accept="image/*"
         [maxFileSize]="1000000"
@@ -132,9 +141,28 @@
         fxLayoutAlign="center center"
       >
         <ng-template pTemplate="content">
-          <ul *ngIf="uploadedFiles.length">
-            <li *ngFor="let file of uploadedFiles">
-              {{ file.name }} - {{ file.size }} bytes
+          <ul *ngIf="uploadedImages.length">
+            <li *ngFor="let image of uploadedImages" >
+              <div class="p-fileupload-row ng-star-inserted">
+                <div>
+                  <img
+                    [src]="fileService.GET_IMAGE_URL + image.serverFilename"
+                    width="50"
+                    class="ng-star-inserted"
+                  />
+                </div>
+                <div class="p-fileupload-filename">{{ image.name }}</div>
+                <div>{{ image.size }} - bytes</div>
+                <div>
+                  <button
+                    type="button"
+                    (click)="onDeleteImage(image, fileUpload)"
+                    class="p-element p-button-icon-only p-button p-component"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
             </li>
           </ul>
         </ng-template>
@@ -147,6 +175,7 @@
     <mat-divider></mat-divider>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -159,6 +188,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -173,6 +203,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -184,6 +215,7 @@
       </mat-form-field>
     </div>
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -201,6 +233,7 @@
     <mat-divider></mat-divider>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -221,6 +254,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -237,6 +271,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -281,6 +316,7 @@
     <mat-divider></mat-divider>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -297,6 +333,7 @@
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
@@ -318,6 +355,7 @@
       extended
       class="submit-button"
       color="warn"
+      [disabled]="!offerForm.valid"
       fxFlex.lt-sm="100%"
     >
       SUBMIT OFFER

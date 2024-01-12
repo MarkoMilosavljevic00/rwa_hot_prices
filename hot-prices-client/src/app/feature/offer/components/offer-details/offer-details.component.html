@@ -43,25 +43,17 @@
           Get Offer
         </button>
       </a>
-      <app-date-display
-        [date]="offer.expiryDate"
-        [isExpiringDate]="true"
-      ></app-date-display>
     </div>
-    <div fxFlex fxLayout="column">
-      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="12px">
-        <div fxLayout="row" fxLayoutGap="6px">
-          <div class="price">{{ offer.price }}$</div>
-          <div class="old-price" *ngIf="offer.oldPrice">
-            {{ offer.oldPrice }}$
-          </div>
-        </div>
-
-        <div *ngIf="offer.oldPrice" class="discount">
-          {{ calculateDiscount(offer.price, offer.oldPrice) }}% DISCOUNT
-        </div>
-      </div>
-    </div>
+    <app-date-display
+      *ngIf="offer.expiryDate"
+      [date]="offer.expiryDate"
+      [isExpiringDate]="true"
+    ></app-date-display>
+    <app-price
+      [price]="offer.price"
+      [oldPrice]="offer.oldPrice"
+      [discount]="offer.discount"
+    ></app-price>
     <div fxFlex fxLayoutAlign="center center">
       <div class="temperature-button" fxLayoutAlign="space-between center">
         <mat-icon class="fire-icon">whatshot</mat-icon>
@@ -94,7 +86,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title> Specifications </mat-panel-title>
         </mat-expansion-panel-header>
-        <table mat-table [dataSource]="dataSource">
+        <table mat-table [dataSource]="specsDataSource">
           <ng-container matColumnDef="specName">
             <mat-header-cell *matHeaderCellDef>
               Specification Name
@@ -111,8 +103,12 @@
             </mat-cell>
           </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          <mat-header-row
+            *matHeaderRowDef="['specName', 'specValue']"
+          ></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: ['specName', 'specValue']"
+          ></mat-row>
         </table>
       </mat-expansion-panel>
     </mat-accordion>

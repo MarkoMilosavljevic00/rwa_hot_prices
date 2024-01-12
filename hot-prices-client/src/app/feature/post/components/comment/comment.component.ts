@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { formatPostTime } from 'src/app/common/helpers/helpers';
-import { Comment } from '../../models/comment';
+import { CommentTest } from '../../models/comment.model';
 
 
 @Component({
@@ -9,12 +8,5 @@ import { Comment } from '../../models/comment';
   styleUrls: ['./comment.component.css'],
 })
 export class CommentComponent {
-  @Input() comment!: Comment;
-
-  getPostTime() {
-    if(!this.comment) 
-      return new Date();
-    else
-      return formatPostTime(this.comment.postedDate);
-  }
+  @Input() comment!: CommentTest;
 }

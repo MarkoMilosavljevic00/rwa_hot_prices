@@ -1,14 +1,14 @@
 import { SaleType } from "src/app/common/enums/sale-type.enum";
-import { Category } from "../../post/models/category";
+import { Category } from "../../post/models/category.model";
 
 
 
 export interface OfferDto{
   title?: string;
+  description?: string;
   category?: Category;
   imgPaths?: string[];
-  type?: SaleType;
-  description?: string;
+  saleType?: SaleType;
   price?: number;
   oldPrice?: number;
   discount?: number;

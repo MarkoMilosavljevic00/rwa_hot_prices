@@ -1,5 +1,4 @@
-export enum OfferType {
+export enum SaleType {
   Online = 'Online',
   Offline = 'Offline',
-  Cupon = 'Cupon'
 }

@@ -4,10 +4,11 @@ import { Conversation } from './conversation.entity';
 import { Offer } from './offer.entity';
 import { Post } from './post.entity';
 import { User } from './user.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Report {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({type: 'enum', enum: ReportType })
@@ -24,4 +25,7 @@ export class Report {
 
   @ManyToOne(() => Post, post => post.reports)
   post: Post;
+
+  @ManyToOne(() => Comment, comment => comment.reports)
+  comment: Comment;
 }

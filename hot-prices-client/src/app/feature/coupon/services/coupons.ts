@@ -24,13 +24,16 @@ export const COUPONS: Coupon[] = [
     comments: [],
     reports: [],
     description: 'Get 10% off on your first order at Zalando',
-    isOnline: true,
     store: 'Zalando',
     code: 'ZALANDO10',
     link: 'https://www.zalando.com/coupon',
-    discount: 10,
+    discounts: {
+      Display: 20,
+    },
     saleType: SaleType.Online,
     expiryDate: new Date('2023-12-31'),
+    restricted: false,
+
   },
   {
     id: 2,
@@ -53,18 +56,16 @@ export const COUPONS: Coupon[] = [
     comments: [],
     reports: [],
     description: "Get a free Big Mac with any purchase at McDonald's",
-    isOnline: true,
     store: "McDonald's",
     code: 'BIGMAC',
     link: 'https://www.mcdonalds.com/coupon',
     saleType: SaleType.Online,
-    discount: undefined,
     discounts: {
-      Display: 20,
       Camera: 30,
-      Battery: 40,
     },
     expiryDate: new Date('2023-12-10'),
+    restricted: false,
+
   },
   {
     id: 3,
@@ -88,12 +89,15 @@ export const COUPONS: Coupon[] = [
     reports: [],
     description: 'Get 50% off on your first month of Netflix',
     store: 'Netflix',
-    isOnline: true,
     code: 'NETFLIX50',
     link: 'https://www.netflix.com/coupon',
     saleType: SaleType.Online,
-    discount: 50,
+    discounts: {
+      Battery: 40,
+    },
     expiryDate: new Date('2023-12-31'),
+    restricted: false,
+
   },
   {
     id: 4,
@@ -117,11 +121,16 @@ export const COUPONS: Coupon[] = [
     reports: [],
     description: 'Get 20% off on Nike shoes at Foot Locker',
     store: 'Foot Locker',
-    isOnline: true,
     code: 'NIKE20',
     link: 'https://www.footlocker.com/coupon',
     saleType: SaleType.Online,
-    discount: 20,
+    discounts: {
+      Display: 20,
+      Camera: 30,
+      Battery: 40,
+    },
     expiryDate: new Date('2023-12-31'),
+    restricted: false,
+
   },
 ];

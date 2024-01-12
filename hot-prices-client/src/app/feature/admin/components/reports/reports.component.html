@@ -1,0 +1,44 @@
+<mat-sidenav-container>
+  <mat-sidenav #filterSidenav>Sidenav content</mat-sidenav>
+  <mat-sidenav-content>
+    <section class="page">
+      <div fxLayout="column">
+        <mat-toolbar color="warn" fxLayoutAlign="start end" class="page">
+          <form
+            class="example-form"
+            fxFlex="100%"
+            fxLayoutGap="5%"
+            fxLayoutAlign="start center"
+          >
+            <mat-form-field class="example-full-width" fxFlex="70%">
+              <mat-label>Search</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="myControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete #auto="matAutocomplete">
+                <mat-option
+                  *ngFor="let option of filteredOptions | async"
+                  [value]="option"
+                >
+                  {{ option }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <button
+              class="filter-button"
+              mat-raised-button
+              fxFlex="30%"
+              (click)="filterSidenav.toggle()"
+            >
+              Filter
+            </button>
+          </form>
+        </mat-toolbar>
+        <app-report-list></app-report-list>
+      </div>
+    </section>
+  </mat-sidenav-content>
+</mat-sidenav-container>

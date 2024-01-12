@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthCredentialsDto } from 'src/models/dtos/auth-credentials.dto';
-import { UserDto } from 'src/models/dtos/users.dto';
-import { User } from 'src/models/entities/user.entity';
+import { UserSignupDto } from 'src/models/dtos/user-signup.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -10,12 +9,12 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
-  signUp(@Body() userDto: UserDto): Promise<void> {
+  signUp(@Body() userDto: UserSignupDto): Promise<void> {
     return this.authService.signUp(userDto);
   }
 
   @Post('/signin')
-  signIn(@Body() userDto: UserDto): Promise<{ accessToken }> {
+  signIn(@Body() userDto: AuthCredentialsDto): Promise<{ accessToken }> {
     return this.authService.signIn(userDto);
   }
 

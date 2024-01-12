@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Category } from '../models/category';
 import { TreeNode } from 'primeng/api';
+import { Category } from '../models/category.model';
 
 @Injectable({
   providedIn: 'root',

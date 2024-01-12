@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Category } from 'src/app/feature/post/models/category';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { TreeNode } from 'primeng/api';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
@@ -15,14 +14,24 @@ import { SelectButtonChangeEvent } from 'primeng/selectbutton';
 import { DiscountCalculatorService } from 'src/app/shared/services/discount-calculator.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Option } from 'src/app/common/interfaces/option.interface';
-import { YES_NO_OPTIONS } from 'src/app/common/constants';
+import { LIMITS, YES_NO_OPTIONS } from 'src/app/common/constants';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
-import { FileUploadEvent } from 'primeng/fileupload';
+import {
+  FileSelectEvent,
+  FileUpload,
+  FileUploadEvent,
+  UploadEvent,
+} from 'primeng/fileupload';
 import { ActivatedRoute } from '@angular/router';
 import { Offer } from '../../models/offer.model';
 import { OFFERS } from '../../services/offer.model';
 import { HttpClient } from '@angular/common/http';
 import { OfferDto } from '../../models/offer.dto';
+import { OfferCreateDto } from '../../models/offer-create.dto';
+import { OfferService } from '../../services/offer.service';
+import { catchError, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { FileService } from 'src/app/shared/services/file.service';
 
 @Component({
   selector: 'app-offer-formular',
@@ -36,13 +45,13 @@ export class OfferFormularComponent implements OnInit {
   description: string;
   minExpiryDate: Date;
 
-  uploadedFiles: File[];
+  uploadedImages: any[];
   categoryOptions: TreeNode[];
   saleTypeOptions: SaleType[];
   discountOptions: Option[];
   expiryDateOptions: Option[];
 
-  SaleType = SaleType;
+  readonly SaleType = SaleType;
 
   get specificationsFormArray(): FormArray {
     return this.offerForm.get('specifications') as FormArray;
@@ -65,12 +74,13 @@ export class OfferFormularComponent implements OnInit {
   }
 
   constructor(
+    private offerService: OfferService,
     private messageService: MessageService,
     private categoryService: CategoryService,
     private discountCalculatorService: DiscountCalculatorService,
+    public fileService: FileService,
     public formControlService: FormControlService,
-    private route: ActivatedRoute,
-    private http: HttpClient
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -102,7 +112,7 @@ export class OfferFormularComponent implements OnInit {
   }
 
   private initInnerElementsValues() {
-    this.uploadedFiles = [];
+    this.uploadedImages = [];
     this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
     this.saleTypeOptions = Object.values(SaleType);
     this.discountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
@@ -124,7 +134,7 @@ export class OfferFormularComponent implements OnInit {
           store: this.offer?.store,
           link: this.offer?.link,
           location: this.offer?.location,
-          saleType: this.offer?.type,
+          saleType: this.offer?.saleType,
           price: this.offer?.price,
           discountOptionSelected:
             (this.offer?.discount || this.offer?.oldPrice) !== undefined,
@@ -146,15 +156,56 @@ export class OfferFormularComponent implements OnInit {
     }
   }
 
-  onUpload(event: FileUploadEvent) {
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-    }
+  onUploadImages(event: any) {
+    const serverResponse = event.originalEvent.body;
+    event.files.forEach((file: File, index: number) => {
+      this.uploadedImages.push({
+        name: file.name,
+        size: file.size,
+        serverFilename: serverResponse[index],
+      });
+    });
     this.messageService.add({
       severity: 'info',
-      summary: 'File Uploaded',
+      summary: serverResponse.length + ' file(s) uploaded successfully',
       detail: '',
     });
+  }
+
+  onSelectImages(event: FileSelectEvent, fileUpload: FileUpload) {
+    if (
+      event.currentFiles.length + this.uploadedImages.length >
+      LIMITS.OFFER.IMAGES
+    ) {
+      fileUpload.clear();
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Upload Error',
+        detail: `You can only upload up to ${LIMITS.OFFER.IMAGES} files.`,
+      });
+    }
+  }
+
+  onDeleteImage(file: any, fileUpload: FileUpload) {
+    this.fileService.deleteImage('offers', file.serverFilename).subscribe(
+      (response) => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'File Deleted',
+          detail: file.name + ' was deleted successfully',
+        });
+        this.uploadedImages = this.uploadedImages.filter(
+          (uploadedFile) => uploadedFile.name !== file.name
+        );
+      },
+      (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'File Delete Error',
+          detail: file.name + ' was not deleted',
+        });
+      }
+    );
   }
 
   onSubmit() {
@@ -164,25 +215,33 @@ export class OfferFormularComponent implements OnInit {
         null
       );
     console.log(specificationsRecord);
+    console.log(this.offerForm.value.selectedCategory.data.id);
 
-    const offer: OfferDto = {
+    const offer: OfferCreateDto = {
       title: this.offerForm.value.title,
-      category: this.categoryService.convertTreeNodeToCategory(
-        this.offerForm.value.selectedCategory
-      ),
+      categoryId: this.offerForm.value.selectedCategory.data.id,
       description: this.description,
-      type: this.offerForm.value.saleType,
+      saleType: this.offerForm.value.saleType,
       store: this.offerForm.value.store,
       link: this.offerForm.value.link,
       location: this.offerForm.value.location,
       specifications: specificationsRecord!,
       price: this.offerForm.value.price,
-      oldPrice: this.offerForm.value.oldPrice,
-      discount: this.offerForm.value.discount,
-      expiryDate: this.offerForm.value.expiryDate,
-      imgPaths: this.uploadedFiles.map((file) => file.name),
+      oldPrice: this.offerForm.value.discountOptionSelected
+        ? this.offerForm.value.oldPrice
+        : null,
+      discount: this.offerForm.value.discountOptionSelected
+        ? this.offerForm.value.discount
+        : null,
+      expiryDate: this.offerForm.value.expiryDateOptions
+        ? this.offerForm.value.expiryDate
+        : null,
+      imgPaths: this.uploadedImages.map((image) => image.serverFilename),
     };
-    console.log(offer);
+
+    this.offerService.postOffer(offer).subscribe((responseOffer) => {
+      console.log(responseOffer)
+    });
   }
 
   addSpecification(key?: string, value?: string) {

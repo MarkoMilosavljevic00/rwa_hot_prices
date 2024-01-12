@@ -1,59 +1,49 @@
-mat-card{
-  height:100%;
-  width:100%;
-}
-
-.container{
-  padding-inline: 0%;
-  margin-top: 3%;
-}
-
-@media screen and (min-width: 1024px) { 
-  .container {
-    padding-inline: 10%;
-  }
-}
-
 .profile-picture{
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  transition: filter 0.3s ease;
 }
 
-.click-region {
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.edit-icon{
-  position: absolute;
-  top: 85%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.click-region:hover .profile-picture {
-  filter: brightness(0.7); /* Zatamnjujemo sliku prilikom hovera */
-}
-
-.click-region:hover .edit-icon {
-  opacity: 1; /* Prikazujemo ikonu prilikom hovera */
-}
-
-h2{
+.generals{
   color: #FF5722;
+  padding-top: 10px;
+  padding-bottom: 30px;
 }
 
-.email-text{
-  font-size: 16px;
-  font-weight: 400;
-  font-style: italic
+.username {
+  font-weight: bold;
+  font-size: 2rem;
 }
 
-span strong{
-  font-size: 24px;
+.email {
+  font-weight: lighter;
+  font-size: 1.5rem;
+}
+
+.stats {
+  font-size: 1.4rem;
+  color: rgba(0, 0, 0, 0.54);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 10px;
+}
+
+.hot{
+  color: RGB(255,0,0,0.7);
+}
+
+.cold{
+  color: RGB(0,0,255,0.7);
+}
+
+.stat-padding {
+  margin-bottom: 15%;
+}
+
+.stat-label {
+  font-size: 1.2rem;
+}
+
+.stat-number {
   font-weight: bold;
 }

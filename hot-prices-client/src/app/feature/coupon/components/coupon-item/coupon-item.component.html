@@ -33,7 +33,7 @@
           <app-date-display
             *ngIf="coupon.expiryDate"
             [date]="coupon.expiryDate"
-            [isPostedDate]="false"
+            [isExpiringDate]="true"
           ></app-date-display>
         </div>
       </div>
@@ -66,9 +66,11 @@
           [routerLink]="['/coupon', coupon.id]"
         >
         </mat-card-subtitle>
-        <div *ngIf="coupon.discount" class="discount">
-          {{ coupon.discount }}% discount
-        </div>
+        <!-- <app-price
+          [discount]="coupon.discount!"
+          [multipleDiscounts]="coupon.discounts ? true : false"
+          [align]="'start'"
+        ></app-price> -->
         <mat-card-subtitle
           fxFlex="100%"
           fxLayout="column"

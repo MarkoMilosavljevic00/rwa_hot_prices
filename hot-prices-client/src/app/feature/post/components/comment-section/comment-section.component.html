@@ -15,7 +15,7 @@
         fxLayout.lt-sm="column"
         fxLayoutAlign="center center"
       >
-        <app-editor [maxLength]="300" (onContentChange)="newContent = $event">
+        <app-editor [maxLength]="300" [width]="'60vw'" (onContentChange)="newContent = $event">
         </app-editor>
         <button
           class="send-button"

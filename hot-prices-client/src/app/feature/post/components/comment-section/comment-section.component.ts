@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Editor } from 'primeng/editor';
 import { CommentService } from '../../comment.service';
-import { Comment } from '../../models/comment';
+import { CommentTest } from '../../models/comment.model';
 
 @Component({
   selector: 'app-comment-section',
@@ -18,7 +18,7 @@ export class CommentSectionComponent {
 
   addNewComment(): void {
     console.log(this.newContent);
-    const newComment: Comment = {
+    const newComment: CommentTest = {
       id: this.comments.length, // ili pronađi najveći id i povećaj za 1
       content: this.newContent,
       postedDate: new Date(),

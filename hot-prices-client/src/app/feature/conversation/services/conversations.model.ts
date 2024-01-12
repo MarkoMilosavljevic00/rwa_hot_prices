@@ -29,6 +29,8 @@ export const CONVERSATIONS: Conversation[] = [
     reactions: [],
     comments: [],
     reports: [],
+    restricted: false,
+
     content: "I am interested in learning a new programming language in 2023, but I am not sure which one to choose. There are so many options out there, and each one has its own pros and cons. I want to learn a language that is popular, versatile, easy to learn, and has a good job market. What do you think is the best programming language to learn in 2023 and why?"
   },
   {
@@ -47,6 +49,8 @@ export const CONVERSATIONS: Conversation[] = [
     reactions: [],
     comments: [],
     reports: [],
+    restricted: false,
+
     content: "I love pizza, but I don't like ordering from restaurants or buying frozen ones. I want to make my own pizza at home, but I don't know how to do it. I need some tips and tricks on how to make the perfect pizza at home, from the dough to the sauce to the toppings. What are the best ingredients, tools, and methods to make a delicious homemade pizza?"
   },
   {
@@ -65,6 +69,8 @@ export const CONVERSATIONS: Conversation[] = [
     reactions: [],
     comments: [],
     reports: [],
+    restricted: false,
+
     content: "I am a coffee lover and I am planning to visit London soon. I want to try some of the best coffee shops in the city, but I don't know where to go. I am looking for coffee shops that have great quality, variety, atmosphere, and service. What are the best coffee shops in London and what makes them special?"
   },
   {
@@ -83,6 +89,8 @@ export const CONVERSATIONS: Conversation[] = [
     reactions: [],
     comments: [],
     reports: [],
+    restricted: false,
+
     content: "I want to get fit and healthy in 2023, but I don't know how to start. I have a busy schedule, a tight budget, and a lack of motivation. I need some advice on how to get fit and healthy in 2023, from the diet to the exercise to the lifestyle. What are the best ways to get fit and healthy in 2023 and what are the benefits of doing so?"
   },
   {
@@ -101,6 +109,8 @@ export const CONVERSATIONS: Conversation[] = [
     reactions: [],
     comments: [],
     reports: [],
+    restricted: false,
+
     content: "I love music and I want to discover some of the best songs of 2023. I like all kinds of genres, from pop to rock to rap to jazz. I want to listen to some of the best songs of 2023, from the hits to the hidden gems. What are the best songs of 2023 and why do you like them?"
   },
   {
@@ -119,5 +129,7 @@ export const CONVERSATIONS: Conversation[] = [
     reactions: [],
     comments: [],
     reports: [],
+    restricted: false,
+
     content: "I love reading and I want to find some of the best books of 2023. I like all kinds of genres, from fiction to non-fiction to poetry to biography. I want to read some of the best books of 2023, from the bestsellers to the classics to the newcomers. What are the best books of 2023 and what makes them great?"
   }];

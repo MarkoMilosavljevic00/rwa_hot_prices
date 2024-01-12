@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
 })
 export class UserAvatarComponent {
   @Input() name?: string;
+  @Input() id?: string;
   @Input() imgSrc?: string;
   @Input() nameFirst?: boolean;
 }

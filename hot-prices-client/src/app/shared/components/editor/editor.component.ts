@@ -17,6 +17,7 @@ export class EditorComponent {
   @Output() onContentChange = new EventEmitter<string>();
   @Input() maxLength: number = 300;
   @Input() height: string = '320px';
+  @Input() width: string = '100%';
   @Input() content: string = '';
   textLength = 0;  
 

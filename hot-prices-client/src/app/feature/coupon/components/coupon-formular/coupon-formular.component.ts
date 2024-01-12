@@ -118,7 +118,7 @@ export class CouponFormularComponent implements OnInit {
           location: this.coupon?.location,
           saleType: this.coupon?.saleType,
           multipleDiscountOptionSelected: this.coupon?.discounts !== undefined,
-          discount: this.coupon?.discount,
+          // discount: this.coupon?.discount,
           expiryDateOptions: this.coupon?.expiryDate !== undefined,
           expiryDate: this.coupon?.expiryDate,
         });

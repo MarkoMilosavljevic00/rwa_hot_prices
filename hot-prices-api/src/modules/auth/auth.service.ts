@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserDto } from 'src/models/dtos/users.dto';
+import { UserSignupDto } from 'src/models/dtos/user-signup.dto';
 import { JwtPayload } from 'src/models/interfaces/jwt-payload.interface';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
+import { AuthCredentialsDto } from 'src/models/dtos/auth-credentials.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,15 +14,15 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(userDto: UserDto): Promise<void> {
+  async signUp(userDto: UserSignupDto): Promise<void> {
     await this.userService.createUser(userDto);
   }
 
-  async signIn(userDto: UserDto): Promise<{ accessToken: string }> {
-    const user = await this.userService.getUserByUsername(userDto.username);
+  async signIn(authDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
+    const user = await this.userService.getUserByUsername(authDto.username);
     if(!user) {
       throw new NotFoundException('User with this username does not exist');
-    } else if (!await bcrypt.compare(userDto.password, user.password)){
+    } else if (!await bcrypt.compare(authDto.password, user.password)){
       throw new UnauthorizedException('Incorrect password');
     }
     else {
