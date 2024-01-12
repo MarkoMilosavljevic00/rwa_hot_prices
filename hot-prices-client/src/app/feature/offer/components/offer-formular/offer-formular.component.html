@@ -141,8 +141,8 @@
         fxLayoutAlign="center center"
       >
         <ng-template pTemplate="content">
-          <ul *ngIf="uploadedImages.length">
-            <li *ngFor="let image of uploadedImages" >
+          <ul *ngIf="uploadedImagesControl?.value.length">
+            <li *ngFor="let image of uploadedImagesControl?.value" >
               <div class="p-fileupload-row ng-star-inserted">
                 <div>
                   <img

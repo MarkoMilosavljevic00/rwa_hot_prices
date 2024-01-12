@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Offer } from '../models/offer.model';
-import { OfferCreateDto } from '../models/offer-create.dto';
+import { OfferCreateDto } from '../models/dtos/offer-create.dto';
 
 @Injectable({
   providedIn: 'root'

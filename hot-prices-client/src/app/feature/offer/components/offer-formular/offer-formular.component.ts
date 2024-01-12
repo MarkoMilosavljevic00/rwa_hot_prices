@@ -14,7 +14,7 @@ import { SelectButtonChangeEvent } from 'primeng/selectbutton';
 import { DiscountCalculatorService } from 'src/app/shared/services/discount-calculator.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Option } from 'src/app/common/interfaces/option.interface';
-import { LIMITS, YES_NO_OPTIONS } from 'src/app/common/constants';
+import { LIMITS, TIME, YES_NO_OPTIONS } from 'src/app/common/constants';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
 import {
   FileSelectEvent,
@@ -26,12 +26,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Offer } from '../../models/offer.model';
 import { OFFERS } from '../../services/offer.model';
 import { HttpClient } from '@angular/common/http';
-import { OfferDto } from '../../models/offer.dto';
-import { OfferCreateDto } from '../../models/offer-create.dto';
+import { OfferDto } from '../../models/dtos/offer.dto';
+import { OfferCreateDto } from '../../models/dtos/offer-create.dto';
 import { OfferService } from '../../services/offer.service';
 import { catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FileService } from 'src/app/shared/services/file.service';
+import { UploadedImage } from 'src/app/common/interfaces/uploaded-image.interface';
+import { OfferForm } from '../../models/offer-form';
 
 @Component({
   selector: 'app-offer-formular',
@@ -45,7 +47,7 @@ export class OfferFormularComponent implements OnInit {
   description: string;
   minExpiryDate: Date;
 
-  uploadedImages: any[];
+  // uploadedImages: UploadedImage[];
   categoryOptions: TreeNode[];
   saleTypeOptions: SaleType[];
   discountOptions: Option[];
@@ -55,6 +57,14 @@ export class OfferFormularComponent implements OnInit {
 
   get specificationsFormArray(): FormArray {
     return this.offerForm.get('specifications') as FormArray;
+  }
+
+  // get uplaodedImagesFormArray(): FormArray {
+  //   return this.offerForm.get('uploadedImages') as FormArray;
+  // }
+
+  get uploadedImagesControl() {
+    return this.offerForm.get('uploadedImages');
   }
 
   get oldPriceControl() {
@@ -91,28 +101,31 @@ export class OfferFormularComponent implements OnInit {
 
   private initFormGroup() {
     this.offerForm = new FormGroup({
-      title: new FormControl('', {
+      title: new FormControl<string>('', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      description: new FormControl(),
+      description: new FormControl(''),
       selectedCategory: new FormControl(),
-      saleType: new FormControl(SaleType.Online),
+      uploadedImages: new FormControl([], {
+        validators: [Validators.required],
+      }),
+      saleType: new FormControl(SaleType.Offline),
       store: new FormControl(''),
-      link: new FormControl(''),
+      link: new FormControl({value: '', disabled: true}),
       location: new FormControl(''),
       specifications: new FormArray([]),
-      price: new FormControl(0, Validators.required),
-      discountOptionSelected: new FormControl(true, { nonNullable: false }),
-      oldPrice: new FormControl(0),
-      discount: new FormControl(0),
-      expiryDateOptions: new FormControl(true, { nonNullable: false }),
-      expiryDate: new FormControl(new Date()),
+      price: new FormControl(0, { validators: [Validators.required, Validators.min(1)]}),
+      discountOptionSelected: new FormControl(false, { nonNullable: false }),
+      oldPrice: new FormControl({value: null, disabled: true}),
+      discount: new FormControl({value: null, disabled: true}),
+      expiryDateOptions: new FormControl(false, { nonNullable: false }),
+      expiryDate: new FormControl({value: null, disabled: true}),
     });
   }
 
   private initInnerElementsValues() {
-    this.uploadedImages = [];
+    // this.uploadedImages = [];
     this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
     this.saleTypeOptions = Object.values(SaleType);
     this.discountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
@@ -158,13 +171,22 @@ export class OfferFormularComponent implements OnInit {
 
   onUploadImages(event: any) {
     const serverResponse = event.originalEvent.body;
+    const uploadedImages = this.uploadedImagesControl?.value;
     event.files.forEach((file: File, index: number) => {
-      this.uploadedImages.push({
+      uploadedImages.push({
         name: file.name,
         size: file.size,
         serverFilename: serverResponse[index],
       });
     });
+    this.uploadedImagesControl?.setValue(uploadedImages);
+    // event.files.forEach((file: File, index: number) => {
+    //   this.uploadedImages.push({
+    //     name: file.name,
+    //     size: file.size,
+    //     serverFilename: serverResponse[index],
+    //   });
+    // });
     this.messageService.add({
       severity: 'info',
       summary: serverResponse.length + ' file(s) uploaded successfully',
@@ -174,7 +196,7 @@ export class OfferFormularComponent implements OnInit {
 
   onSelectImages(event: FileSelectEvent, fileUpload: FileUpload) {
     if (
-      event.currentFiles.length + this.uploadedImages.length >
+      event.currentFiles.length + this.uploadedImagesControl?.value.length >
       LIMITS.OFFER.IMAGES
     ) {
       fileUpload.clear();
@@ -194,9 +216,11 @@ export class OfferFormularComponent implements OnInit {
           summary: 'File Deleted',
           detail: file.name + ' was deleted successfully',
         });
-        this.uploadedImages = this.uploadedImages.filter(
-          (uploadedFile) => uploadedFile.name !== file.name
+        let uploadedImagesArray = this.uploadedImagesControl?.value;
+        uploadedImagesArray = uploadedImagesArray.filter(
+          (uploadedFile: UploadedImage) => uploadedFile.name !== file.name
         );
+        this.uploadedImagesControl?.setValue(uploadedImagesArray);
       },
       (error) => {
         this.messageService.add({
@@ -236,11 +260,13 @@ export class OfferFormularComponent implements OnInit {
       expiryDate: this.offerForm.value.expiryDateOptions
         ? this.offerForm.value.expiryDate
         : null,
-      imgPaths: this.uploadedImages.map((image) => image.serverFilename),
+      imgPaths: this.uploadedImagesControl?.value.map(
+        (image: UploadedImage) => image.serverFilename
+      ),
     };
 
     this.offerService.postOffer(offer).subscribe((responseOffer) => {
-      console.log(responseOffer)
+      console.log(responseOffer);
     });
   }
 
@@ -288,7 +314,7 @@ export class OfferFormularComponent implements OnInit {
       this.offerForm,
       'expiryDate',
       isExpiryDateActivated,
-      new Date()
+      new Date(Date.now() + TIME.MILISECONDS.ONE_DAY)
     );
   }
 

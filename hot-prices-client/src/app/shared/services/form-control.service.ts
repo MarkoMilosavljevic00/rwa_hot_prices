@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,14 @@ export class FormControlService {
     if (condition) {
       form.get(controlName)?.enable();
       form.get(controlName)?.setValue(defaultValue);
+      form.get(controlName)?.setValidators(Validators.required);
     } else {
       form.get(controlName)?.disable();
       form.get(controlName)?.setValue(null);
-
+      form.get(controlName)?.clearValidators();
     }
+    form.get(controlName)?.updateValueAndValidity();
+    form.updateValueAndValidity();
   }
 
   transformFormArrayToRecord<T>(

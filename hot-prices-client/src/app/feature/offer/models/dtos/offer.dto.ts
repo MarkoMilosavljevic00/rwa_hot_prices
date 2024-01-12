@@ -1,5 +1,5 @@
 import { SaleType } from "src/app/common/enums/sale-type.enum";
-import { Category } from "../../post/models/category.model";
+import { Category } from "../../../post/models/category.model";
 
 
 
