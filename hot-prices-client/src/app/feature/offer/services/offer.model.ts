@@ -347,6 +347,5 @@ export const OFFERS: Offer[] = [
     },
     oldPrice: undefined,
     price: 1,
-    expiryDate: new Date('2023-12-31'),
   },
 ];

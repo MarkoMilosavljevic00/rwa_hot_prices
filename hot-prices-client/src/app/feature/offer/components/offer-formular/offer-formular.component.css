@@ -5,6 +5,10 @@ section{
   border-radius: 5px;
 }
 
+i{
+  font-size: 1rem;
+}
+
 .margin{
   margin-block: 40px;
 }

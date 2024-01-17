@@ -1,10 +1,8 @@
-import { Category } from '../../../post/models/category.model';
-import { SaleType } from 'src/app/common/enums/sale-type.enum';
+import { SaleType } from "src/app/common/enums/sale-type.enum";
 
-export class OfferCreateDto {
+export class UpdateOfferDto {
   title?: string;
   categoryId?: number;
-  // category?: Category;
   imgPaths?: string[];
   saleType?: SaleType;
   description?: string;

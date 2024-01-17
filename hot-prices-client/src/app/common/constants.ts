@@ -12,6 +12,7 @@ export const DEFAULT = {
 export const LIMITS = {
   OFFER:{
     IMAGES: 10,
+    SPECIFICATIONS: 3,
   }
 }
 

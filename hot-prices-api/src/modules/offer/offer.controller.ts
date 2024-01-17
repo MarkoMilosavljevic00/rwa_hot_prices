@@ -7,16 +7,12 @@ import {
   Post,
   UseInterceptors,
   UploadedFiles,
+  Put,
+  Patch,
 } from '@nestjs/common';
-import { OfferCreateDto } from 'src/models/dtos/offer-create.dto';
 import { OfferService } from './offer.service';
 import { Offer } from 'src/models/entities/offer.entity';
-import { FilesInterceptor } from '@nestjs/platform-express';
-
-import { diskStorage } from 'multer';
-import { join } from 'path';
-import * as path from 'path';
-import { FileService } from '../file/file.service';
+import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
 
 @Controller('offers')
 export class OfferController {
@@ -26,18 +22,23 @@ export class OfferController {
 
   @Get()
   getOffers(): Promise<Offer[]> {
-    return this.offerService.getOffers();
+    return this.offerService.get();
   }
 
   @Get('/:id')
   getOfferById(@Param('id', ParseIntPipe) id: number): Promise<Offer> {
-    return this.offerService.getOfferById(id);
+    return this.offerService.getById(id);
   }
 
   @Post()
-  postOffer(@Body() offerCreateDto: OfferCreateDto) {
+  postOffer(@Body() offerCreateDto: FormOfferDto) {
     console.log(offerCreateDto);
-    return this.offerService.createOffer(offerCreateDto);
+    return this.offerService.create(offerCreateDto);
+  }
+
+  @Patch('/:id')
+  async updateOffer(@Param('id') id: number, @Body() updateOfferDto: FormOfferDto): Promise<Offer> {
+    return this.offerService.update(id, updateOfferDto);
   }
 
 }

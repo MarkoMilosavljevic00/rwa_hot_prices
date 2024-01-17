@@ -7,8 +7,6 @@ import {
   TreeParent,
   OneToMany,
 } from "typeorm"
-import { Conversation } from "./conversation.entity";
-import { Offer } from "./offer.entity";
 import { Post } from "./post.entity";
 
 @Entity()

@@ -54,6 +54,14 @@ export class CouponFormularComponent implements OnInit {
     return this.couponForm.get('description');
   }
 
+  get linkControl(){
+    return this.couponForm.get('link');
+  }
+
+  get codeControl(){
+    return this.couponForm.get('code');
+  }
+
   constructor(
     private messageService: MessageService,
     private categoryService: CategoryService,
@@ -176,7 +184,7 @@ export class CouponFormularComponent implements OnInit {
     let discountsRecord: Record<string, number> | null;
     if (this.multipleDiscountsControl?.value) {
       discountsRecord =
-        this.formControlService.transformFormArrayToRecord<number>(
+        this.formControlService.convertFormArrayToRecord<number>(
           this.discountsFormArray,
           null
         ) || {};
@@ -214,7 +222,7 @@ export class CouponFormularComponent implements OnInit {
   onExpiryDateOptionChange(isExpiryDateActivated: boolean) {
     this.formControlService.toggleFormControl<Date>(
       this.couponForm,
-      'expiryDate',
+      this.expiryDateControl as FormControl,
       isExpiryDateActivated,
       new Date()
     );
@@ -223,7 +231,7 @@ export class CouponFormularComponent implements OnInit {
   onCodeOptionChange(codeExists: boolean) {
     this.formControlService.toggleFormControl<boolean>(
       this.couponForm,
-      'code',
+      this.codeControl as FormControl,
       codeExists,
       false
     );
@@ -232,7 +240,7 @@ export class CouponFormularComponent implements OnInit {
   onSaleTypeOptionChange(saleType: SaleType) {
     this.formControlService.toggleFormControl<SaleType>(
       this.couponForm,
-      'link',
+      this.linkControl as FormControl,
       saleType === SaleType.Online
     );
   }

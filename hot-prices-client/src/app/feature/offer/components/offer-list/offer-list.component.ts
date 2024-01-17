@@ -22,7 +22,7 @@ export class OfferListComponent implements OnInit {
   }
 
   private loadOffers() {
-    this.offerService.getOffers().subscribe((offers) => {
+    this.offerService.get().subscribe((offers) => {
       this.offers = offers;
       this.offers.forEach((offer) => {
         offer.postedDate = new Date(offer.postedDate);

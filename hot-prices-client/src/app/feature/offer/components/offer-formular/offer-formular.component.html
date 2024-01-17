@@ -15,7 +15,9 @@
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
     >
-      <mat-card-subtitle fxFlex="15%">Title: </mat-card-subtitle>
+      <mat-card-subtitle fxFlex="15%"
+        >*Title <i>(required)</i>:
+      </mat-card-subtitle>
       <span fxFlex>
         <mat-form-field fxFlex class="centered-field">
           <mat-label>Title</mat-label>
@@ -37,7 +39,9 @@
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
     >
-      <mat-card-subtitle fxFlex="15%">Category: </mat-card-subtitle>
+      <mat-card-subtitle fxFlex="15%"
+        >*Category: <i>(required)</i></mat-card-subtitle
+      >
       <p-treeSelect
         class="centered-field"
         containerStyleClass="w-full"
@@ -80,7 +84,7 @@
       >
         <div
           class="margin"
-          formArrayName="specifications"
+          formArrayName="specificationsFormArray"
           *ngFor="let spec of specificationsFormArray.controls; index as i"
         >
           <span
@@ -91,29 +95,46 @@
           >
             <mat-form-field>
               <mat-label>Key</mat-label>
-              <input matInput formControlName="key" required />
+              <input
+                (change)="onLastSpecificationChanged()"
+                matInput
+                formControlName="key"
+              />
+              <mat-error *ngIf="checkIsSpecificationsEmpty()"
+                >Field must not be empty</mat-error
+              >
             </mat-form-field>
             <mat-form-field>
               <mat-label>Value</mat-label>
-              <input matInput formControlName="value" required />
+              <input
+                (change)="onLastSpecificationChanged()"
+                matInput
+                formControlName="value"
+              />
+              <mat-error *ngIf="checkIsSpecificationsEmpty()"
+                >Field must not be empty</mat-error
+              >
             </mat-form-field>
             <button
               mat-raised-button
               [disabled]="i === specificationsFormArray.controls.length - 1"
               color="warn"
-              (click)="deleteSpecification(i)"
+              (click)="onDeleteSpecification(i)"
             >
               <mat-icon>delete</mat-icon>
             </button>
           </span>
         </div>
+        <mat-error *ngIf="checkSpecificationsLimit()">
+          You have reached the limit of specifications
+        </mat-error>
         <button
           mat-raised-button
+          type="button"
           color="warn"
-          (click)="addSpecification()"
+          (click)="onAddSpecification()"
           [disabled]="
-            !specificationsFormArray.valid ||
-            specificationsFormArray.controls.length >= 5
+            checkSpecificationsLimit() || checkIsSpecificationsEmpty()
           "
         >
           Add Specification
@@ -142,7 +163,7 @@
       >
         <ng-template pTemplate="content">
           <ul *ngIf="uploadedImagesControl?.value.length">
-            <li *ngFor="let image of uploadedImagesControl?.value" >
+            <li *ngFor="let image of uploadedImagesControl?.value">
               <div class="p-fileupload-row ng-star-inserted">
                 <div>
                   <img
@@ -156,7 +177,7 @@
                 <div>
                   <button
                     type="button"
-                    (click)="onDeleteImage(image, fileUpload)"
+                    (click)="onDeleteImage(image)"
                     class="p-element p-button-icon-only p-button p-component"
                   >
                     <mat-icon>delete</mat-icon>
@@ -173,19 +194,6 @@
   <section>
     <mat-card-title>Location Information</mat-card-title>
     <mat-divider></mat-divider>
-
-    <div
-      class="margin"
-      fxLayout.gt-xs="row"
-      fxLayout.lt-sm="column"
-      fxLayoutAlign="start center"
-    >
-      <mat-card-subtitle fxFlex="15%">Store: </mat-card-subtitle>
-      <mat-form-field class="centered-field" fxFlex>
-        <mat-label>Store</mat-label>
-        <input matInput formControlName="store" />
-      </mat-form-field>
-    </div>
 
     <div
       class="margin"
@@ -214,6 +222,20 @@
         <input matInput formControlName="link" />
       </mat-form-field>
     </div>
+
+    <div
+      class="margin"
+      fxLayout.gt-xs="row"
+      fxLayout.lt-sm="column"
+      fxLayoutAlign="start center"
+    >
+      <mat-card-subtitle fxFlex="15%">Store: </mat-card-subtitle>
+      <mat-form-field class="centered-field" fxFlex>
+        <mat-label>Store</mat-label>
+        <input matInput formControlName="store" />
+      </mat-form-field>
+    </div>
+
     <div
       class="margin"
       fxLayout.gt-xs="row"
@@ -325,7 +347,7 @@
       <p-selectButton
         class="centered-field"
         [options]="expiryDateOptions"
-        formControlName="expiryDateOptions"
+        formControlName="expiryDateOptionSelected"
         optionLabel="label"
         optionValue="value"
         (onChange)="onExpiryDateOptionChange($event.value)"
@@ -353,12 +375,13 @@
     <button
       mat-fab
       extended
+      type="submit"
       class="submit-button"
       color="warn"
       [disabled]="!offerForm.valid"
       fxFlex.lt-sm="100%"
     >
-      SUBMIT OFFER
+      {{ (editMode ? "SAVE " : "SUBMIT ") + "OFFER" }}
     </button>
   </div>
 </form>

@@ -39,7 +39,7 @@ export class OfferDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const id = +this.route.snapshot.params['id'];
-    this.offerService.getOfferById(id).subscribe((offer) => {
+    this.offerService.getById(id).subscribe((offer) => {
       this.offer = offer;
       this.offer.postedDate = new Date(this.offer.postedDate);
       if (this.offer.expiryDate) {
