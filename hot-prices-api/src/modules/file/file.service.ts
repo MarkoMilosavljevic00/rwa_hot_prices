@@ -9,7 +9,7 @@ import * as multer from 'multer';
 import { ImageType } from 'src/models/enums/image-type.enum';
 import { File } from 'multer';
 import { existsSync, unlinkSync } from 'fs';
-import { response } from 'express';
+import { Response, response } from 'express';
 
 @Injectable()
 export class FileService implements MulterOptionsFactory {
@@ -18,15 +18,6 @@ export class FileService implements MulterOptionsFactory {
       storage: multer.diskStorage({
         destination: (req, file, cb) => {
           let dest = 'images/' + req.params.imageType;
-          // const imageType = req.body.imageType;
-          // dest += imageType;
-          // if (imageType === ImageType.UserImage) {
-          //   dest += 'users';
-          // } else if (imageType === 'offers') {
-          //   dest += 'offers';
-          // } else if (imageType === 'coupons') {
-          //   dest += 'coupons';
-          // }
           cb(null, dest);
         },
         filename: (req, file, cb) => {
@@ -42,7 +33,7 @@ export class FileService implements MulterOptionsFactory {
     return files.map((file) => file.filename);
   }
 
-  getImagePath(imageType: ImageType, imageName: string) {
+  getImageLocation(imageType: ImageType, imageName: string) {
     // const imagePath = join(__dirname, '..' , '..', '..' ,'..', 'images', imageType, imageName);
     const imagePath = path.resolve(
       process.cwd(),
@@ -53,12 +44,30 @@ export class FileService implements MulterOptionsFactory {
     return imagePath;
   }
 
-  deleteImage(imageType: ImageType, imageName: string) {
-    const imagePath = this.getImagePath(imageType, imageName);
-    if (!existsSync(imagePath)) {
-      throw new NotFoundException(`Image ${imageName} not found`);
+  getImage(imageType: ImageType, imageName: string, res: Response) {
+    if (!this.isExists(imageType, imageName)) {
+      throw new NotFoundException(`Image with filename " ${imageName} " not found`);
     }
-    unlinkSync(imagePath);
-    return true;
+    const imagePath = this.getImageLocation(imageType, imageName);
+    return res.sendFile(imagePath);
+  }
+
+  isExists(imageType: ImageType, imageName: string) {
+    const imagePath = this.getImageLocation(imageType, imageName);
+    if (!existsSync(imagePath))
+      return false
+    else {
+      return true;
+    }
+  }
+
+  deleteImage(imageType: ImageType, imageName: string) {
+    if (!this.isExists(imageType, imageName)) {
+      throw new NotFoundException(`Image with filename " ${imageName} " not found`);
+    } else {
+      const imagePath = this.getImageLocation(imageType, imageName);
+      unlinkSync(imagePath);
+      return true;
+    };
   }
 }

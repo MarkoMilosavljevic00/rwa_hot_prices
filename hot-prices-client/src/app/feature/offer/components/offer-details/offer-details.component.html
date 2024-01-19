@@ -1,7 +1,7 @@
 <mat-card-content *ngIf="offer" fxLayout="column" fxLayoutGap="12px">
   <div fxLayoutAlign="end end">
     <app-date-display
-      [date]="offer.postedDate"
+      [date]="formatDate(offer.postedDate)"
       [isPostedDate]="true"
     ></app-date-display>
   </div>
@@ -14,7 +14,7 @@
 
   <div class="row-image" fxLayoutAlign="center">
     <p-galleria
-      [value]="images"
+      [value]="galleryImages"
       [showIndicators]="true"
       [showThumbnails]="false"
       fxFlex="50%"
@@ -46,7 +46,7 @@
     </div>
     <app-date-display
       *ngIf="offer.expiryDate"
-      [date]="offer.expiryDate"
+      [date]="formatDate(offer.expiryDate)"
       [isExpiringDate]="true"
     ></app-date-display>
     <app-price
@@ -81,7 +81,7 @@
         ></div>
       </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion *ngIf="offer.specifications">
+    <mat-accordion *ngIf="!isSpecificationsEmpty(offer.specifications)">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title> Specifications </mat-panel-title>

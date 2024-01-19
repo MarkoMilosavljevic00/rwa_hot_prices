@@ -8,6 +8,8 @@ import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
 import { Category } from 'src/models/entities/category.entity';
 import { Offer } from 'src/models/entities/offer.entity';
 import { Repository } from 'typeorm';
+import { FileService } from '../file/file.service';
+import { ImageType } from 'src/models/enums/image-type.enum';
 
 @Injectable()
 export class OfferService {
@@ -16,11 +18,15 @@ export class OfferService {
     private offerRepository: Repository<Offer>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+    private fileService: FileService,
   ) {}
 
-  async get(): Promise<Offer[]> {
-    return await this.offerRepository.find({ relations: ['category'] });
+  async getAll(): Promise<Offer[]> {
+    const offers = await this.offerRepository.find({ relations: ['category'] });
+    // await this.cleanNotFoundedImages(offers);
+    return offers;
   }
+
 
   async getById(id: number): Promise<Offer> {
     return await this.offerRepository.findOne({
@@ -80,5 +86,28 @@ export class OfferService {
     }
 
     return this.offerRepository.findOne({ where: { id } });
+  }
+
+  async cleanNotFoundedImages(offers: Offer[]) {
+    let offersToUpdate = [];
+    for (let offer of offers) {
+      let hasChanges = false;
+      if (offer.imgPaths)
+        for (let i = 0; i < offer.imgPaths.length; i++) {
+          if (
+            !this.fileService.isExists(ImageType.OfferImage, offer.imgPaths[i])
+          ) {
+            offer.imgPaths.splice(i, 1);
+            i--;
+            hasChanges = true;
+          }
+        }
+      if (hasChanges) {
+        offersToUpdate.push(offer);
+      }
+    }
+
+    if (offersToUpdate.length > 0)
+      await this.offerRepository.save(offersToUpdate);
   }
 }

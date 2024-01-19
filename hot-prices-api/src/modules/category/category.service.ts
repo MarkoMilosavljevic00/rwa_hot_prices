@@ -99,26 +99,26 @@ export class CategoryService {
     });
   }
 
-  async delete(deleteCategoryDto: DeleteCategoryDto): Promise<Category[]> {
+  async delete(id: number, childHandlingMethod: ChildHandlingMethod): Promise<Category[]> {
     const category = await this.categoryRepository.findOne({
-      where: { id: deleteCategoryDto.id },
+      where: { id },
       relations: ['children', 'parent', 'posts'],
     });
 
     if (!category) {
       throw new NotFoundException(
-        `Category with ID ${deleteCategoryDto.id} not found`,
+        `Category with ID ${id} not found`,
       );
     }
 
     const categoriesForUpdating = [];
     const categoriesForDeleting = [];
 
-    switch (deleteCategoryDto.childHandlingMethod) {
-      case ChildHandlingMethod.REASSIGN_TO_PARENT:
+    switch (childHandlingMethod) {
+      case ChildHandlingMethod.REASSIGN:
         if (!category.parent) {
           throw new BadRequestException(
-            `Category with ID ${deleteCategoryDto.id} has no parent`,
+            `Category with ID ${id} has no parent`,
           );
         }
 
@@ -179,56 +179,4 @@ export class CategoryService {
 
     return categoriesForDeleting;
   }
-
-  // async delete(deleteCategoryDto: DeleteCategoryDto): Promise<void> {
-  //   let category: Category;
-  //   const categoriesForDeleting: Category[] = [];
-  //   const categoriesForUpdating: Category[] = [];
-  //   const { id, childHandlingMethod } = deleteCategoryDto;
-
-  //   if (childHandlingMethod) {
-  //     category = this.get({ id, descendants: true, ancestors: true})[0];
-  //     for (const child of category.children) {
-  //       if (childHandlingMethod === ChildHandlingMethod.REASSIGN_TO_PARENT)
-  //         child.parent = category.parent;
-  //       else if (childHandlingMethod === ChildHandlingMethod.DETACH)
-  //         child.parent = null;
-  //       else if (childHandlingMethod === ChildHandlingMethod.DELETE)
-  //         await this.categoryRepository.remove(child);
-  //       else throw new BadRequestException('Invalid child handling method');
-  //     }
-  //   }
-  //   else {
-  //     category = await this.categoryRepository.findOne({ where: { id } });
-  //     categoriesForDeleting.push(category);
-  //     if (!category) {
-  //       throw new NotFoundException(
-  //         `Category with ID ${deleteCategoryDto.id} not found`,
-  //       );
-  //     }
-  //   }
-  //   await this.categoryRepository.remove(categoriesForDeleting);
-  //   if(categoriesForUpdating.length > 0)
-  //     await this.categoryRepository.save(categoriesForUpdating);
-
-  // switch (childHandlingMethod) {
-  //   case ChildHandlingMethod.REASSIGN_TO_PARENT:
-  //     children = await this.categoryRepository.findDescendants(category);
-  //     for (const child of children) {
-  //       child.parent = category.parent;
-  //       await this.categoryRepository.save(child);
-  //     }
-  //     break;
-  //   case ChildHandlingMethod.DETACH:
-  //     children = await this.categoryRepository.findDescendants(category);
-  //     for (const child of children) {
-  //       child.parent = null;
-  //       await this.categoryRepository.save(child);
-  //     }
-  //     break;
-  //   case ChildHandlingMethod.DELETE:
-  //     await this.categoryRepository.remove(category);
-  //     break;
-  // }
-  // }
 }

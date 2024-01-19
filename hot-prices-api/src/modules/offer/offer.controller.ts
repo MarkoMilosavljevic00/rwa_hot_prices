@@ -22,7 +22,7 @@ export class OfferController {
 
   @Get()
   getOffers(): Promise<Offer[]> {
-    return this.offerService.get();
+    return this.offerService.getAll();
   }
 
   @Get('/:id')
@@ -39,6 +39,12 @@ export class OfferController {
   @Patch('/:id')
   async updateOffer(@Param('id') id: number, @Body() updateOfferDto: FormOfferDto): Promise<Offer> {
     return this.offerService.update(id, updateOfferDto);
+  }
+
+  @Patch('cleanNotFoundedImages')
+  async cleanNotFoundedImages(): Promise<void> {
+    const offers = await this.offerService.getAll();
+    return this.offerService.cleanNotFoundedImages(offers);
   }
 
 }

@@ -1,13 +1,18 @@
+import { environment } from "src/environments/environment";
+
 export const YES_NO_OPTIONS = {
   YES: { label: 'Yes', value: true},
   NO: { label: 'No', value: false },
 };
+
 
 export const DEFAULT = {
   OFFER:{
     IMAGE: '../../../assets/default-product.png',
   }
 }
+
+export const IMAGES_URL = `${environment.api}/file/image`
 
 export const LIMITS = {
   OFFER:{

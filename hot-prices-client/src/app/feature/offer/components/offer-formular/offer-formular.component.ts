@@ -16,7 +16,7 @@ import { SelectButtonChangeEvent } from 'primeng/selectbutton';
 import { DiscountCalculatorService } from 'src/app/shared/services/discount-calculator.service';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Option } from 'src/app/common/interfaces/option.interface';
-import { LIMITS, TIME, YES_NO_OPTIONS } from 'src/app/common/constants';
+import { IMAGES_URL, LIMITS, TIME, YES_NO_OPTIONS } from 'src/app/common/constants';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
 import {
   FileSelectEvent,
@@ -43,6 +43,10 @@ import { environment } from 'src/environments/environment';
 import { FileService } from 'src/app/shared/services/file.service';
 import { UploadedImage } from 'src/app/common/interfaces/uploaded-image.interface';
 import { Validity } from 'src/app/common/interfaces/validity.interface';
+import { AppState } from 'src/app/state/app.state';
+import { Store } from '@ngrx/store';
+import { loadEditingOffer, resetEditingOffer } from '../../state/offer.action';
+import { selectEditingOffer } from '../../state/offer.selector';
 
 @Component({
   selector: 'app-offer-formular',
@@ -51,6 +55,7 @@ import { Validity } from 'src/app/common/interfaces/validity.interface';
 })
 export class OfferFormularComponent implements OnInit {
   offer?: Offer;
+
   offerForm: FormGroup;
   editMode: boolean;
 
@@ -72,10 +77,6 @@ export class OfferFormularComponent implements OnInit {
     return this.offerForm.get('addedSpecifications');
   }
 
-  // get uplaodedImagesFormArray(): FormArray {
-  //   return this.offerForm.get('uploadedImages') as FormArray;
-  // }
-
   get lastSpecification() {
     return this.specificationsFormArray.at(
       this.specificationsFormArray.length - 1
@@ -84,6 +85,10 @@ export class OfferFormularComponent implements OnInit {
 
   get uploadedImagesControl() {
     return this.offerForm.get('uploadedImages');
+  }
+
+  get saleTypeControl() {
+    return this.offerForm.get('saleType');
   }
 
   get priceControl() {
@@ -121,13 +126,14 @@ export class OfferFormularComponent implements OnInit {
     private discountCalculatorService: DiscountCalculatorService,
     public fileService: FileService,
     public formControlService: FormControlService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
     this.initFormGroup();
     this.initInnerElementsValues();
-    this.patchValues();
+    this.loadOfferToForm();
   }
 
   private initFormGroup() {
@@ -148,7 +154,7 @@ export class OfferFormularComponent implements OnInit {
       link: new FormControl({ value: '', disabled: true }),
       location: new FormControl(''),
       specificationsFormArray: new FormArray([]),
-      addedSpecifications: new FormControl([]),
+      addedSpecifications: new FormControl({}),
       price: new FormControl(0, {
         validators: [Validators.required, Validators.min(1)],
       }),
@@ -161,7 +167,6 @@ export class OfferFormularComponent implements OnInit {
   }
 
   private initInnerElementsValues() {
-    // this.uploadedImages = [];
     this.editMode = false;
     this.categoryService.getAll().subscribe((categories) => {
       this.categoryOptions = categories.map((category) =>
@@ -174,60 +179,65 @@ export class OfferFormularComponent implements OnInit {
     this.minExpiryDate = new Date();
   }
 
-  private patchValues() {
-    this.route.paramMap
-      .pipe(
-        map((params: ParamMap) => {
-          const id = params.get('id');
-          return id ? +id : null;
-        }),
-        filter((id: number | null, index: number) => !!id),
-        switchMap((id: number | null) => this.offerService.getById(id!))
-      )
-      .subscribe((offer) => {
-        if (offer) {
-          this.editMode = true;
-          this.offer = offer;
-          this.offerForm.patchValue({
-            title: this.offer.title,
-            selectedCategory: this.offer.category
-              ? this.categoryService.convertCategoryToTreeNode(
-                  this.offer!.category
-                )
-              : null,
-            description: this.offer.description,
-            uploadedImages: this.offer.imgPaths
-              ? this.offer.imgPaths.map((imgPath) => ({
-                  name: imgPath,
-                  size: 0,
-                  serverFilename: imgPath,
-                }))
-              : [],
-            saleType: this.offer.saleType,
-            link: this.offer.link,
-            store: this.offer.store,
-            location: this.offer.location,
-            price: this.offer.price,
-            discountOptionSelected:
-              (this.offer.discount || this.offer.oldPrice) !== undefined,
-            oldPrice: this.offer.oldPrice,
-            discount: this.offer.discount,
-            expiryDateOptionSelected: this.offer.expiryDate !== undefined,
-            expiryDate: this.offer.expiryDate
-              ? new Date(this.offer.expiryDate)
-              : null,
-          });
-          console.log(this.offer.category);
-          this.onSaleTypeOptionChange(this.offer?.saleType!);
-          this.onDiscountOptionChange(
-            this.discountOptionSelectedControl?.value
-          );
-          this.onExpiryDateOptionChange(
-            this.expiryDateOptionSelectedControl?.value
-          );
-          this.patchSpecifications(this.offer?.specifications);
-        }
-      });
+  private loadOfferToForm() {
+    const offerId = this.route.snapshot.paramMap.get('id');
+    if (!offerId)
+      this.store.dispatch((resetEditingOffer()));
+    else { 
+      this.store.dispatch(loadEditingOffer({ offerId: +offerId })); 
+    }
+    this.store.select(selectEditingOffer).subscribe((offer) => {
+      if (offer) {
+        this.editMode = true;
+        this.offer = offer;
+        this.patchValuesInForm(offer);
+        this.patchSelectedOptions();
+        this.patchSpecifications(offer.specifications);
+      }
+    });
+  }
+
+  private patchSelectedOptions() {
+    this.onSaleTypeOptionChange(this.saleTypeControl?.value);
+    this.onDiscountOptionChange(this.discountOptionSelectedControl?.value);
+    this.onExpiryDateOptionChange(
+      this.expiryDateOptionSelectedControl?.value
+    );
+  }
+
+  private patchValuesInForm(offer: Offer) {
+    this.offerForm.patchValue({
+      title: offer.title,
+      selectedCategory: offer.category
+        ? this.categoryService.convertCategoryToTreeNode(
+          this.offer!.category
+        )
+        : null,
+      description: offer.description,
+      uploadedImages: offer.imgPaths
+        ? offer.imgPaths.map((imgPath) => ({
+          name: imgPath,
+          size: 0,
+          serverFilename: imgPath,
+        }))
+        : [],
+      saleType: offer.saleType,
+      link: offer.link,
+      store: offer.store,
+      location: offer.location,
+      price: offer.price,
+      discountOptionSelected: (offer.discount || offer.oldPrice) !== undefined,
+      oldPrice: offer.oldPrice,
+      discount: offer.discount,
+      expiryDateOptionSelected: offer.expiryDate !== undefined,
+      expiryDate: offer.expiryDate
+        ? new Date(offer.expiryDate)
+        : null,
+    });
+  }
+
+  getImagePath(serverFilename: string) {
+    return IMAGES_URL + '/offers/' + serverFilename;
   }
 
   patchSpecifications(specifications?: Record<string, string>) {
@@ -250,15 +260,8 @@ export class OfferFormularComponent implements OnInit {
       });
     });
     this.uploadedImagesControl?.setValue(uploadedImages);
-    // event.files.forEach((file: File, index: number) => {
-    //   this.uploadedImages.push({
-    //     name: file.name,
-    //     size: file.size,
-    //     serverFilename: serverResponse[index],
-    //   });
-    // });
     this.messageService.add({
-      severity: 'info',
+      severity: 'success',
       summary: serverResponse.length + ' file(s) uploaded successfully',
       detail: '',
     });
@@ -324,11 +327,9 @@ export class OfferFormularComponent implements OnInit {
       ),
     };
 
-    console.log(this.offerForm.value.expiryDateOptionSelected);
-    console.log(this.offerForm.value.expiryDate);
-
-    console.log(offer);
-    console.log(offer.expiryDate);
+    // console.log(offer);
+    // console.log(offer.expiryDate);
+    // console.log(offer.specifications);
 
     if (this.editMode) {
       this.offerService
@@ -420,7 +421,6 @@ export class OfferFormularComponent implements OnInit {
         null
       )
     );
-    // console.log(this.addedSpecificationsControl?.value);
   }
 
   onDiscountOptionChange(isDiscountActivated: boolean) {

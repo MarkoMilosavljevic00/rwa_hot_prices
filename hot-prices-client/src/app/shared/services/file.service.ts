@@ -12,6 +12,16 @@ export class FileService {
 
   constructor(private readonly http: HttpClient) {}
 
+  getImages(imageType: string, imageNames: string[]) {
+    return this.http
+      .get(`${environment.api}/file/getImages/${imageType}/${imageNames}`)
+      .pipe(
+        map((response) => {
+          return response;
+        })
+      );
+  }
+
   deleteImage(imageType: string, imageName: string) {
     return this.http
       .delete(`${environment.api}/file/deleteImage/${imageType}/${imageName}`)
@@ -24,11 +34,13 @@ export class FileService {
           };
         }),
         catchError((error) => {
-          if(error.status === 404)
+          if (error.status === 404)
             return of({
               severity: 'info',
               summary: 'File Not Found On Server',
-              detail: imageName + ' was not found on the server. It may have already been deleted.',
+              detail:
+                imageName +
+                ' was not found on the server. It may have already been deleted.',
             });
           else
             throw {

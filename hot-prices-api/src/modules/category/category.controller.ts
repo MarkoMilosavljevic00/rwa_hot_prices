@@ -49,11 +49,10 @@ export class CategoryController {
   @Delete()
   delete(
     @Query('id', ParseIntPipe) id: number,
-    @Query('childHandlingMethod', ParseIntPipe)
-    childHandlingMethod: ChildHandlingMethod,
+    // @Query('childHandlingMethod', ParseIntPipe)
+    childHandlingMethod: ChildHandlingMethod = ChildHandlingMethod.DETACH,
   ): Promise<Category[]> {
-    const deleteCategoryDto: DeleteCategoryDto = { id, childHandlingMethod };
-    return this.categoryService.delete(deleteCategoryDto);
+    return this.categoryService.delete(id, childHandlingMethod);
   }
 
   @Get('/test/:id')

@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Offer } from '../../models/offer.model';
 import { OFFERS } from '../../services/offer.model';
 import { OfferService } from '../../services/offer.service';
+import { AppState } from 'src/app/state/app.state';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { loadOffers } from '../../state/offer.action';
+import { selectOffersList } from '../../state/offer.selector';
 
 @Component({
   selector: 'app-offer-list',
@@ -12,13 +17,23 @@ export class OfferListComponent implements OnInit {
   offers: Offer[] = [];
   onePageOffers: Offer[] = [];
 
-  page = 0;
-  size = 5;
+  offer$: Observable<Offer[]>;
 
-  constructor(private offerService: OfferService) {}
+  page = 0;
+  size = 3;
+
+  constructor(
+    private offerService: OfferService,
+    private store: Store<AppState>
+  ) {}
 
   ngOnInit() {
-    this.loadOffers();
+    this.store.dispatch(loadOffers());
+    this.offer$ = this.store.select(selectOffersList)
+    // .subscribe((offers) => {
+    //   console.log(offers)
+    // });
+    // this.loadOffers();
   }
 
   private loadOffers() {
@@ -34,7 +49,7 @@ export class OfferListComponent implements OnInit {
     });
   }
 
-  getData(obj: {pageIndex: number, pageSize: number}) {
+  getData(obj: { pageIndex: number; pageSize: number }) {
     let index = 0,
       startingIndex = obj.pageIndex * obj.pageSize,
       endingIndex = startingIndex + obj.pageSize;
