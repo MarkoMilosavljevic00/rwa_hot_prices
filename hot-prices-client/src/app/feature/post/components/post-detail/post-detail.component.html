@@ -1,9 +1,9 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
   <div fxLayout="column" fxFlex="100%">
-    <mat-card *ngIf="post" fxLayout="column" fxFlex="100%">
+    <mat-card fxLayout="column" fxFlex="100%">
       <mat-toolbar color="warn" class="row-1">
         <app-user-avatar
-          [name]="post.owner"
+          [name]="post?.owner"
           [imgSrc]="
             'https://material.angular.io/assets/img/examples/shiba1.jpg'
           "

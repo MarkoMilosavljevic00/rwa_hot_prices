@@ -1,12 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { Offer } from '../../models/offer.model';
-import { OFFERS } from '../../services/offer.model';
+import { OFFERS } from '../../services/offers';
 import { OfferService } from '../../services/offer.service';
 import { AppState } from 'src/app/state/app.state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { loadOffers } from '../../state/offer.action';
-import { selectOffersList } from '../../state/offer.selector';
+import {
+  changePaginationFilter,
+  changeSearchFilter,
+  loadOffers,
+} from '../../state/offer.action';
+import {
+  selectFilterOffer,
+  selectLengthOfOffers,
+  selectOffersList,
+} from '../../state/offer.selector';
+import { DEFAULT, PAGE } from 'src/app/common/constants';
+import { Pagination } from 'src/app/common/interfaces/pagination.interface';
+import { FilterOfferDto } from '../../models/dtos/filter-offer.dto';
 
 @Component({
   selector: 'app-offer-list',
@@ -18,45 +29,43 @@ export class OfferListComponent implements OnInit {
   onePageOffers: Offer[] = [];
 
   offer$: Observable<Offer[]>;
+  length$: Observable<number>;
+  filter$: Observable<FilterOfferDto>;
 
-  page = 0;
-  size = 3;
+  pagination: Pagination = {
+    pageIndex: PAGE.INITIAL_INDEX,
+    pageSize: PAGE.SIZE,
+  };
 
-  constructor(
-    private offerService: OfferService,
-    private store: Store<AppState>
-  ) {}
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.store.dispatch(loadOffers());
-    this.offer$ = this.store.select(selectOffersList)
-    // .subscribe((offers) => {
-    //   console.log(offers)
-    // });
-    // this.loadOffers();
+    this.store.dispatch(
+      changePaginationFilter({ pagination: this.pagination })
+    );
+    this.store.select(selectFilterOffer).subscribe((filter) => {
+      this.store.dispatch(loadOffers({ filterOfferDto: filter }));
+    });
+    this.offer$ = this.store.select(selectOffersList);
+    this.length$ = this.store.select(selectLengthOfOffers);
   }
 
-  private loadOffers() {
-    this.offerService.get().subscribe((offers) => {
-      this.offers = offers;
-      this.offers.forEach((offer) => {
-        offer.postedDate = new Date(offer.postedDate);
-        if (offer.expiryDate) {
-          offer.expiryDate = new Date(offer.expiryDate);
-        }
-      });
-      this.getData({ pageIndex: this.page, pageSize: this.size });
-    });
-  }
+  // private loadOffers() {
+  //   this.offerService.getOffers().subscribe((offers) => {
+  //     this.offers = offers;
+  //     this.offers.forEach((offer) => {
+  //       offer.postedDate = new Date(offer.postedDate);
+  //       if (offer.expiryDate) {
+  //         offer.expiryDate = new Date(offer.expiryDate);
+  //       }
+  //     });
+  //     this.getData({ pageIndex: this.pageIndex, pageSize: this.pageSize });
+  //   });
+  // }
 
-  getData(obj: { pageIndex: number; pageSize: number }) {
-    let index = 0,
-      startingIndex = obj.pageIndex * obj.pageSize,
-      endingIndex = startingIndex + obj.pageSize;
-
-    this.onePageOffers = this.offers.filter(() => {
-      index++;
-      return index > startingIndex && index <= endingIndex ? true : false;
-    });
+  getData(pagination: Pagination) {
+    // const filterOfferDto: FilterOfferDto = { ...pagination };
+    // this.store.dispatch(changeSearch({ filterOfferDto }));
+    this.store.dispatch(changePaginationFilter({ pagination }));
   }
 }

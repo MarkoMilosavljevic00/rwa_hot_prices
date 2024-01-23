@@ -18,6 +18,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
 
 const modules = [
   MatButtonModule,
@@ -40,6 +43,9 @@ const modules = [
   MatTableModule,
   MatRadioModule,
   MatDatepickerModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSelectModule,
 ];
 
 @NgModule({

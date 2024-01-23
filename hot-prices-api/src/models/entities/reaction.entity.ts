@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
-import { ReactionType } from '../enums/reaction-type.enum';
+import { ReactionType } from '../../common/enums/reaction-type.enum';
 import { Post } from './post.entity';
 import { User } from './user.entity';
 

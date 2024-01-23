@@ -3,7 +3,7 @@ import { Post } from "../../post/models/post.model";
 import { Reaction } from "../../post/models/reaction.model";
 
 export interface User {
-  id: string;
+  id: number;
   username: string;
   email: string;
   password: string;

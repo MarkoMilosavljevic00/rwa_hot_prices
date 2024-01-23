@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Editor, EditorTextChangeEvent } from 'primeng/editor';
+import { DEFAULT, LIMITS } from 'src/app/common/constants';
 
 @Component({
   selector: 'app-editor',
@@ -15,7 +16,7 @@ import { Editor, EditorTextChangeEvent } from 'primeng/editor';
 export class EditorComponent {
   @ViewChild(Editor) editor!: Editor;
   @Output() onContentChange = new EventEmitter<string>();
-  @Input() maxLength: number = 300;
+  @Input() maxLength: number = DEFAULT.EDITORS_NUM_OF_CHARS;
   @Input() height: string = '320px';
   @Input() width: string = '100%';
   @Input() content: string = '';

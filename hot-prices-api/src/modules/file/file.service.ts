@@ -6,7 +6,7 @@ import {
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import * as multer from 'multer';
-import { ImageType } from 'src/models/enums/image-type.enum';
+import { ImageType } from 'src/common/enums/image-type.enum';
 import { File } from 'multer';
 import { existsSync, unlinkSync } from 'fs';
 import { Response, response } from 'express';

@@ -43,10 +43,10 @@
         >*Category: <i>(required)</i></mat-card-subtitle
       >
       <p-treeSelect
+        [options]="categoryOptions"
         class="centered-field"
         containerStyleClass="w-full"
         formControlName="selectedCategory"
-        [options]="categoryOptions"
         placeholder="Select Category"
       ></p-treeSelect>
     </div>
@@ -60,9 +60,8 @@
       <mat-card-subtitle>Description: </mat-card-subtitle>
       <app-editor
         fxFlex="100%"
-        [maxLength]="300"
         [height]="'150px'"
-        (onContentChange)="description = $event"
+        (onContentChange)="offerForm.get('description')?.setValue($event)"
         [content]="offerForm.get('description')?.value"
       >
       </app-editor>
@@ -219,7 +218,7 @@
       <mat-card-subtitle fxFlex="15%"> Link: </mat-card-subtitle>
       <mat-form-field class="centered-field" fxFlex>
         <mat-label>Link</mat-label>
-        <input matInput formControlName="link" />
+        <input type="url" matInput formControlName="link" />
       </mat-form-field>
     </div>
 

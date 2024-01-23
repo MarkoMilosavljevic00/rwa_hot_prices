@@ -4,19 +4,20 @@ import {
   MatTableDataSource,
   MatTableDataSourcePaginator,
 } from '@angular/material/table';
-import { ActivatedRoute, Params } from '@angular/router';
-import { OFFERS } from '../../services/offer.model';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { OFFERS } from '../../services/offers';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { Offer } from '../../models/offer.model';
 import { OfferService } from '../../services/offer.service';
 import { DEFAULT, IMAGES_URL } from 'src/app/common/constants';
 import { FileService } from 'src/app/shared/services/file.service';
-import { selectRouteParams } from 'src/app/state/app.selectors';
+import { selectIdFromRouteParams, selectRouteParams } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
 import { Store } from '@ngrx/store';
-import { loadDetailedOffer } from '../../state/offer.action';
-import { Observable, filter, map } from 'rxjs';
+import { clearDetailedOffer, clearEditingOffer, loadDetailedOffer } from '../../state/offer.action';
+import { Observable, Subscription, filter, map, skip, switchMap } from 'rxjs';
 import { selectDetailedOffer } from '../../state/offer.selector';
+import { isNotUndefined } from 'src/app/common/type-guards';
 
 export interface ImageInfo {
   itemImageSrc: string;
@@ -30,26 +31,40 @@ export interface ImageInfo {
 })
 export class OfferDetailsComponent implements OnInit {
   offer?: Offer;
+  offerSubscription: Subscription;
+
   galleryImages?: ImageInfo[];
   specsDataSource: MatTableDataSource<
     { key: string; value: string },
     MatTableDataSourcePaginator
   >;
 
-  constructor(private route: ActivatedRoute, private store: Store<AppState>) {}
+  constructor(private route: ActivatedRoute, private store: Store<AppState>, private router: Router) {}
 
   ngOnInit(): void {
-    const offerId = +this.route.snapshot.params['id'];
-    this.store.dispatch(loadDetailedOffer({ offerId }));
-    this.store
-      .select(selectDetailedOffer)
-      .subscribe((offer) => {
+    this.offerSubscription = this.store.select(selectIdFromRouteParams)
+    .pipe(
+      filter(isNotUndefined),
+      switchMap(offerId => {
+        if(offerId){
+          this.store.dispatch(loadDetailedOffer({ offerId: +offerId }));
+        }
+        return this.store.select(selectDetailedOffer);
+      }),
+      skip(1)
+    ).subscribe((offer) => {
+        console.log('uso u selectDetailedOffer sub')
         if(offer){
           this.offer = offer;
           this.setGalleryImages(offer.imgPaths);
           this.setSpecsDataSource(offer.specifications);
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.offerSubscription.unsubscribe();
+    this.store.dispatch(clearDetailedOffer());
   }
 
   setSpecsDataSource(specifications: Record<string, string> | undefined) {

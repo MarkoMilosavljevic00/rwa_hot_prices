@@ -52,7 +52,7 @@ export class ConversationFormularComponent {
   }
 
   private initInnerElementsValues() {
-    this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
+    // this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
   }
 
   private initFormGroup() {

@@ -6,7 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Role } from '../enums/role.enum';
+import { Role } from '../../common/enums/role.enum';
 import { Comment } from './comment.entity';
 import { Post } from './post.entity';
 import { Reaction } from './reaction.entity';

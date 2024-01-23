@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
-import { ReportType } from '../enums/report-type.enum';
+import { ReportType } from '../../common/enums/report-type.enum';
 import { Conversation } from './conversation.entity';
 import { Offer } from './offer.entity';
 import { Post } from './post.entity';

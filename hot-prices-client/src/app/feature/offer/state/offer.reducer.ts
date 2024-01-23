@@ -4,37 +4,86 @@ import { Offer } from '../models/offer.model';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { OfferState } from './offer.state';
 
-
 const adapter = createEntityAdapter<Offer>();
 
 export const initialState: OfferState = adapter.getInitialState({
-  detailedOffer: undefined,
-  editingOffer: undefined,
+  length: 0,
+  filter: {},
+  titles: [],
 });
 
 export const offerReducer = createReducer(
   initialState,
+  on(Actions.changeFilter, (state, { filter }) => {
+    return {
+      ...state,
+      filter: {
+        ...state.filter,
+        ...filter,
+      },
+    };
+  }),
+  on(Actions.changeSearchFilter, (state, { search }) => {
+    return {
+      ...state,
+      filter: {
+        ...state.filter,
+        title: search,
+      },
+    };
+  }),
+  on(Actions.changePaginationFilter, (state, { pagination }) => {
+    return {
+      ...state,
+      filter: {
+        ...state.filter,
+        ...pagination,
+      },
+    };
+  }),
+  on(Actions.loadOffersTitlesSuccess, (state, { titles }) => {
+    return {
+      ...state,
+      titles,
+    };
+  }),
+  on(Actions.loadOffersSuccess, (state, { offers, length }) => {
+    return adapter.setAll(offers, {
+      ...state,
+      length,
+    });
+  }),
   on(Actions.loadDetailedOfferSuccess, (state, { offer }) => {
     return {
       ...state,
       detailedOffer: offer,
-    }
+    };
+  }),
+  on(Actions.clearDetailedOffer, (state) => {
+    return {
+      ...state,
+      detailedOffer: undefined,
+    };
   }),
   on(Actions.loadEditingOfferSuccess, (state, { offer }) => {
     return {
       ...state,
       editingOffer: offer,
-    }
+    };
   }),
-  on(Actions.resetEditingOffer, (state) => {
+  on(Actions.clearEditingOffer, (state) => {
     return {
       ...state,
       editingOffer: undefined,
-    }
+    };
   }),
-  on(Actions.loadOffersSuccess, (state, { offers: songs }) =>
-    adapter.setAll(songs, state)
-  ),
+  on(Actions.submittedOfferSuccess, (state, { offer }) => {
+    // return adapter.addOne(offer, state);
+    return {
+      ...state,
+      detailedOffer: offer,
+    };
+  })
   // on(Actions.rateSong, (state, { songId, rating }) =>
   //   adapter.updateOne(
   //     {

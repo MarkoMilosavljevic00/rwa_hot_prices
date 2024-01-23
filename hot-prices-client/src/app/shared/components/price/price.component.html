@@ -9,7 +9,7 @@
 
     <div *ngIf="discount" class="discount">
       <span *ngIf="multipleDiscounts">to</span>
-    {{ discount }}% DISCOUNT
+    {{ discount | number: '0.0-2' }}% DISCOUNT
     </div>
   </div>
 </div>

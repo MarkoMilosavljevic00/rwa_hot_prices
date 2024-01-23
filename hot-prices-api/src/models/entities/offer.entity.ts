@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, ChildEntity } from 'typeorm';
-import { SaleType } from '../enums/sale-type.enum';
+import { SaleType } from '../../common/enums/sale-type.enum';
 import { Post } from './post.entity';
 import { User } from './user.entity';
 

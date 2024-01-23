@@ -1,28 +1,65 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Offer } from '../models/offer.model';
-import { FormOfferDto } from '../models/dtos/create-offer.dto';
+import { FormOfferDto } from '../models/dtos/form-offer.dto';
+import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OfferService {
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient) {}
 
-  getById(id: number) {
+  getOfferById(id: number) {
     return this.http.get<Offer>(`${environment.api}/offers/${id}`);
   }
 
-  get(){
-    return this.http.get<Offer[]>(`${environment.api}/offers`);
+  getOffers(filterOfferDto?: FilterOfferDto) {
+    if (!filterOfferDto)
+      return this.http.get<{ offers: Offer[]; length: number }>(`${environment.api}/offers`);
+
+    const { title, pageSize, pageIndex } = filterOfferDto;
+    let params = new HttpParams();
+
+    if (title) {
+      params = params.set('title', title);
+    }
+
+    if (pageSize != undefined && pageIndex != undefined) {
+      params = params
+        .set('pageSize', pageSize.toString())
+        .set('pageIndex', pageIndex.toString());
+    }
+
+    return this.http.get<{ offers: Offer[]; length: number }>(
+      `${environment.api}/offers`,
+      { params }
+    );
   }
 
-  post(offer: FormOfferDto) {
-    return this.http.post<FormOfferDto>(`${environment.api}/offers`, offer);
+  getOffersTitles(search?: string) { 
+    let params = new HttpParams();
+    if (search) {
+      params = params.set('search', search);
+    }
+    return this.http.get<string[]>(
+      `${environment.api}/offers/titles`,
+      { params }
+    );
   }
 
-  update(id: number, offer: FormOfferDto) {
-    return this.http.patch<FormOfferDto>(`${environment.api}/offers/${id}`, offer);
+  getOfferDistinctProperty(key: string) { 
+    return this.http.get<string[]>(
+      `${environment.api}/offers/distinct-property/${key}`,
+    );
+  }
+
+  postOffer(offer: FormOfferDto) {
+    return this.http.post<Offer>(`${environment.api}/offers`, offer);
+  }
+
+  updateOffer(id: number, offer: FormOfferDto) {
+    return this.http.patch<Offer>(`${environment.api}/offers/${id}`, offer);
   }
 }

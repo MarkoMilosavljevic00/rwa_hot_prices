@@ -1,5 +1,5 @@
-import { IsArray, IsDateString, IsEnum, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
-import { SaleType } from "../enums/sale-type.enum";
+import { Allow, IsArray, IsDateString, IsEnum, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
+import { SaleType } from "../../common/enums/sale-type.enum";
 import { Category } from "../entities/category.entity";
 
 export class FormOfferDto {

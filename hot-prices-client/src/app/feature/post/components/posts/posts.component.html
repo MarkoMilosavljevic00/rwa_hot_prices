@@ -1,7 +1,12 @@
-<mat-sidenav-container>
-  <mat-sidenav #filterSidenav>Sidenav content</mat-sidenav>
+<mat-sidenav-container class="page">
+  <mat-sidenav [opened]="true" #filterSidenav>
+    <app-offer-filter
+      [sidenavControl]="filterSidenav"
+      *ngIf="postType === PostType.Offer"
+    ></app-offer-filter>
+  </mat-sidenav>
   <mat-sidenav-content>
-    <section class="page">
+    <section class="padding">
       <nav mat-tab-nav-bar [tabPanel]="tabPanel" color="warn">
         <a
           mat-tab-link
@@ -37,30 +42,35 @@
               color="warn"
               fxFlex.gt-xs="30%"
               fxFlex.lt-sm="70%"
-              (click)="onAddNewFormular()"
+              (click)="onAddNew()"
             >
-              <mat-icon fxLayoutAlign="center center" class="add-new-icon">add_circle</mat-icon>
-              <span>Add New {{ currentPostType }}</span>
+              <mat-icon fxLayoutAlign="center center" class="add-new-icon"
+                >add_circle</mat-icon
+              >
+              <span>Add New {{ postType }}</span>
             </button>
           </div>
-          <mat-toolbar color="warn" fxLayoutAlign="start end" class="page">
+          <mat-toolbar color="warn" fxLayoutAlign="start end" class="padding">
             <form
               class="example-form"
               fxFlex="100%"
               fxLayoutGap="5%"
               fxLayoutAlign="start center"
             >
-              <mat-form-field class="example-full-width" fxFlex="70%">
+              <mat-form-field fxFlex="70%">
                 <mat-label>Search</mat-label>
                 <input
+                  (ngModelChange)="onSearch($event)"
+                  [matAutocomplete]="searchAutocomplete"
+                  [formControl]="searchControl"
                   type="text"
                   matInput
-                  [formControl]="myControl"
-                  [matAutocomplete]="auto"
                 />
-                <mat-autocomplete #auto="matAutocomplete">
+                <mat-autocomplete
+                  #searchAutocomplete="matAutocomplete"
+                >
                   <mat-option
-                    *ngFor="let option of filteredOptions | async"
+                    *ngFor="let option of filteredTitlesOptions"
                     [value]="option"
                   >
                     {{ option }}

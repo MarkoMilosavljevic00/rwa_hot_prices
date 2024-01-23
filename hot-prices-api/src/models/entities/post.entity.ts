@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, TableInheritance } from 'typeorm';
-import { PostStatus } from '../enums/post-status.enum';
 import { Category } from './category.entity';
 import { Comment } from './comment.entity';
 import { Reaction } from './reaction.entity';
@@ -15,11 +14,14 @@ export class Post {
   @Column({ nullable: false})
   title: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 0 })
   numOfHotReactions: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: 0 })
   numOfColdReactions: number;
+
+  @Column({ nullable: false, default: 0 })
+  numOfDegrees: number;
 
   @Column({
     type: 'timestamptz',
@@ -31,7 +33,7 @@ export class Post {
   // @Column({type: 'enum', enum: PostStatus})
   // status: PostStatus;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   restricted: boolean;
 
   @ManyToOne(() => User, user => user.posts)

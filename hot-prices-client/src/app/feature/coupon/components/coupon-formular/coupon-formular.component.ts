@@ -101,7 +101,7 @@ export class CouponFormularComponent implements OnInit {
 
   private initInnerElementsValues() {
     this.uploadedFiles = [];
-    this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
+    // this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
     this.saleTypeOptions = Object.values(SaleType);
     this.codeOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.multipleDiscountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];

@@ -4,7 +4,7 @@ import { Category } from '../models/category.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { GetCategoryDto } from '../models/dtos/get-category.dto';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +14,11 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
-  convertCategoryToTreeNode(category: Category, keyPrefix = ''): TreeNode {
-    let node: TreeNode = {
+  convertCategoryToTreeNode(
+    category: Category,
+    keyPrefix = ''
+  ): TreeNode<Category> {
+    let node: TreeNode<Category> = {
       key: keyPrefix + category.id,
       label: category.name,
       data: category,
@@ -34,8 +37,16 @@ export class CategoryService {
   }
 
   getAllCategoriesAsTreeNodes() {
-    return this.categories.map((category) =>
-      this.convertCategoryToTreeNode(category)
+    // return this.categories.map((category) =>
+    //   this.convertCategoryToTreeNode(category)
+    // );
+    return this.http.get<Category[]>(`${environment.api}/category`).pipe(
+      map((categories) =>{
+        let treeNodes = categories.map((category) => this.convertCategoryToTreeNode(category))
+        return treeNodes
+      }
+      ),
+      tap((categories) => console.log(categories))
     );
   }
 

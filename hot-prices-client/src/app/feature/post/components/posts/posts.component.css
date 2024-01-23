@@ -1,21 +1,29 @@
 @media screen and (min-width: 1024px) {
-  .page {
+  .padding {
     padding-inline: 10%;
   }
 }
+
+.page{
+  height:100%
+}
+
 
 mat-toolbar{
   height:100px;
 }
 
+mat-sidenav-content{
+  height: 100vw;
+}
 
-mat-sidenav-container, mat-sidenav-content, mat-sidenav {
+mat-sidenav-container, mat-sidenav {
   height: 100%;
 }
 
 mat-sidenav {
   height: 100%;
-  width: 200px;
+  width: 300px;
 }
 
 .add-new-button{

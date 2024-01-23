@@ -16,7 +16,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from 'src/models/dtos/create-category.dto';
 import { GetCategoryDto } from 'src/models/dtos/get-category.dto';
 import { DeleteCategoryDto } from 'src/models/dtos/delete-category.dto';
-import { ChildHandlingMethod } from 'src/models/enums/child-handling-method.enum';
+import { ChildHandlingMethod } from 'src/common/enums/child-handling-method.enum';
 
 @Controller('category')
 export class CategoryController {

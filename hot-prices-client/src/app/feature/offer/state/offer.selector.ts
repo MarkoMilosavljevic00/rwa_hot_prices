@@ -4,6 +4,9 @@ import { Offer } from '../models/offer.model';
 import { OfferState } from './offer.state';
 import { DEFAULT, IMAGES_URL } from 'src/app/common/constants';
 import { ImageInfo } from '../components/offer-details/offer-details.component';
+import { selectRouteParams } from 'src/app/state/app.selectors';
+import { Params } from '@angular/router';
+import { isNotUndefined } from 'src/app/common/type-guards';
 
 // export const selectOffersFeature = createSelector(
 //   (state: AppState) => state.offers,
@@ -14,7 +17,7 @@ export const selectOffersFeature = createFeatureSelector<OfferState>('offers');
 
 export const selectOfferIds = createSelector(
   selectOffersFeature,
-  (offers) => offers.ids
+  (offerState) => offerState.ids
 );
 
 export const selectOffersList = createSelector(selectOffersFeature, (offers) =>
@@ -32,13 +35,29 @@ export const selectOffersList = createSelector(selectOffersFeature, (offers) =>
 
 export const selectDetailedOffer = createSelector(
   selectOffersFeature,
-  (offers) => offers.detailedOffer
+  (offerState) => offerState.detailedOffer
 );
 
 export const selectEditingOffer = createSelector(
   selectOffersFeature,
-  (offers) => offers.editingOffer
+  (offerState) => offerState.editingOffer
 );
+
+export const selectLengthOfOffers = createSelector(
+  selectOffersFeature,
+  (offerState) => offerState.length
+);
+
+export const selectFilterOffer = createSelector(
+  selectOffersFeature,
+  (offerState) => offerState.filter
+);
+
+export const selectOffersTitles = createSelector(
+  selectOffersFeature,
+  (offerState) => offerState.titles
+);
+
 
 
 

@@ -17,7 +17,7 @@ import {
 } from '@nestjs/platform-express';
 import { FileService } from './file.service';
 import { File } from 'multer';
-import { ImageType } from 'src/models/enums/image-type.enum';
+import { ImageType } from 'src/common/enums/image-type.enum';
 import { join } from 'path';
 import { Response } from 'express';
 import * as path from 'path';

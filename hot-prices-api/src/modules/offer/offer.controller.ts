@@ -9,19 +9,46 @@ import {
   UploadedFiles,
   Put,
   Patch,
+  Query,
+  ParseArrayPipe,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { Offer } from 'src/models/entities/offer.entity';
 import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
+import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
+import { FilterOfferValidationPipe } from './pipes/filter-offer.pipe';
 
 @Controller('offers')
 export class OfferController {
-  constructor(
-    private offerService: OfferService,
-  ) {}
+  constructor(private offerService: OfferService) {}
 
   @Get()
-  getOffers(): Promise<Offer[]> {
+  getOffers(
+    @Query()
+    filterOfferDto: FilterOfferDto,
+  ): Promise<{ offers: Offer[]; length: number }> {
+    return this.offerService.getFilter(filterOfferDto);
+  }
+
+  // @Get('stores')
+  // getOffersAllStores(): Promise<string[]> {
+  //   return this.offerService.getAllStores();
+  // }
+
+  @Get('distinct-property/:key')
+  getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
+    return this.offerService.getDistinctProperty(key);
+  }
+
+  // @Get('titles')
+  // getOffersTitles(@Query('search') search: string): Promise<string[]> {
+  //   return this.offerService.getTitles(search);
+  // }
+
+  @Get('all')
+  getAllOffers(): Promise<Offer[]> {
     return this.offerService.getAll();
   }
 
@@ -31,13 +58,16 @@ export class OfferController {
   }
 
   @Post()
-  postOffer(@Body() offerCreateDto: FormOfferDto) {
-    console.log(offerCreateDto);
-    return this.offerService.create(offerCreateDto);
+  postOffer(@Body() formOfferDto: FormOfferDto) {
+    console.log(formOfferDto);
+    return this.offerService.create(formOfferDto);
   }
 
   @Patch('/:id')
-  async updateOffer(@Param('id') id: number, @Body() updateOfferDto: FormOfferDto): Promise<Offer> {
+  async updateOffer(
+    @Param('id') id: number,
+    @Body() updateOfferDto: FormOfferDto,
+  ): Promise<Offer> {
     return this.offerService.update(id, updateOfferDto);
   }
 
@@ -46,5 +76,4 @@ export class OfferController {
     const offers = await this.offerService.getAll();
     return this.offerService.cleanNotFoundedImages(offers);
   }
-
 }

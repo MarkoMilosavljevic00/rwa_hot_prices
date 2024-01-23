@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../../models/post.model';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { OFFERS } from 'src/app/feature/offer/services/offer.model';
+import { OFFERS } from 'src/app/feature/offer/services/offers';
 import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
 import { PostType } from 'src/app/common/enums/post-type.enum';
 import { CONVERSATIONS } from 'src/app/feature/conversation/services/conversations.model';
@@ -11,6 +11,12 @@ import { Conversation } from 'src/app/feature/conversation/models/conversation.m
 import { Report, ReportTest } from '../../models/report.model';
 import { MatDialog } from '@angular/material/dialog';
 import { InputDialogComponent } from 'src/app/shared/components/input-dialog/input-dialog.component';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+import { selectDetailedOffer } from 'src/app/feature/offer/state/offer.selector';
+import { Observable } from 'rxjs';
+import { loadDetailedOffer } from 'src/app/feature/offer/state/offer.action';
+
 
 @Component({
   selector: 'app-post-detail',
@@ -19,6 +25,7 @@ import { InputDialogComponent } from 'src/app/shared/components/input-dialog/inp
 })
 export class PostDetailComponent implements OnInit {
   post?: Post;
+  post$: Observable<Post | undefined>;
 
   currentPostType: PostType = PostType.Offer;
 
@@ -26,7 +33,8 @@ export class PostDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private routeMappingService: RouteMappingService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
@@ -45,34 +53,42 @@ export class PostDetailComponent implements OnInit {
       }
     });
 
-    let DATA: Post[] | Conversation[] | Coupon[];
-
-    switch (this.currentPostType) {
-      case PostType.Offer:
-        DATA = OFFERS;
-        break;
-      case PostType.Conversation:
-        DATA = CONVERSATIONS;
-        break;
-      case PostType.Coupon:
-        DATA = COUPONS;
-        break;
+    if (this.currentPostType === PostType.Offer) {
+      // this.store.dispatch(loadDetailedOffer({ offerId: this.routeMappingService.getIdFromUrl(this.router.url, 1) }));
+      this.store.select(selectDetailedOffer).subscribe((offer) => {
+        if (offer) {
+          this.post = offer;
+        }
+      });
     }
+    // let DATA: Post[] | Conversation[] | Coupon[];
 
-    this.post = DATA.find(
-      (post) =>
-        post.id === this.routeMappingService.getIdFromUrl(this.router.url, 1)
-    );
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.post = DATA.find(
-          (post) =>
-            post.id === this.routeMappingService.getIdFromUrl(event.url, 1)
-        );
-      }
-    });
+    // switch (this.currentPostType) {
+    //   case PostType.Offer:
+    //     DATA = OFFERS;
+    //     break;
+    //   case PostType.Conversation:
+    //     DATA = CONVERSATIONS;
+    //     break;
+    //   case PostType.Coupon:
+    //     DATA = COUPONS;
+    //     break;
+    // }
 
-    console.log(this.post);
+    // this.post = DATA.find(
+    //   (post) =>
+    //     post.id === this.routeMappingService.getIdFromUrl(this.router.url, 1)
+    // );
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationEnd) {
+    //     this.post = DATA.find(
+    //       (post) =>
+    //         post.id === this.routeMappingService.getIdFromUrl(event.url, 1)
+    //     );
+    //   }
+    // });
+
+    // console.log(this.post);
   }
 
   onEditPost() {

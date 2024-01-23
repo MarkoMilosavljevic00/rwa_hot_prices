@@ -11,6 +11,8 @@ import { StoreModule } from '@ngrx/store';
 import { offerReducer } from './state/offer.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { OfferEffects } from './state/offer.effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { OfferFilterComponent } from './components/offer-filter/offer-filter.component';
 // import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
@@ -19,14 +21,21 @@ import { OfferEffects } from './state/offer.effects';
     OfferItemComponent,
     OfferDetailsComponent,
     OfferFormularComponent,
+    OfferFilterComponent,
   ],
   imports: [
     RouterModule,
     SharedModule,
     StoreModule.forFeature('offers', offerReducer),
-    EffectsModule.forFeature([OfferEffects])
+    EffectsModule.forFeature([OfferEffects]),
+    StoreRouterConnectingModule,
   ],
-  exports: [OfferListComponent, OfferItemComponent, OfferDetailsComponent],
+  exports: [
+    OfferListComponent,
+    OfferItemComponent,
+    OfferDetailsComponent,
+    OfferFilterComponent,
+  ],
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class OfferModule {}
