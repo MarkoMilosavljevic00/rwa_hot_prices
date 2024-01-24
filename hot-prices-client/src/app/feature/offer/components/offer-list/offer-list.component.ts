@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Offer } from '../../models/offer.model';
 import { OFFERS } from '../../services/offers';
 import { OfferService } from '../../services/offer.service';
 import { AppState } from 'src/app/state/app.state';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, skip } from 'rxjs';
 import {
   changePaginationFilter,
   changeSearchFilter,
@@ -24,7 +24,7 @@ import { FilterOfferDto } from '../../models/dtos/filter-offer.dto';
   templateUrl: './offer-list.component.html',
   styleUrls: ['./offer-list.component.css'],
 })
-export class OfferListComponent implements OnInit {
+export class OfferListComponent implements OnInit, OnDestroy {
   offers: Offer[] = [];
   onePageOffers: Offer[] = [];
 
@@ -37,17 +37,26 @@ export class OfferListComponent implements OnInit {
     pageSize: PAGE.SIZE,
   };
 
+  filterSubscription: Subscription;
+
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.store.dispatch(
       changePaginationFilter({ pagination: this.pagination })
     );
-    this.store.select(selectFilterOffer).subscribe((filter) => {
-      this.store.dispatch(loadOffers({ filterOfferDto: filter }));
-    });
+    this.filterSubscription = this.store
+      .select(selectFilterOffer)
+      .subscribe((filter) => {
+        console.log('loadujem offere');
+        this.store.dispatch(loadOffers({ filterOffer: filter }));
+      });
     this.offer$ = this.store.select(selectOffersList);
     this.length$ = this.store.select(selectLengthOfOffers);
+  }
+
+  ngOnDestroy() {
+    this.filterSubscription.unsubscribe();
   }
 
   // private loadOffers() {

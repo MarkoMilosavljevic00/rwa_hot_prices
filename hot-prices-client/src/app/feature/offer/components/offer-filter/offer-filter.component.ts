@@ -17,6 +17,8 @@ import { OfferService } from '../../services/offer.service';
 import { SortBy, SortType } from 'src/app/common/enums/sort.enum';
 import { UserService } from 'src/app/feature/user/service/user.service';
 import { changeFilter } from '../../state/offer.action';
+import { selectFilterOffer } from '../../state/offer.selector';
+import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
 
 @Component({
   selector: 'app-offer-filter',
@@ -25,23 +27,26 @@ import { changeFilter } from '../../state/offer.action';
 })
 export class OfferFilterComponent implements OnInit {
   @Input() sidenavControl: MatSidenav;
-  filterOffer: FilterOfferDto;
+  filterOffer: FilterOffer;
 
-  isPricingEnabled = false;
-  isDiscountEnabled = false;
+  // availableValues: InitialValues;
+  // categoriesOption$: Observable<TreeNode<Category>[]>;
+  // storesOption$: Observable<string[]>;
+  // locationsOption$: Observable<string[]>;
 
-  categoriesOption$: Observable<TreeNode<Category>[]>;
-  storesOption$: Observable<string[]>;
-  locationsOption$: Observable<string[]>;
-
+  categoriesOptions: TreeNode<Category>[];
   users: User[];
   filteredUsersSuggestions: User[];
+  storesOptions: string[];
+  locationsOptions: string[];
   saleTypesOptions: SaleType[];
   sortByOptions: SortBy[];
   sortTypesOptions: SortType[];
-  
-  selectedCategory: TreeNode<Category>;
-  selectedUser: User;
+
+  // isPricingEnabled = false;
+  selectedTreeNode: TreeNode<Category>;
+  // isDiscountEnabled = false;
+  // selectedUser?: User;
 
   DROPDOWN_STYLE = STYLE.FULL_WIDTH;
 
@@ -53,25 +58,73 @@ export class OfferFilterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('init offer filter');
     this.initValues();
+    this.store.select(selectFilterOffer).subscribe((filterOffer) => {
+      if (filterOffer.selectedCategory)
+        this.selectedTreeNode = this.categoryService.convertCategoryToTreeNode(
+          filterOffer.selectedCategory
+        );
+      this.filterOffer = {
+        ...filterOffer,
+      };
+    });
   }
+
+  // patchValues(filterOffer: FilterOfferDto) {
+  //   if(filterOffer.categoryId){
+  //     console.log(filterOffer.categoryId);
+  //     this.selectedCategory = this.categoriesOptions.find(category => category.data?.id === filterOffer.categoryId);
+  //   }
+  //   if(filterOffer.ownerId){
+  //     this.selectedUser = this.users.find(user => user.id === filterOffer.ownerId);
+  //   }
+  //   this.isPricingEnabled = filterOffer.minPrice != undefined || filterOffer.maxPrice != undefined;
+  //   this.isDiscountEnabled = filterOffer.minDiscount != undefined || filterOffer.maxDiscount != undefined;
+  // }
 
   initValues() {
-    this.filterOffer = {};
-    this.userService.getUsers().subscribe(users => this.users = users);
-    this.categoriesOption$ = this.categoryService.getAllCategoriesAsTreeNodes();
+    this.filterOffer = new FilterOfferDto();
     this.saleTypesOptions = Object.values(SaleType);
-    this.storesOption$ = this.offerService.getOfferDistinctProperty(KEYS.OFFER.STORE);
-    this.locationsOption$ = this.offerService.getOfferDistinctProperty(KEYS.OFFER.LOCATION);
     this.sortByOptions = Object.values(SortBy);
     this.sortTypesOptions = Object.values(SortType);
+
+    this.userService.getUsers().subscribe((users) => (this.users = users));
+    this.categoryService
+      .getAllCategoriesAsTreeNodes()
+      .subscribe((categories) => {
+        this.categoriesOptions = categories;
+      });
+    this.offerService
+      .getOfferDistinctProperty(KEYS.OFFER.STORE)
+      .subscribe((stores) => (this.storesOptions = stores));
+    this.offerService
+      .getOfferDistinctProperty(KEYS.OFFER.LOCATION)
+      .subscribe((locations) => (this.locationsOptions = locations));
+    // this.store
+    //   .select(selectInitialValues)
+    //   .subscribe(
+    //     (initialValues) => (this.availableValues = { ...initialValues })
+    //   );
+    // this.store.select(selectInitialValues).subscribe((initialValues) => {
+    //   let categories: TreeNode<Category>[] | Category[] = [];
+    //   if (initialValues.categories) {
+    //     categories = initialValues.categories.map((category) =>
+    //       this.categoryService.convertCategoryToTreeNode(category as Category)
+    //     );
+    //   }
+    //   this.availableValues = { ...initialValues, categories };
+    // });
   }
 
-  onCategoryChanged(selectedCategory: TreeNode<Category>) {
-    this.filterOffer.categoryId = selectedCategory
-      ? selectedCategory.data?.id
+  onCategoryChanged(selectedTreeNode: TreeNode<Category>) {
+    this.filterOffer.categoryId = selectedTreeNode
+      ? selectedTreeNode.data?.id
       : undefined;
-    this.selectedCategory = selectedCategory;
+    if (selectedTreeNode)
+      this.filterOffer.selectedCategory = selectedTreeNode.data;
+    else this.filterOffer.selectedCategory = undefined;
+    this.selectedTreeNode = selectedTreeNode;
   }
 
   filterOwner(event: AutoCompleteCompleteEvent) {
@@ -79,15 +132,20 @@ export class OfferFilterComponent implements OnInit {
     this.filteredUsersSuggestions = this.users.filter((owner) =>
       owner.username.toLowerCase().includes(query.toLowerCase())
     );
+    // if (this.availableValues.users) {
+    //   this.filteredUsersSuggestions = this.availableValues.users.filter(
+    //     (owner) => owner.username.toLowerCase().includes(query.toLowerCase())
+    //   );
+    // }
   }
 
   onOwnerChanged(user: User) {
     this.filterOffer.ownerId = user ? user.id : undefined;
-    this.selectedUser = user;
+    this.filterOffer.selectedUser = user;
   }
 
   onPricingChanged(isPricingEnabled: boolean) {
-    this.isPricingEnabled = isPricingEnabled;
+    this.filterOffer.isPricingEnabled = isPricingEnabled;
     if (!isPricingEnabled) {
       this.filterOffer.minPrice = undefined;
       this.filterOffer.maxPrice = undefined;
@@ -98,7 +156,7 @@ export class OfferFilterComponent implements OnInit {
   }
 
   onDiscountChanged(isDiscountEnabled: boolean) {
-    this.isDiscountEnabled = isDiscountEnabled;
+    this.filterOffer.isDiscountEnabled = isDiscountEnabled;
     if (!isDiscountEnabled) {
       this.filterOffer.minDiscount = undefined;
       this.filterOffer.maxDiscount = undefined;
@@ -108,8 +166,18 @@ export class OfferFilterComponent implements OnInit {
     }
   }
 
+  onShowExpiredChanged(showExpired: boolean) {
+    this.filterOffer.expired = showExpired;
+  }
+
   applyFilter() {
-    console.log(this.filterOffer);
-    this.store.dispatch(changeFilter({ filter: this.filterOffer }));
+    this.sidenavControl.toggle();
+    this.store.dispatch(
+      changeFilter({
+        filter: {
+          ...this.filterOffer,
+        },
+      })
+    );
   }
 }

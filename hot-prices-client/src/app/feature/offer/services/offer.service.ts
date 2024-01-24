@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Offer } from '../models/offer.model';
 import { FormOfferDto } from '../models/dtos/form-offer.dto';
 import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
+import { InitialValues } from 'src/app/common/interfaces/initial-values.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,20 +18,27 @@ export class OfferService {
 
   getOffers(filterOfferDto?: FilterOfferDto) {
     if (!filterOfferDto)
-      return this.http.get<{ offers: Offer[]; length: number }>(`${environment.api}/offers`);
+      return this.http.get<{ offers: Offer[]; length: number }>(
+        `${environment.api}/offers`
+      );
 
-    const { title, pageSize, pageIndex } = filterOfferDto;
+    // const { title, pageSize, pageIndex } = filterOfferDto;
     let params = new HttpParams();
 
-    if (title) {
-      params = params.set('title', title);
-    }
+    Object.keys(filterOfferDto).forEach((key: string) => {
+      const value = filterOfferDto[key as keyof FilterOfferDto];
+      if (value != undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
 
-    if (pageSize != undefined && pageIndex != undefined) {
-      params = params
-        .set('pageSize', pageSize.toString())
-        .set('pageIndex', pageIndex.toString());
-    }
+    // console.log(params);
+
+    // if (pageSize != undefined && pageIndex != undefined) {
+    //   params = params
+    //     .set('pageSize', pageSize.toString())
+    //     .set('pageIndex', pageIndex.toString());
+    // }
 
     return this.http.get<{ offers: Offer[]; length: number }>(
       `${environment.api}/offers`,
@@ -38,20 +46,35 @@ export class OfferService {
     );
   }
 
-  getOffersTitles(search?: string) { 
+  getOffersTitles(search?: string) {
     let params = new HttpParams();
     if (search) {
       params = params.set('search', search);
     }
-    return this.http.get<string[]>(
-      `${environment.api}/offers/titles`,
+    return this.http.get<string[]>(`${environment.api}/offers/titles`, {
+      params,
+    });
+  }
+
+  getAvailableValues(filterOfferDto: FilterOfferDto) {
+    let params = new HttpParams();
+
+    Object.keys(filterOfferDto).forEach((key: string) => {
+      const value = filterOfferDto[key as keyof FilterOfferDto];
+      if (value != undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<InitialValues>(
+      `${environment.api}/offers/available-values`,
       { params }
     );
   }
 
-  getOfferDistinctProperty(key: string) { 
+  getOfferDistinctProperty(key: string) {
     return this.http.get<string[]>(
-      `${environment.api}/offers/distinct-property/${key}`,
+      `${environment.api}/offers/distinct-property/${key}`
     );
   }
 

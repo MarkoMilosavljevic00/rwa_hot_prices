@@ -7,11 +7,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
 import { Category } from 'src/models/entities/category.entity';
 import { Offer } from 'src/models/entities/offer.entity';
-import { ILike, Like, Repository } from 'typeorm';
+import { ILike, Like, Repository, SelectQueryBuilder } from 'typeorm';
 import { FileService } from '../file/file.service';
 import { ImageType } from 'src/common/enums/image-type.enum';
 import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
 import { SortBy, SortType } from 'src/common/enums/sort.enum';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class OfferService {
@@ -21,6 +22,7 @@ export class OfferService {
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
     private fileService: FileService,
+    private categoryService: CategoryService,
   ) {}
 
   async getAll(): Promise<Offer[]> {
@@ -29,13 +31,9 @@ export class OfferService {
     return offers;
   }
 
-  async getFilter(
-    filterOfferDto: FilterOfferDto,
-  ): Promise<{ offers: Offer[]; length: number }> {
+  async getQueryFromFilter(filterOfferDto: FilterOfferDto): Promise<SelectQueryBuilder<Offer>> {
     const {
       title,
-      pageSize,
-      pageIndex,
       categoryId,
       ownerId,
       minPrice,
@@ -49,6 +47,7 @@ export class OfferService {
       sortBy,
       sortType,
     } = filterOfferDto;
+
     const query = this.offerRepository.createQueryBuilder('offer');
     query.leftJoinAndSelect('offer.category', 'category');
     query.leftJoinAndSelect('offer.owner', 'owner');
@@ -59,8 +58,12 @@ export class OfferService {
       });
     }
 
+    // if (categoryId) {
+    //   query.andWhere('offer.categoryId = :categoryId', { categoryId });
+    // }
     if (categoryId) {
-      query.andWhere('offer.categoryId = :categoryId', { categoryId });
+      const descendantIds = await this.categoryService.getAllDescendantIds(categoryId);
+      query.andWhere('offer.categoryId IN (:...ids)', { ids: [categoryId, ...descendantIds] });    
     }
 
     if (ownerId) {
@@ -120,6 +123,16 @@ export class OfferService {
 
     query.orderBy(`offer.${sortField}`, sortOrder, 'NULLS LAST');
 
+    return query;
+  }
+
+  async getPagedOffersAndLength(
+    filterOfferDto: FilterOfferDto,
+  ): Promise<{ offers: Offer[]; length: number }> {
+
+    const query = await this.getQueryFromFilter(filterOfferDto);
+    const { pageSize, pageIndex } = filterOfferDto;
+
     const length = await query.getCount();
 
     if (pageSize && pageIndex !== undefined) {
@@ -138,7 +151,14 @@ export class OfferService {
     });
   }
 
-  async getDistinctProperty(key: string): Promise<string[]> {
+  // getAvailableValues(filterOfferDto: FilterOfferDto): Promise<InitialValues> {
+  //   return {}
+  // }
+
+  async getDistinctProperty(
+    key: string,
+    filterOferrDto?: FilterOfferDto,
+  ): Promise<string[]> {
     const offers = await this.offerRepository
       .createQueryBuilder('offer')
       .select(`offer.${key}`, key)
@@ -149,7 +169,7 @@ export class OfferService {
       .getRawMany();
 
     return offers.map((offer) => {
-      return offer[key]
+      return offer[key];
     });
   }
 

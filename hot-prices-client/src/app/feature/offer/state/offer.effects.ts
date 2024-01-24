@@ -5,6 +5,8 @@ import * as OfferActions from './offer.action';
 import { OfferService } from '../services/offer.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { PAGE } from 'src/app/common/constants';
+import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 
 @Injectable()
 export class OfferEffects {
@@ -12,7 +14,8 @@ export class OfferEffects {
   loadOffers$ = createEffect(() =>
     this.action$.pipe(
       ofType(OfferActions.loadOffers),
-      switchMap(({ filterOfferDto }) => {
+      switchMap(({ filterOffer }) => {
+        const filterOfferDto: FilterOfferDto = filterOffer;
         return this.offerService.getOffers(filterOfferDto).pipe(
           map(({ offers, length }) => OfferActions.loadOffersSuccess({offers, length})),
           catchError(() => of())
@@ -20,12 +23,12 @@ export class OfferEffects {
       })
     ));
     
-  // loadOffersTitles$ = createEffect(() =>
+  // loadAvailableValues$ = createEffect(() =>
   //   this.action$.pipe(
-  //     ofType(OfferActions.changeSearchFilter),
-  //     switchMap(({ search }) => {
-  //       return this.offerService.getOffersTitles(search).pipe(
-  //         map((titles) => OfferActions.loadOffersTitlesSuccess({ titles })),
+  //     ofType(OfferActions.changeFilter),
+  //     switchMap(({filter}) => {
+  //       return this.offerService.getAvailableValues(filter).pipe(
+  //         map((availableValues) => OfferActions.loadAvailableValuesSuccess({ availableValues })),
   //         catchError(() => of())
   //       );
   //     })
@@ -65,7 +68,7 @@ export class OfferEffects {
             return [
               OfferActions.submittedOfferSuccess({ offer }),
               OfferActions.loadOffers({
-                filterOfferDto: { pageIndex: 0, pageSize: 5 },
+                filterOffer: { pageIndex: PAGE.INITIAL_INDEX, pageSize: PAGE.SIZE },
               }),
             ];
           }),
@@ -84,7 +87,7 @@ export class OfferEffects {
             return [
               OfferActions.submittedOfferSuccess({ offer }),
               OfferActions.loadOffers({
-                filterOfferDto: { pageIndex: 0, pageSize: 5 },
+                filterOffer: { pageIndex: PAGE.INITIAL_INDEX, pageSize: PAGE.SIZE },
               }),
             ];
           }),

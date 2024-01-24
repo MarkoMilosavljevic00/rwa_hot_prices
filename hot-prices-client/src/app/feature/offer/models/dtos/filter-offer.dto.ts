@@ -1,7 +1,7 @@
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { SortBy, SortType } from 'src/app/common/enums/sort.enum';
 
-export interface FilterOfferDto {
+export class FilterOfferDto {
   title?: string;
   categoryId?: number;
   ownerId?: number;

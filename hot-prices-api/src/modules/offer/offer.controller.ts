@@ -19,6 +19,7 @@ import { Offer } from 'src/models/entities/offer.entity';
 import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
 import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
 import { FilterOfferValidationPipe } from './pipes/filter-offer.pipe';
+import { InitialValues } from 'src/common/interfaces/initial-values.interface';
 
 @Controller('offers')
 export class OfferController {
@@ -29,7 +30,7 @@ export class OfferController {
     @Query()
     filterOfferDto: FilterOfferDto,
   ): Promise<{ offers: Offer[]; length: number }> {
-    return this.offerService.getFilter(filterOfferDto);
+    return this.offerService.getPagedOffersAndLength(filterOfferDto);
   }
 
   // @Get('stores')
@@ -41,6 +42,14 @@ export class OfferController {
   getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
     return this.offerService.getDistinctProperty(key);
   }
+
+  // @Get('available-values')
+  // getOffersAvailableValues(
+  //   @Query()
+  //   filterOfferDto: FilterOfferDto,
+  // ): Promise<InitialValues> {
+  //   return this.offerService.getAvailableValues(filterOfferDto);
+  // }
 
   // @Get('titles')
   // getOffersTitles(@Query('search') search: string): Promise<string[]> {

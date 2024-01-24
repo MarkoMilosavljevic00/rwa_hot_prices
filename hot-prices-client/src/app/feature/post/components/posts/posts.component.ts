@@ -7,7 +7,6 @@ import { KEYS } from 'src/app/common/constants';
 import { PostType } from 'src/app/common/enums/post-type.enum';
 import { OfferService } from 'src/app/feature/offer/services/offer.service';
 import { changeSearchFilter } from 'src/app/feature/offer/state/offer.action';
-import { selectOffersTitles } from 'src/app/feature/offer/state/offer.selector';
 import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
 import { selectUrl } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
@@ -70,14 +69,13 @@ export class PostsComponent implements OnInit {
         })
       )
       .subscribe((titles) => {
-        console.log(titles);
+        // console.log(titles);
         this.titlesOptions = titles
       });
   }
 
   onSearch(search: string) {
     this.filteredTitlesOptions = this._filter(search);
-    console.log(this.filteredTitlesOptions);
     this.store.dispatch(changeSearchFilter({ search }));
   }
 

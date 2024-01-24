@@ -90,6 +90,13 @@ export class CategoryService {
     return await this.categoryRepository.findAncestorsTree(category);
   }
 
+  async getAllDescendantIds(id: number): Promise<number[]> {
+    const category = await this.categoryRepository.findOne({ where: { id } });
+    return await this.categoryRepository
+      .findDescendants(category)
+      .then((categories) => categories.map((category) => category.id));
+  }
+
   async getTest(id: number) {
     const category = await this.categoryRepository.findOne({
       where: { id },
@@ -99,16 +106,17 @@ export class CategoryService {
     });
   }
 
-  async delete(id: number, childHandlingMethod: ChildHandlingMethod): Promise<Category[]> {
+  async delete(
+    id: number,
+    childHandlingMethod: ChildHandlingMethod,
+  ): Promise<Category[]> {
     const category = await this.categoryRepository.findOne({
       where: { id },
       relations: ['children', 'parent', 'posts'],
     });
 
     if (!category) {
-      throw new NotFoundException(
-        `Category with ID ${id} not found`,
-      );
+      throw new NotFoundException(`Category with ID ${id} not found`);
     }
 
     const categoriesForUpdating = [];
@@ -117,9 +125,7 @@ export class CategoryService {
     switch (childHandlingMethod) {
       case ChildHandlingMethod.REASSIGN:
         if (!category.parent) {
-          throw new BadRequestException(
-            `Category with ID ${id} has no parent`,
-          );
+          throw new BadRequestException(`Category with ID ${id} has no parent`);
         }
 
         const parent = await this.categoryRepository.findOne({

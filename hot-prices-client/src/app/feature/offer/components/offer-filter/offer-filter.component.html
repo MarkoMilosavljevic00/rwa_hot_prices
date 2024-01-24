@@ -13,14 +13,14 @@
   <div fxLayoutAlign="center center">
     <h2>Filter Offers</h2>
   </div>
-
+  <!-- [options]="(categoriesOption$ | async) || []" -->
   <div class="field">
     <label> Category: </label>
     <mat-divider></mat-divider>
     <p-treeSelect
-      [ngModel]="selectedCategory"
+      [ngModel]="selectedTreeNode"
       (ngModelChange)="onCategoryChanged($event)"
-      [options]="(categoriesOption$ | async) || []"
+      [options]="categoriesOptions"
       [showClear]="true"
       placeholder="All categories..."
       fxFlex="100%"
@@ -32,7 +32,7 @@
     <label> Owner: </label>
     <mat-divider></mat-divider>
     <p-autoComplete
-      [ngModel]="selectedUser"
+      [ngModel]="filterOffer.selectedUser"
       (ngModelChange)="onOwnerChanged($event)"
       [suggestions]="filteredUsersSuggestions"
       [completeOnFocus]="true"
@@ -57,7 +57,7 @@
     <div fxFlex>
       <label fxFlex>Pricing:</label>
       <mat-slide-toggle
-        [ngModel]="isPricingEnabled"
+        [ngModel]="filterOffer.isPricingEnabled"
         (ngModelChange)="onPricingChanged($event)"
         fxFlex
         fxLayoutAlign="end end"
@@ -67,7 +67,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-slider
-      [disabled]="!isPricingEnabled"
+      [disabled]="!filterOffer.isPricingEnabled"
       color="warn"
       [min]="0"
       [max]="10000"
@@ -82,7 +82,7 @@
     <div fxFlex>
       <label fxFlex>Discount:</label>
       <mat-slide-toggle
-        [ngModel]="isDiscountEnabled"
+        [ngModel]="filterOffer.isDiscountEnabled"
         (ngModelChange)="onDiscountChanged($event)"
         fxFlex
         fxLayoutAlign="end end"
@@ -92,7 +92,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-slider
-      [disabled]="!isDiscountEnabled"
+      [disabled]="!filterOffer.isDiscountEnabled"
       color="warn"
       min="0"
       max="100"
@@ -120,7 +120,7 @@
     <mat-divider></mat-divider>
     <p-dropdown
       [(ngModel)]="filterOffer.store"
-      [options]="(storesOption$ | async) || []"
+      [options]="storesOptions"
       [showClear]="true"
       [style]="DROPDOWN_STYLE"
       placeholder="All stores..."
@@ -132,7 +132,7 @@
     <mat-divider></mat-divider>
     <p-dropdown
       [(ngModel)]="filterOffer.location"
-      [options]="(locationsOption$ | async) || []"
+      [options]="locationsOptions"
       [showClear]="true"
       [style]="DROPDOWN_STYLE"
       placeholder="All locations..."
@@ -151,7 +151,7 @@
     ></p-dropdown>
     <mat-divider></mat-divider>
     <p-dropdown
-    [(ngModel)]="filterOffer.sortType"
+      [(ngModel)]="filterOffer.sortType"
       [options]="sortTypesOptions"
       [showClear]="true"
       placeholder="Sort Type"
@@ -163,7 +163,8 @@
     <div fxFlex>
       <label fxFlex>Show Expired:</label>
       <mat-slide-toggle
-        [(ngModel)]="filterOffer.expired"
+        [ngModel]="filterOffer.expired"
+        (ngModelChange)="onShowExpiredChanged($event)"
         fxFlex
         fxLayoutAlign="end end"
         color="warn"
@@ -171,8 +172,6 @@
       </mat-slide-toggle>
     </div>
   </div>
-
-  <!-- Dodajte ostale polja na sličan način -->
 
   <button mat-raised-button color="warn" (click)="applyFilter()">
     Apply Filter

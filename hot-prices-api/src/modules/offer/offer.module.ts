@@ -7,10 +7,11 @@ import { Post } from 'src/models/entities/post.entity';
 import { Offer } from 'src/models/entities/offer.entity';
 import { Category } from 'src/models/entities/category.entity';
 import { FileService } from '../file/file.service';
+import { CategoryService } from '../category/category.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Offer, Category])],
   controllers: [OfferController],
-  providers: [OfferService, FileService]
+  providers: [OfferService, FileService, CategoryService]
 })
 export class OfferModule {}

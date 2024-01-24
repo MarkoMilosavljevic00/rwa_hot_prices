@@ -41,12 +41,12 @@ export class CategoryService {
     //   this.convertCategoryToTreeNode(category)
     // );
     return this.http.get<Category[]>(`${environment.api}/category`).pipe(
-      map((categories) =>{
-        let treeNodes = categories.map((category) => this.convertCategoryToTreeNode(category))
-        return treeNodes
-      }
-      ),
-      tap((categories) => console.log(categories))
+      map((categories) => {
+        let treeNodes = categories.map((category) =>
+          this.convertCategoryToTreeNode(category)
+        );
+        return treeNodes;
+      })
     );
   }
 

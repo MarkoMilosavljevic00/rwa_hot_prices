@@ -8,8 +8,7 @@ const adapter = createEntityAdapter<Offer>();
 
 export const initialState: OfferState = adapter.getInitialState({
   length: 0,
-  filter: {},
-  titles: [],
+  filter: {}
 });
 
 export const offerReducer = createReducer(
@@ -41,12 +40,15 @@ export const offerReducer = createReducer(
       },
     };
   }),
-  on(Actions.loadOffersTitlesSuccess, (state, { titles }) => {
-    return {
-      ...state,
-      titles,
-    };
-  }),
+  // on(Actions.loadAvailableValuesSuccess, (state, { availableValues }) => {
+  //   return {
+  //     ...state,
+  //     initialValues: {
+  //       ...state.initialValues,
+  //       ...availableValues,
+  //     },
+  //   };
+  // }),
   on(Actions.loadOffersSuccess, (state, { offers, length }) => {
     return adapter.setAll(offers, {
       ...state,

@@ -3,10 +3,12 @@ import { Offer } from '../models/offer.model';
 import { FormOfferDto } from '../models/dtos/form-offer.dto';
 import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 import { Pagination } from 'src/app/common/interfaces/pagination.interface';
+import { InitialValues } from 'src/app/common/interfaces/initial-values.interface';
+import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
 
 export const loadOffers = createAction(
   '[Offer] Load offers',
-  props<{ filterOfferDto?: FilterOfferDto }>()
+  props<{ filterOffer: FilterOfferDto }>()
 );
 
 export const loadOffersSuccess = createAction(
@@ -16,7 +18,7 @@ export const loadOffersSuccess = createAction(
 
 export const changeFilter = createAction(
   '[Offer] Change filter',
-  props<{ filter: FilterOfferDto }>()
+  props<{ filter: FilterOffer }>()
 );
 
 export const changePaginationFilter = createAction(
@@ -29,9 +31,9 @@ export const changeSearchFilter = createAction(
   props<{ search: string }>()
 );
 
-export const loadOffersTitlesSuccess = createAction(
-  '[Offer] Load offers titles success',
-  props<{ titles: string[] }>()
+export const loadAvailableValuesSuccess = createAction(
+  '[Offer] Load available values success',
+  props<{ availableValues: InitialValues }>()
 );
 
 export const loadDetailedOffer = createAction(
