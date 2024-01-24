@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { createEffect, Actions, ofType } from '@ngrx/effects';
-import { EMPTY, catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import {
+  EMPTY,
+  catchError,
+  concatMap,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import * as OfferActions from './offer.action';
 import { OfferService } from '../services/offer.service';
 import { Router } from '@angular/router';
@@ -10,30 +19,42 @@ import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 
 @Injectable()
 export class OfferEffects {
-
   loadOffers$ = createEffect(() =>
     this.action$.pipe(
       ofType(OfferActions.loadOffers),
-      switchMap(({ filterOffer }) => {
+      switchMap(({ filterOfferDto: filterOffer }) => {
         const filterOfferDto: FilterOfferDto = filterOffer;
         return this.offerService.getOffers(filterOfferDto).pipe(
-          map(({ offers, length }) => OfferActions.loadOffersSuccess({offers, length})),
+          map(({ offers, length }) =>
+            OfferActions.loadOffersSuccess({ offers, length })
+          ),
           catchError(() => of())
         );
       })
-    ));
-    
-  // loadAvailableValues$ = createEffect(() =>
-  //   this.action$.pipe(
-  //     ofType(OfferActions.changeFilter),
-  //     switchMap(({filter}) => {
-  //       return this.offerService.getAvailableValues(filter).pipe(
-  //         map((availableValues) => OfferActions.loadAvailableValuesSuccess({ availableValues })),
-  //         catchError(() => of())
-  //       );
-  //     })
-  //   ));
+    )
+  );
 
+  loadAvailableTitles$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.changeFilter, OfferActions.loadTitles),
+      switchMap(({ filterOffer: filter }) => {
+        const {
+          isDiscountEnabled,
+          isPricingEnabled,
+          selectedCategory,
+          selectedUser,
+          ...filterOfferDto
+        } = filter;
+        console.log(filterOfferDto);
+        return this.offerService
+          .getOfferDistinctPropertyFilter('title', filterOfferDto)
+          .pipe(
+            map((titles) => OfferActions.loadTitlesSuccess({ titles })),
+            catchError(() => of())
+          );
+      })
+    )
+  );
 
   loadDetailedOffer$ = createEffect(() =>
     this.action$.pipe(
@@ -68,7 +89,10 @@ export class OfferEffects {
             return [
               OfferActions.submittedOfferSuccess({ offer }),
               OfferActions.loadOffers({
-                filterOffer: { pageIndex: PAGE.INITIAL_INDEX, pageSize: PAGE.SIZE },
+                filterOfferDto: {
+                  pageIndex: PAGE.INITIAL_INDEX,
+                  pageSize: PAGE.SIZE,
+                },
               }),
             ];
           }),
@@ -87,7 +111,10 @@ export class OfferEffects {
             return [
               OfferActions.submittedOfferSuccess({ offer }),
               OfferActions.loadOffers({
-                filterOffer: { pageIndex: PAGE.INITIAL_INDEX, pageSize: PAGE.SIZE },
+                filterOfferDto: {
+                  pageIndex: PAGE.INITIAL_INDEX,
+                  pageSize: PAGE.SIZE,
+                },
               }),
             ];
           }),

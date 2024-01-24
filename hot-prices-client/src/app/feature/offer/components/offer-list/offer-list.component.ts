@@ -9,6 +9,7 @@ import {
   changePaginationFilter,
   changeSearchFilter,
   loadOffers,
+  loadTitles,
 } from '../../state/offer.action';
 import {
   selectFilterOffer,
@@ -49,7 +50,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
       .select(selectFilterOffer)
       .subscribe((filter) => {
         console.log('loadujem offere');
-        this.store.dispatch(loadOffers({ filterOffer: filter }));
+        this.store.dispatch(loadOffers({ filterOfferDto: filter }));
       });
     this.offer$ = this.store.select(selectOffersList);
     this.length$ = this.store.select(selectLengthOfOffers);

@@ -9,5 +9,6 @@ export interface OfferState extends EntityState<Offer> {
   detailedOffer?: Offer;
   editingOffer?: Offer;
   filter: FilterOffer;
+  titles: string[]
   length: number;
 }

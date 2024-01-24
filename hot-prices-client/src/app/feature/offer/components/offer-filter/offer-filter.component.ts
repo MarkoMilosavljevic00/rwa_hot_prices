@@ -174,7 +174,7 @@ export class OfferFilterComponent implements OnInit {
     this.sidenavControl.toggle();
     this.store.dispatch(
       changeFilter({
-        filter: {
+        filterOffer: {
           ...this.filterOffer,
         },
       })

@@ -6,7 +6,8 @@ import { map, Observable, of, startWith, switchMap } from 'rxjs';
 import { KEYS } from 'src/app/common/constants';
 import { PostType } from 'src/app/common/enums/post-type.enum';
 import { OfferService } from 'src/app/feature/offer/services/offer.service';
-import { changeSearchFilter } from 'src/app/feature/offer/state/offer.action';
+import { changeSearchFilter, loadTitles } from 'src/app/feature/offer/state/offer.action';
+import { selectOffersTitles } from 'src/app/feature/offer/state/offer.selector';
 import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
 import { selectUrl } from 'src/app/state/app.selectors';
 import { AppState } from 'src/app/state/app.state';
@@ -33,13 +34,6 @@ export class PostsComponent implements OnInit {
     private store: Store<AppState>
   ) {}
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.titlesOptions.filter((option) =>
-      option.toLowerCase().includes(filterValue)
-    );
-  }
-
   ngOnInit() {
     // this.filteredOptions = this.searchControl.valueChanges.pipe(
     //   startWith(''),
@@ -62,21 +56,31 @@ export class PostsComponent implements OnInit {
       .pipe(
         switchMap((url) => {
           this.routeMappingService.mapUrlToPostType(url, true);
-          if (this.postType === PostType.Offer)
-            return this.offerService.getOfferDistinctProperty(KEYS.OFFER.TITLE);
-          // this.searchOptions = this.store.select(selectOffersTitles);
+          if (this.postType === PostType.Offer){
+            this.store.dispatch(loadTitles({ filterOffer: {} }));
+            return this.store.select(selectOffersTitles);
+            // return this.offerService.getOfferDistinctProperty(KEYS.OFFER.TITLE);
+          }
           else return of([]);
         })
       )
       .subscribe((titles) => {
         // console.log(titles);
-        this.titlesOptions = titles
+        this.titlesOptions = titles;
+        this.filteredTitlesOptions = titles;
       });
   }
 
   onSearch(search: string) {
     this.filteredTitlesOptions = this._filter(search);
     this.store.dispatch(changeSearchFilter({ search }));
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.titlesOptions.filter((option) =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
 
   onAddNew() {

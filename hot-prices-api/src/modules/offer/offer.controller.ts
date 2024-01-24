@@ -30,7 +30,7 @@ export class OfferController {
     @Query()
     filterOfferDto: FilterOfferDto,
   ): Promise<{ offers: Offer[]; length: number }> {
-    return this.offerService.getPagedOffersAndLength(filterOfferDto);
+    return this.offerService.getOffersFilter(filterOfferDto);
   }
 
   // @Get('stores')
@@ -41,6 +41,14 @@ export class OfferController {
   @Get('distinct-property/:key')
   getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
     return this.offerService.getDistinctProperty(key);
+  }
+
+  @Get('distinct-property-filter/:key')
+  getOffersDistinctPropertyFilter(
+    @Param('key') key: string,
+    @Query() filterOfferDto: FilterOfferDto,
+  ): Promise<string[]> {
+    return this.offerService.getDistinctProperty(key, filterOfferDto);
   }
 
   // @Get('available-values')

@@ -78,6 +78,22 @@ export class OfferService {
     );
   }
 
+  getOfferDistinctPropertyFilter(key: string, filterOfferDto: FilterOfferDto) {
+    let params = new HttpParams();
+
+    Object.keys(filterOfferDto).forEach((key: string) => {
+      const value = filterOfferDto[key as keyof FilterOfferDto];
+      if (value != undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<string[]>(
+      `${environment.api}/offers/distinct-property-filter/${key}`,
+      { params }
+    );
+  }
+
   postOffer(offer: FormOfferDto) {
     return this.http.post<Offer>(`${environment.api}/offers`, offer);
   }

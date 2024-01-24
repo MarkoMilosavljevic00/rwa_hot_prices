@@ -8,7 +8,7 @@ import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
 
 export const loadOffers = createAction(
   '[Offer] Load offers',
-  props<{ filterOffer: FilterOfferDto }>()
+  props<{ filterOfferDto: FilterOfferDto }>()
 );
 
 export const loadOffersSuccess = createAction(
@@ -18,7 +18,7 @@ export const loadOffersSuccess = createAction(
 
 export const changeFilter = createAction(
   '[Offer] Change filter',
-  props<{ filter: FilterOffer }>()
+  props<{ filterOffer: FilterOffer }>()
 );
 
 export const changePaginationFilter = createAction(
@@ -31,9 +31,14 @@ export const changeSearchFilter = createAction(
   props<{ search: string }>()
 );
 
-export const loadAvailableValuesSuccess = createAction(
-  '[Offer] Load available values success',
-  props<{ availableValues: InitialValues }>()
+export const loadTitles = createAction(
+  '[Offer] Load titles',
+  props<{ filterOffer: FilterOffer }>()
+);
+
+export const loadTitlesSuccess = createAction(
+  '[Offer] Load titles success',
+  props<{ titles: string[] }>()
 );
 
 export const loadDetailedOffer = createAction(

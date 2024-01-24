@@ -31,7 +31,31 @@ export class OfferService {
     return offers;
   }
 
-  async getQueryFromFilter(filterOfferDto: FilterOfferDto): Promise<SelectQueryBuilder<Offer>> {
+  async getOffersFilter(
+    filterOfferDto: FilterOfferDto,
+  ): Promise<{ offers: Offer[]; length: number }> {
+    let query = await this.getQueryFromFilter(filterOfferDto);
+
+    const length = await query.getCount();
+
+    query = this.getPagedQuery(
+      query,
+      filterOfferDto.pageSize,
+      filterOfferDto.pageIndex,
+    );
+    query = this.getSortQuery(
+      query,
+      filterOfferDto.sortBy,
+      filterOfferDto.sortType,
+    );
+
+    const offers = await query.getMany();
+    return { offers, length };
+  }
+
+  async getQueryFromFilter(
+    filterOfferDto: FilterOfferDto,
+  ): Promise<SelectQueryBuilder<Offer>> {
     const {
       title,
       categoryId,
@@ -44,8 +68,6 @@ export class OfferService {
       store,
       location,
       expired,
-      sortBy,
-      sortType,
     } = filterOfferDto;
 
     const query = this.offerRepository.createQueryBuilder('offer');
@@ -62,8 +84,11 @@ export class OfferService {
     //   query.andWhere('offer.categoryId = :categoryId', { categoryId });
     // }
     if (categoryId) {
-      const descendantIds = await this.categoryService.getAllDescendantIds(categoryId);
-      query.andWhere('offer.categoryId IN (:...ids)', { ids: [categoryId, ...descendantIds] });    
+      const descendantIds =
+        await this.categoryService.getAllDescendantIds(categoryId);
+      query.andWhere('offer.categoryId IN (:...ids)', {
+        ids: [categoryId, ...descendantIds],
+      });
     }
 
     if (ownerId) {
@@ -103,45 +128,48 @@ export class OfferService {
     }
 
     if (expired === undefined || expired === false) {
+      console.log(expired);
       query.andWhere('offer.expiryDate > CURRENT_TIMESTAMP');
     }
-
-    const sortField =
-      sortBy === SortBy.DEGREES
-        ? 'numOfDegrees'
-        : sortBy === SortBy.POST_DATE
-        ? 'postedDate'
-        : sortBy === SortBy.EXPIRY_DATE
-        ? 'expiryDate'
-        : sortBy === SortBy.PRICE
-        ? 'price'
-        : sortBy === SortBy.DISCOUNT
-        ? 'discount'
-        : 'id';
-
-    const sortOrder = sortType === SortType.DESC ? 'DESC' : 'ASC';
-
-    query.orderBy(`offer.${sortField}`, sortOrder, 'NULLS LAST');
 
     return query;
   }
 
-  async getPagedOffersAndLength(
-    filterOfferDto: FilterOfferDto,
-  ): Promise<{ offers: Offer[]; length: number }> {
+  getSortQuery(
+    query: SelectQueryBuilder<Offer>,
+    sortBy?: SortBy,
+    sortType?: SortType,
+  ) {
+    if (sortBy !== undefined || sortType !== undefined) {
+      const sortField =
+        sortBy === SortBy.DEGREES
+          ? 'numOfDegrees'
+          : sortBy === SortBy.POST_DATE
+          ? 'postedDate'
+          : sortBy === SortBy.EXPIRY_DATE
+          ? 'expiryDate'
+          : sortBy === SortBy.PRICE
+          ? 'price'
+          : sortBy === SortBy.DISCOUNT
+          ? 'discount'
+          : 'id';
 
-    const query = await this.getQueryFromFilter(filterOfferDto);
-    const { pageSize, pageIndex } = filterOfferDto;
+      const sortOrder = sortType === SortType.DESC ? 'DESC' : 'ASC';
+      query.orderBy(`offer.${sortField}`, sortOrder, 'NULLS LAST');
+    }
+    return query;
+  }
 
-    const length = await query.getCount();
-
+  getPagedQuery(
+    query: SelectQueryBuilder<Offer>,
+    pageSize?: number,
+    pageIndex?: number,
+  ) {
     if (pageSize && pageIndex !== undefined) {
       query.skip(pageSize * pageIndex);
       query.take(pageSize);
     }
-
-    const offers = await query.getMany();
-    return { offers, length };
+    return query;
   }
 
   async getById(id: number): Promise<Offer> {
@@ -159,14 +187,24 @@ export class OfferService {
     key: string,
     filterOferrDto?: FilterOfferDto,
   ): Promise<string[]> {
-    const offers = await this.offerRepository
-      .createQueryBuilder('offer')
+    let query;
+
+    if (filterOferrDto) {
+      query = await this.getQueryFromFilter(filterOferrDto);
+    } else {
+      query = this.offerRepository.createQueryBuilder('offer')
+      .andWhere('offer.expiryDate > CURRENT_TIMESTAMP');
+    }
+    query = query
       .select(`offer.${key}`, key)
-      .where(`offer.${key} IS NOT NULL`)
+      .andWhere(`offer.${key} IS NOT NULL`)
       .andWhere(`offer.${key} != ''`)
-      .andWhere('offer.expiryDate > CURRENT_TIMESTAMP')
-      .distinct(true)
-      .getRawMany();
+      .distinct(true);
+    console.log(query.getSql());
+
+    let offers = await query.getRawMany();
+
+    // console.log(offers);
 
     return offers.map((offer) => {
       return offer[key];

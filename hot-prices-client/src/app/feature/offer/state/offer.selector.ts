@@ -53,10 +53,10 @@ export const selectFilterOffer = createSelector(
   (offerState) => offerState.filter
 );
 
-// export const selectInitialValues = createSelector(
-//   selectOffersFeature,
-//   (offerState) => offerState.initialValues
-// );
+export const selectOffersTitles = createSelector(
+  selectOffersFeature,
+  (offerState) => offerState.titles
+);
 
 
 

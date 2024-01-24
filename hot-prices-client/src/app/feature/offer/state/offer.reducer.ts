@@ -8,12 +8,13 @@ const adapter = createEntityAdapter<Offer>();
 
 export const initialState: OfferState = adapter.getInitialState({
   length: 0,
-  filter: {}
+  filter: {},
+  titles: [],
 });
 
 export const offerReducer = createReducer(
   initialState,
-  on(Actions.changeFilter, (state, { filter }) => {
+  on(Actions.changeFilter, (state, { filterOffer: filter }) => {
     return {
       ...state,
       filter: {
@@ -38,6 +39,12 @@ export const offerReducer = createReducer(
         ...state.filter,
         ...pagination,
       },
+    };
+  }),
+  on(Actions.loadTitlesSuccess, (state, { titles }) => {
+    return {
+      ...state,
+      titles,
     };
   }),
   // on(Actions.loadAvailableValuesSuccess, (state, { availableValues }) => {
