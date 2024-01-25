@@ -36,7 +36,7 @@ export class User {
   })
   registrationDate: Date;
 
-  @Column()
+  @Column({ nullable: true})
   imgPath: string;
 
   @OneToMany(() => Post, post => post.owner)

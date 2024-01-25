@@ -1,16 +1,40 @@
 @media screen and (min-width: 1024px) {
-  .padding {
+  .inline-padding {
     padding-inline: 10%;
   }
 }
 
-.page{
-  height:100%
+.container{
+  height:100%;
+  background-color: #e9eaed;
 }
 
+nav{
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+  /* background-color: #fff; */
+}
+
+@media screen and (max-width: 320px) {
+  .toolbar {
+    height: 300px;
+  }
+}
+
+.toolbar{
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background-color: #f44336;
+  padding-inline: 5%;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
 mat-toolbar{
-  height:100px;
+  /* padding-inline: 5%; */
+  height: 100px;
 }
 
 mat-sidenav-content{
@@ -21,27 +45,41 @@ mat-sidenav-container, mat-sidenav {
   height: 100%;
 }
 
+mat-sidenav-container{
+  color: #e9eaed;
+}
+
 mat-sidenav {
   height: 100%;
   width: 300px;
 }
 
 .add-new-button{
-  align-self: center;
-  /* margin-block: 10px; */
-  height: 100px;
-  width: 100px;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.add-new-text{
+  white-space: wrap;
 }
 
 .add-new-icon{
   height: 40px;
   width: 40px; 
-  font-size: 40px;
+  font-size: 30px;
 }
 
 .filter-button{
+  height: 56px;
+  width: 300px;
+}
+
+.search-bar-button{
   align-self: flex-start;
-  height: 50px;
+  height: 56px;
 }
 
 /* .example-form {

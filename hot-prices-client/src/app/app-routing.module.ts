@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './feature/auth/pages/login/login.component';
 import { SignupComponent } from './feature/auth/pages/signup/signup.component';
-import { CommentListComponent } from './feature/post/components/comment-list/comment-list.component';
-import { CommentComponent } from './feature/post/components/comment/comment.component';
+import { CommentListComponent } from './feature/comment/components/comment-list/comment-list.component';
+import { CommentComponent } from './feature/comment/components/comment/comment.component';
 import { UserAvatarComponent } from './shared/components/user-avatar/user-avatar.component';
 
 const routes: Routes = [

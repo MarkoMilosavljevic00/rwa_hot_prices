@@ -1,4 +1,4 @@
-import { Post } from "./post.model";
+import { Post } from "../../post/models/post.model";
 import { User } from "../../user/models/user.model";
 
 export interface Comment {
@@ -11,10 +11,10 @@ export interface Comment {
   reports: Report[];
 }
 
-export interface CommentTest {
-  id: number;
-  content: string;
-  postedDate: Date;
-  post?: Post;
-  owner: string;
-}
+// export interface CommentTest {
+//   id: number;
+//   content: string;
+//   postedDate: Date;
+//   post?: Post;
+//   owner: string;
+// }

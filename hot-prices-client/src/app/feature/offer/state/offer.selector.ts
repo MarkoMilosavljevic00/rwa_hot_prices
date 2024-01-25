@@ -7,6 +7,7 @@ import { ImageInfo } from '../components/offer-details/offer-details.component';
 import { selectRouteParams } from 'src/app/state/app.selectors';
 import { Params } from '@angular/router';
 import { isNotUndefined } from 'src/app/common/type-guards';
+import { Comment } from '../../comment/models/comment.model';
 
 // export const selectOffersFeature = createSelector(
 //   (state: AppState) => state.offers,
@@ -57,6 +58,11 @@ export const selectOffersTitles = createSelector(
   selectOffersFeature,
   (offerState) => offerState.titles
 );
+
+// export const selectDetailedOfferComments = createSelector(
+//   selectDetailedOffer,
+//   (detailedOffer): Comment[] | undefined => detailedOffer?.comments
+// );
 
 
 

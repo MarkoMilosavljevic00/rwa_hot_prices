@@ -76,8 +76,7 @@ export class OfferController {
 
   @Post()
   postOffer(@Body() formOfferDto: FormOfferDto) {
-    console.log(formOfferDto);
-    return this.offerService.create(formOfferDto);
+    return this.offerService.post(formOfferDto);
   }
 
   @Patch('/:id')

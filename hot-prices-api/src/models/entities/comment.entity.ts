@@ -18,7 +18,7 @@ export class Comment {
   })
   postedDate: Date;
 
-  @Column({ type: 'boolean' })
+  @Column({ type: 'boolean', default: false })
   restricted: boolean;
 
   @ManyToOne(() => Post, post => post.comments)
@@ -26,6 +26,8 @@ export class Comment {
 
   @ManyToOne(() => User, user => user.comments)
   owner: User;
+
+  
 
   @OneToMany(() => Report, report => report.comment)
   reports: Report[];

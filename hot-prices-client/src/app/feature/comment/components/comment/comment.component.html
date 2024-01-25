@@ -1,19 +1,19 @@
 <mat-card fxFlex fxLayout="column" fxLayoutAlign="start start">
   <mat-toolbar class="row-1">
     <app-user-avatar
-      [name]="comment.owner"
-      [imgSrc]="'https://material.angular.io/assets/img/examples/shiba1.jpg'"
+      [name]="comment.owner.username"
+      [imgSrc]="formatImage(comment.owner.imgPath)"
       [nameFirst]="false"
     ></app-user-avatar>
     <div fxLayoutAlign="end start" fxFlex>
-      <mat-icon class="clickable">delete</mat-icon>
+      <mat-icon (click)="onDeleteComment()" class="clickable">delete</mat-icon>
     </div>
   </mat-toolbar>
   <mat-card-content fxLayout="column">
     <div class="ql-editor" [innerHTML]="comment.content | noSanitize"></div>
     <div fxFlex fxLayoutAlign="end end">
       <app-date-display
-        [date]="comment.postedDate"
+        [date]="formatDate(comment.postedDate)"
         [isPostedDate]="true"
       ></app-date-display>
     </div>

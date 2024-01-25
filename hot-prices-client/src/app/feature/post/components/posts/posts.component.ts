@@ -1,8 +1,8 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { map, Observable, of, startWith, switchMap } from 'rxjs';
+import { map, Observable, of, startWith, Subscription, switchMap } from 'rxjs';
 import { KEYS } from 'src/app/common/constants';
 import { PostType } from 'src/app/common/enums/post-type.enum';
 import { OfferService } from 'src/app/feature/offer/services/offer.service';
@@ -17,14 +17,14 @@ import { AppState } from 'src/app/state/app.state';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.css'],
 })
-export class PostsComponent implements OnInit {
-  searchOption$: Observable<string[]>;
+export class PostsComponent implements OnInit, OnDestroy {
   titlesOptions: string[];
   filteredTitlesOptions: string[];
+  subscription: Subscription;
 
   searchControl = new FormControl();
 
-  postType: PostType = PostType.Offer;
+  postType: PostType;
   PostType = PostType;
 
   constructor(
@@ -51,11 +51,11 @@ export class PostsComponent implements OnInit {
     //       true
     //     );
     //   }
-    this.store
+    this.subscription = this.store
       .select(selectUrl)
       .pipe(
         switchMap((url) => {
-          this.routeMappingService.mapUrlToPostType(url, true);
+          this.postType = this.routeMappingService.mapUrlToPostType(url, true);
           if (this.postType === PostType.Offer){
             this.store.dispatch(loadTitles({ filterOffer: {} }));
             return this.store.select(selectOffersTitles);
@@ -65,14 +65,21 @@ export class PostsComponent implements OnInit {
         })
       )
       .subscribe((titles) => {
-        // console.log(titles);
+        console.log('loadujem titles')
         this.titlesOptions = titles;
         this.filteredTitlesOptions = titles;
       });
   }
 
-  onSearch(search: string) {
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  onSearchChange(search: string){
     this.filteredTitlesOptions = this._filter(search);
+  }
+
+  onSearch(search: string) {
     this.store.dispatch(changeSearchFilter({ search }));
   }
 

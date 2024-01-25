@@ -5,6 +5,7 @@ import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 import { Pagination } from 'src/app/common/interfaces/pagination.interface';
 import { InitialValues } from 'src/app/common/interfaces/initial-values.interface';
 import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
+import { Comment } from '../../comment/models/comment.model';
 
 export const loadOffers = createAction(
   '[Offer] Load offers',
@@ -87,6 +88,8 @@ export const submittedOfferSuccess = createAction(
   '[Offer] Submitted offer success',
   props<{ offer: Offer }>()
 );
+
+
 
 // export const updateOfferSuccess = createAction(
 //   '[Offer] Update offer',

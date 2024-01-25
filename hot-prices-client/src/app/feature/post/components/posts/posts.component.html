@@ -1,4 +1,4 @@
-<mat-sidenav-container class="page">
+<mat-sidenav-container class="container">
   <mat-sidenav #filterSidenav>
     <app-offer-filter
       [sidenavControl]="filterSidenav"
@@ -6,7 +6,7 @@
     ></app-offer-filter>
   </mat-sidenav>
   <mat-sidenav-content>
-    <section class="padding">
+    <section class="inline-padding">
       <nav mat-tab-nav-bar [tabPanel]="tabPanel" color="warn">
         <a
           mat-tab-link
@@ -34,41 +34,39 @@
         >
       </nav>
       <mat-tab-nav-panel #tabPanel>
-        <div fxLayout="column">
-          <div fxFlex fxLayoutAlign="center center">
-            <button
-              class="add-new-button"
-              mat-button
-              color="warn"
-              fxFlex.gt-xs="30%"
-              fxFlex.lt-sm="70%"
-              (click)="onAddNew()"
-            >
-              <mat-icon fxLayoutAlign="center center" class="add-new-icon"
-                >add_circle</mat-icon
+        <div class="border-rounded border-shadow" fxLayout="column">
+          <div
+            fxLayout.gt-xs="row"
+            fxLayout.lt-sm="column"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px"
+            class="toolbar border-shadow"
+            color="warn"
+          >
+            <div fxFlex.gt-xs="15%" fxFlex.lt-sm="100%" fxLayoutAlign="center center">
+              <button
+                class="add-new-button"
+                fxLayout="column"
+                mat-button
+                (click)="onAddNew()"
               >
-              <span>Add New {{ postType }}</span>
-            </button>
-          </div>
-          <mat-toolbar color="warn" fxLayoutAlign="start end" class="padding">
-            <form
-              class="example-form"
-              fxFlex="100%"
-              fxLayoutGap="5%"
-              fxLayoutAlign="start center"
-            >
-              <mat-form-field fxFlex="70%">
+                <mat-icon fxLayoutAlign="center center" class="add-new-icon"
+                  >add_circle</mat-icon
+                >
+                <span class="add-new-text">Add New {{ postType }}</span>
+              </button>
+            </div>
+            <div fxFlex.gt-xs="60%" fxFlex.lt-sm="100%" class="top-margin" fxLayoutAlign="center center">
+              <mat-form-field fxFlex="95%">
                 <mat-label>Search</mat-label>
                 <input
-                  (ngModelChange)="onSearch($event)"
+                  (ngModelChange)="onSearchChange($event)"
                   [matAutocomplete]="searchAutocomplete"
                   [formControl]="searchControl"
                   type="text"
                   matInput
                 />
-                <mat-autocomplete
-                  #searchAutocomplete="matAutocomplete"
-                >
+                <mat-autocomplete #searchAutocomplete="matAutocomplete">
                   <mat-option
                     *ngFor="let option of filteredTitlesOptions"
                     [value]="option"
@@ -78,16 +76,27 @@
                 </mat-autocomplete>
               </mat-form-field>
               <button
+                fxFlex="5%"
+                class="search-bar-button"
+                mat-raised-button
+                color="warn"
+                (click)="onSearch(searchControl.value)"
+              >
+                <mat-icon>search</mat-icon>
+              </button>
+            </div>
+            <div fxFlex.gt-xs="25%" fxFlex.lt-sm="100%" fxLayoutAlign="center center">
+              <button
                 class="filter-button"
                 type="button"
+                fxFlex="100%"
                 mat-raised-button
-                fxFlex="30%"
                 (click)="filterSidenav.toggle()"
               >
                 Filter
               </button>
-            </form>
-          </mat-toolbar>
+            </div>
+          </div>
           <router-outlet></router-outlet>
         </div>
       </mat-tab-nav-panel>

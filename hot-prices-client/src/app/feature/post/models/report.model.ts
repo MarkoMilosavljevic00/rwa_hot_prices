@@ -1,7 +1,7 @@
 import { ReportType } from 'src/app/common/enums/report-type.enum';
 import { User, UserTest } from '../../user/models/user.model';
 import { Post } from './post.model';
-import { Comment } from './comment.model';
+import { Comment } from '../../comment/models/comment.model';
 
 export interface Report {
   id: number;

@@ -1,0 +1,10 @@
+mat-list mat-list-item{
+  height:100%;
+  width:100%;
+}
+
+mat-list-item {
+  border-radius: 30px;
+  border-bottom-right-radius: 0px;
+  /* daj mi neku nezno plavu boju kao za oblak za komentar i chat */
+}

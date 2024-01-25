@@ -159,7 +159,6 @@ export class CategoryService {
           category,
           { relations: ['posts'], depth: 1 },
         );
-        console.log(directChildren);
         for (const child of directChildren) {
           child.parent = null;
           categoriesForUpdating.push(child);

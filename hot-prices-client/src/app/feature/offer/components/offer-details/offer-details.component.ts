@@ -53,7 +53,6 @@ export class OfferDetailsComponent implements OnInit {
       }),
       skip(1)
     ).subscribe((offer) => {
-        console.log('uso u selectDetailedOffer sub')
         if(offer){
           this.offer = offer;
           this.setGalleryImages(offer.imgPaths);

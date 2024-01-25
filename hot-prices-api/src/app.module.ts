@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { OfferModule } from './modules/offer/offer.module';
 import { FileModule } from './modules/file/file.module';
 import { CategoryModule } from './modules/category/category.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CategoryModule } from './modules/category/category.module';
     OfferModule,
     FileModule,
     CategoryModule,
+    CommentModule,
   ],
   controllers: [],
   providers: [],

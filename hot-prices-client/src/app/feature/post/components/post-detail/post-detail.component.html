@@ -1,7 +1,7 @@
-<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
-  <div fxLayout="column" fxFlex="100%">
+<div class="gray-bg" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
+  <div class="top-margin" fxLayout="column" fxFlex="100%">
     <mat-card fxLayout="column" fxFlex="100%">
-      <mat-toolbar color="warn" class="row-1">
+      <mat-toolbar color="warn" class="row-1 border-shadow">
         <app-user-avatar
           [name]="post?.owner"
           [imgSrc]="
@@ -18,5 +18,5 @@
       <router-outlet></router-outlet>
     </mat-card>
   </div>
-  <app-comment-section></app-comment-section>
+  <app-comment-section class="border-rounded border-shadow top-margin"></app-comment-section>
 </div>

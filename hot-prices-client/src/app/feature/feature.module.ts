@@ -7,6 +7,7 @@ import { OfferModule } from './offer/offer.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { CouponModule } from './coupon/coupon.module';
 import { AdminModule } from './admin/admin.module';
+import { CommentModule } from './comment/comment.module';
 
 
 
@@ -21,6 +22,7 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     UserModule,
     AdminModule,
+    CommentModule,
   ]
 })
 export class FeatureModule { }

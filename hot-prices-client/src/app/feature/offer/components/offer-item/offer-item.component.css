@@ -1,6 +1,10 @@
-mat-card {
+/* mat-card {
   border: 1px solid #ccc;
   padding-inline: 10px;
+} */
+
+mat-card{
+  cursor: pointer
 }
 
 mat-card-title {

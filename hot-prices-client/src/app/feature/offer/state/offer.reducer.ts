@@ -68,6 +68,15 @@ export const offerReducer = createReducer(
       detailedOffer: offer,
     };
   }),
+  // on(Actions.loadAllCommentsFromOfferSuccess, (state, { comments }) => {
+  //   return {
+  //     ...state,
+  //     detailedOffer: {
+  //       ...state.detailedOffer!,
+  //       comments,
+  //     }
+  //   }
+  // }),
   on(Actions.clearDetailedOffer, (state) => {
     return {
       ...state,

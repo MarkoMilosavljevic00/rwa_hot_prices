@@ -176,6 +176,7 @@ export class OfferFilterComponent implements OnInit {
       changeFilter({
         filterOffer: {
           ...this.filterOffer,
+          title: undefined,
         },
       })
     );

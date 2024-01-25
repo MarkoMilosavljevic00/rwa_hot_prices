@@ -12,6 +12,7 @@ mat-card{
   width: 100%;
   text-wrap: wrap;
   font-size: 0.9rem;
+  /* height: 200px; */
 }
 
 @media screen and (max-width: 768px) {

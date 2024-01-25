@@ -31,11 +31,19 @@ export const DEFAULT = {
     IMAGE: '../../../assets/default-product.png',
   },
   EDITORS_NUM_OF_CHARS: 1000,
+  USER: {
+    IMAGE: '../../../assets/default-user.jpg',
+    ID: 5,
+  },
 }
 
 export const PAGE = {
   INITIAL_INDEX: 0,
   SIZE: 5,
+}
+
+export const COMMENTS = {
+  INITIAL_SIZE: 3,
 }
 
 export const NOT_FOUND = {

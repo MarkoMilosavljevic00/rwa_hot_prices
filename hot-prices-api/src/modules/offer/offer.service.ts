@@ -13,6 +13,8 @@ import { ImageType } from 'src/common/enums/image-type.enum';
 import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
 import { SortBy, SortType } from 'src/common/enums/sort.enum';
 import { CategoryService } from '../category/category.service';
+import { CommentService } from '../comment/comment.service';
+import { Comment } from 'src/models/entities/comment.entity';
 
 @Injectable()
 export class OfferService {
@@ -23,6 +25,7 @@ export class OfferService {
     private categoryRepository: Repository<Category>,
     private fileService: FileService,
     private categoryService: CategoryService,
+    private commentService: CommentService,
   ) {}
 
   async getAll(): Promise<Offer[]> {
@@ -128,7 +131,6 @@ export class OfferService {
     }
 
     if (expired === undefined || expired === false) {
-      console.log(expired);
       query.andWhere('offer.expiryDate > CURRENT_TIMESTAMP');
     }
 
@@ -172,11 +174,26 @@ export class OfferService {
     return query;
   }
 
+  // async getById(id: number): Promise<Offer> {
+  //   return await this.offerRepository.findOne({
+  //     where: { id },
+  //     relations: ['category', 'comments'],
+  //   });
+  // }
+
   async getById(id: number): Promise<Offer> {
-    return await this.offerRepository.findOne({
+    const offer = await this.offerRepository.findOne({
       where: { id },
       relations: ['category'],
     });
+  
+    if (!offer) {
+      throw new NotFoundException(`Offer with ID ${id} not found`);
+    }
+
+    offer.comments = await this.commentService.getCommentsByPostId(id, 3);
+  
+    return offer;
   }
 
   // getAvailableValues(filterOfferDto: FilterOfferDto): Promise<InitialValues> {
@@ -200,7 +217,6 @@ export class OfferService {
       .andWhere(`offer.${key} IS NOT NULL`)
       .andWhere(`offer.${key} != ''`)
       .distinct(true);
-    console.log(query.getSql());
 
     let offers = await query.getRawMany();
 
@@ -213,7 +229,6 @@ export class OfferService {
 
   async getAllStores(): Promise<string[]> {
     const offers = await this.offerRepository.find({ select: ['store'] });
-    console.log(offers);
     return offers.map((offer) => offer.store);
   }
 
@@ -235,32 +250,18 @@ export class OfferService {
     return offers.map((offer) => offer.title);
   }
 
-  async create(offerCreateDto: FormOfferDto): Promise<Offer> {
+  async post(formOfferDto: FormOfferDto): Promise<Offer> {
     const offer = this.offerRepository.create({
-      ...offerCreateDto,
+      ...formOfferDto,
     });
-    console.log(offerCreateDto);
+    console.log(formOfferDto);
     try {
       await this.offerRepository.save(offer);
     } catch (error) {
-      console.log(error);
+      throw new InternalServerErrorException(`Failed to create the offer: ${error}`);
     }
     return offer;
   }
-
-  // async updateOffer(id: number, updateOfferDto: FormOfferDto): Promise<any> {
-  //   const offer = await this.offerRepository.findOne({ where: { id } });
-  //   if (!offer) {
-  //     throw new NotFoundException(`Offer with ID ${id} not found`);
-  //   }
-  //   try {
-  //     await this.offerRepository.update(id, updateOfferDto);
-  //     return await this.offerRepository.findOne({ where: { id } });
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new InternalServerErrorException('Failed to update the offer');
-  //   }
-  // }
 
   async update(id: number, updateOfferDto: FormOfferDto): Promise<any> {
     if (updateOfferDto.categoryId) {

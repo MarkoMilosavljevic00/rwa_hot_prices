@@ -230,7 +230,6 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
         skip(1)
       )
       .subscribe((offer) => {
-        console.log('uso u selectEditingOffer sub');
         if (offer) {
           this.editMode = true;
           this.offerId = offer.id;

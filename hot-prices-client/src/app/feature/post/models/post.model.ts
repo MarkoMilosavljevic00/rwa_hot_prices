@@ -3,6 +3,7 @@ import { Category } from "./category.model";
 import { Reaction } from "./reaction.model";
 import { Report } from "./report.model";
 import { User } from "../../user/models/user.model";
+import { Comment } from "../../comment/models/comment.model";
 
 export interface Post {
   id: number;
@@ -19,17 +20,17 @@ export interface Post {
   reports: Report[];
 }
 
-export interface PostTest {
-  id: number;
-  title: string;
-  numOfHotReactions: number;
-  numOfColdReactions: number;
-  postedDate: Date;
-  // status: PostStatus;
-  restricted: boolean;
-  owner: User;
-  category: Category;
-  reactions: Reaction[];
-  comments: Comment[];
-  reports: Report[];
-}
+// export interface PostTest {
+//   id: number;
+//   title: string;
+//   numOfHotReactions: number;
+//   numOfColdReactions: number;
+//   postedDate: Date;
+//   // status: PostStatus;
+//   restricted: boolean;
+//   owner: User;
+//   category: Category;
+//   reactions: Reaction[];
+//   comments: Comment[];
+//   reports: Report[];
+// }

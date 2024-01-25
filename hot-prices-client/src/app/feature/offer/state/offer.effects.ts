@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { PAGE } from 'src/app/common/constants';
 import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
+import { CommentService } from '../../comment/services/comment.service';
 
 @Injectable()
 export class OfferEffects {
@@ -67,6 +68,20 @@ export class OfferEffects {
       )
     )
   );
+
+  // loadAllCommentsFromOffer$ = createEffect(() =>
+  //   this.action$.pipe(
+  //     ofType(OfferActions.loadAllCommentsFromOffer),
+  //     switchMap(({ offerId }) => {
+  //       return this.commentService.getAllCommentsByPostId(offerId).pipe(
+  //         map((comments) =>
+  //           OfferActions.loadAllCommentsFromOfferSuccess({ comments })
+  //         ),
+  //         catchError(() => of())
+  //       );
+  //     })
+  //   )
+  // );
 
   loadEditingOffer$ = createEffect(() =>
     this.action$.pipe(
@@ -143,6 +158,7 @@ export class OfferEffects {
   constructor(
     private action$: Actions,
     private offerService: OfferService,
+    private commentService: CommentService,
     private messageService: MessageService,
     private router: Router
   ) {}

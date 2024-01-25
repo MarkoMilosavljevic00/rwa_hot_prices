@@ -21,3 +21,42 @@ body {
   color: #FF5722;
 }
 
+@media screen and (min-width: 1024px) {
+  .inline-padding {
+    padding-inline: 10%;
+  }
+  .inline-margin {
+    margin-inline: 10%
+  }
+}
+
+.top-margin {
+  margin-top: 2%;
+}
+
+.border-shadow {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.border-rounded{
+  border-radius: 10px;
+  
+}
+
+.white-bg{
+  background-color: #fff;
+}
+
+.gray-bg{
+  background-color: #e9eaed;
+}
+/* #e9eaed */
+.scaling-up{
+  transition: transform .2s;
+}
+
+.scaling-up:hover {
+  transform: scale(1.02);
+}
+
+

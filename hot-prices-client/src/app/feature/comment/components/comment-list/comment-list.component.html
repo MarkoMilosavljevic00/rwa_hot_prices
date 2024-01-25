@@ -1,13 +1,10 @@
 <mat-list fxLayout="column" fxLayoutGap="2%">
-  <mat-list-item
-    *ngFor="
-      let comment of comments.slice(0, showAllComments ? comments.length : 3)
-    "
-  >
+  <mat-list-item class="border-shadow" *ngFor="let comment of comments">
+    <!-- let comment of comments.slice(0, showAllComments ? comments.length : 3) -->
     <app-comment [comment]="comment"></app-comment>
   </mat-list-item>
   <div
-    *ngIf="comments.length > 3 && !showAllComments"
+    *ngIf="comments.length === 3"
     (click)="showMoreComments()"
     fxLayoutAlign="center center"
     class="clickable"
@@ -18,7 +15,7 @@
     <span>Show more</span>
   </div>
   <div
-    *ngIf="comments.length > 3 && showAllComments"
+    *ngIf="comments.length > 3"
     (click)="showLessComments()"
     fxLayoutAlign="center center"
     class="clickable"
