@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Coupon } from '../../models/coupon.model';
-import { COUPONS } from '../../services/coupons';
 
 @Component({
   selector: 'app-coupon-list',
@@ -8,7 +7,7 @@ import { COUPONS } from '../../services/coupons';
   styleUrls: ['./coupon-list.component.css']
 })
 export class CouponListComponent  implements OnInit {
-  coupons: Coupon[] = COUPONS
+  coupons: Coupon[];
   onePageCoupons: Coupon[] = [];
 
   page = 0;

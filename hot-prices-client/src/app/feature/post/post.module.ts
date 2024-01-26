@@ -14,6 +14,7 @@ import { categoryReducer } from './state/category/category.reducer';
 import { CategoryEffects } from './state/category/category.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { CommentModule } from '../comment/comment.module';
+import { ReactionComponent } from '../reaction/components/reaction.component';
 
 
 

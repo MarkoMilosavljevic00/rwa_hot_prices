@@ -8,6 +8,8 @@ export const CONVERSATIONS: Conversation[] = [
     title: "What is the best programming language to learn in 2023?",
     numOfHotReactions: 12,
     numOfColdReactions: 3,
+    numOfDegrees: 8,
+
     postedDate: new Date("2023-12-04T15:48:07"),
     status: PostStatus.Available,
     owner: "Bing",
@@ -38,6 +40,8 @@ export const CONVERSATIONS: Conversation[] = [
     title: "How to make the perfect pizza at home?",
     numOfHotReactions: 10,
     numOfColdReactions: 5,
+    numOfDegrees: 8,
+
     postedDate: new Date("2023-12-03T12:30:00"),
     status: PostStatus.Available,
     owner: "Bing",
@@ -58,6 +62,8 @@ export const CONVERSATIONS: Conversation[] = [
     title: "What are the best coffee shops in London?",
     numOfHotReactions: 8,
     numOfColdReactions: 7,
+    numOfDegrees: 8,
+
     postedDate: new Date("2023-12-02T10:15:00"),
     status: PostStatus.Available,
     owner: "Bing",
@@ -78,6 +84,8 @@ export const CONVERSATIONS: Conversation[] = [
     title: "How to get fit and healthy in 2023?",
     numOfHotReactions: 9,
     numOfColdReactions: 6,
+    numOfDegrees: 8,
+
     postedDate: new Date("2023-12-01T16:45:00"),
     status: PostStatus.Available,
     owner: "Bing",
@@ -98,6 +106,8 @@ export const CONVERSATIONS: Conversation[] = [
     title: "What are the best songs of 2023?",
     numOfHotReactions: 11,
     numOfColdReactions: 4,
+    numOfDegrees: 8,
+
     postedDate: new Date("2023-11-30T18:00:00"),
     status: PostStatus.Available,
     owner: "Bing",
@@ -118,6 +128,8 @@ export const CONVERSATIONS: Conversation[] = [
     title: "What are the best books of 2023?",
     numOfHotReactions: 7,
     numOfColdReactions: 8,
+    numOfDegrees: 8,
+
     postedDate: new Date("2023-11-29T14:30:00"),
     status: PostStatus.Available,
     owner: "Bing",

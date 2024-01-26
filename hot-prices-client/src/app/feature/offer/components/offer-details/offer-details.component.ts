@@ -5,7 +5,6 @@ import {
   MatTableDataSourcePaginator,
 } from '@angular/material/table';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { OFFERS } from '../../services/offers';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { Offer } from '../../models/offer.model';
 import { OfferService } from '../../services/offer.service';
@@ -55,6 +54,7 @@ export class OfferDetailsComponent implements OnInit {
     ).subscribe((offer) => {
         if(offer){
           this.offer = offer;
+          console.log(this.offer);
           this.setGalleryImages(offer.imgPaths);
           this.setSpecsDataSource(offer.specifications);
         }

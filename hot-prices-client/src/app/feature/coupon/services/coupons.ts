@@ -12,6 +12,7 @@ export const COUPONS: Coupon[] = [
     ],
     numOfHotReactions: 10,
     numOfColdReactions: 2,
+    numOfDegrees: 8,
     postedDate: new Date('2023-12-04T15:48:07'),
     status: PostStatus.Expired,
     owner: 'Bing',
@@ -44,6 +45,8 @@ export const COUPONS: Coupon[] = [
     ],
     numOfHotReactions: 8,
     numOfColdReactions: 4,
+    numOfDegrees: 8,
+
     postedDate: new Date('2023-12-03T12:30:00'),
     status: PostStatus.Available,
     owner: 'Bing',
@@ -76,6 +79,8 @@ export const COUPONS: Coupon[] = [
     ],
     numOfHotReactions: 6,
     numOfColdReactions: 3,
+    numOfDegrees: 8,
+
     postedDate: new Date('2023-12-02T10:15:00'),
     status: PostStatus.Available,
     owner: 'Bing',
@@ -108,6 +113,8 @@ export const COUPONS: Coupon[] = [
     ],
     numOfHotReactions: 7,
     numOfColdReactions: 5,
+    numOfDegrees: 8,
+
     postedDate: new Date('2023-12-01T16:45:00'),
     status: PostStatus.Available,
     owner: 'Bing',

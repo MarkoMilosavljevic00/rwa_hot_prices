@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Offer } from '../../models/offer.model';
-import { OFFERS } from '../../services/offers';
 import { OfferService } from '../../services/offer.service';
 import { AppState } from 'src/app/state/app.state';
 import { Store } from '@ngrx/store';

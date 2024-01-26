@@ -8,6 +8,7 @@ import { ConversationModule } from './conversation/conversation.module';
 import { CouponModule } from './coupon/coupon.module';
 import { AdminModule } from './admin/admin.module';
 import { CommentModule } from './comment/comment.module';
+import { ReactionModule } from './reaction/reaction.module';
 
 
 
@@ -23,6 +24,7 @@ import { CommentModule } from './comment/comment.module';
     UserModule,
     AdminModule,
     CommentModule,
+    ReactionModule,
   ]
 })
 export class FeatureModule { }

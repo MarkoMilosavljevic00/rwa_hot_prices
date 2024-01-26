@@ -9,12 +9,13 @@ import { Repository } from 'typeorm';
 import { PostCommentDto } from './dtos/post-comment.dto';
 import { Post } from 'src/models/entities/post.entity';
 import { UsersService } from '../users/users.service';
+import { PostService } from '../post/post.service';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
-    @InjectRepository(Post) private postRepository: Repository<Post>,
+    private postService: PostService,
     private usersService: UsersService,
   ) {}
 
@@ -39,7 +40,7 @@ export class CommentService {
   async postComment(postCommentDto: PostCommentDto) {
     const { postId, userId } = postCommentDto;
 
-    const post = await this.postRepository.findOne({ where: { id: postId } });
+    const post = await this.postService.getPostById(postId);
     if (!post) {
       throw new InternalServerErrorException(
         `Failed to create the comment: Post with id ${postId} does not exist`,
@@ -70,12 +71,12 @@ export class CommentService {
   }
 
   async deleteComment(id: number) {
-    try{
+    try {
       return await this.commentRepository.delete(id);
     } catch (error) {
       throw new InternalServerErrorException(
         `Failed to delete the comment: ${error}`,
       );
-    } 
+    }
   }
 }

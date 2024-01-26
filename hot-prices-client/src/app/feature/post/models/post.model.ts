@@ -1,15 +1,16 @@
 import { PostStatus } from "src/app/common/enums/post-status.enum";
 import { Category } from "./category.model";
-import { Reaction } from "./reaction.model";
 import { Report } from "./report.model";
 import { User } from "../../user/models/user.model";
 import { Comment } from "../../comment/models/comment.model";
+import { Reaction } from "../../reaction/models/reaction.model";
 
 export interface Post {
   id: number;
   title: string;
   numOfHotReactions: number;
   numOfColdReactions: number;
+  numOfDegrees: number;
   postedDate: Date;
   status: PostStatus;
   owner: string;

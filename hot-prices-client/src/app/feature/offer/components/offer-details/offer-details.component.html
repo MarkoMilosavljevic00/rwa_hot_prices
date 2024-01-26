@@ -55,15 +55,11 @@
       [discount]="offer.discount"
     ></app-price>
     <div fxFlex fxLayoutAlign="center center">
-      <div class="temperature-button" fxLayoutAlign="space-between center">
-        <mat-icon class="fire-icon">whatshot</mat-icon>
-        <span class="hot-number">{{ offer.numOfHotReactions }}</span>
-        <span class="temperature-number"
-          >{{ offer.numOfHotReactions - offer.numOfColdReactions }}°</span
-        >
-        <span class="cold-number">{{ offer.numOfColdReactions }}</span>
-        <mat-icon class="snowflake-icon">ac_unit</mat-icon>
-      </div>
+      <app-reaction
+        [numOfHotReactions]="offer.numOfHotReactions"
+        [numOfColdReactions]="offer.numOfColdReactions"
+        [numOfDegrees]="offer.numOfDegrees"
+      ></app-reaction>
     </div>
   </div>
 

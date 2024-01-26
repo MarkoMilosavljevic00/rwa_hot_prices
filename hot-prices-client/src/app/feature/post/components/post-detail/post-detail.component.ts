@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../../models/post.model';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
-import { OFFERS } from 'src/app/feature/offer/services/offers';
 import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
 import { PostType } from 'src/app/common/enums/post-type.enum';
 import { CONVERSATIONS } from 'src/app/feature/conversation/services/conversations.model';
-import { COUPONS } from 'src/app/feature/coupon/services/coupons';
 import { Coupon } from 'src/app/feature/coupon/models/coupon.model';
 import { Conversation } from 'src/app/feature/conversation/models/conversation.model';
 import { Report, ReportTest } from '../../models/report.model';

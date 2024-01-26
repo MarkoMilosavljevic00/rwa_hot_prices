@@ -14,6 +14,8 @@ import { OfferEffects } from './state/offer.effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { OfferFilterComponent } from './components/offer-filter/offer-filter.component';
 import { CommentModule } from '../comment/comment.module';
+import { PostModule } from '../post/post.module';
+import { ReactionModule } from '../reaction/reaction.module';
 // import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
@@ -27,6 +29,7 @@ import { CommentModule } from '../comment/comment.module';
   imports: [
     RouterModule,
     SharedModule,
+    ReactionModule,
     CommentModule,
     StoreModule.forFeature('offers', offerReducer),
     EffectsModule.forFeature([OfferEffects]),

@@ -1,0 +1,69 @@
+.temperature-button {
+  display: flex;
+  border: 1px solid #FF5722;
+  border-radius: 20px;
+  width: 120px;
+  height: 40px;
+  transition: width 0.3s ease-in-out;
+  color:#FF5722;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.temperature-button .hot-number,
+.temperature-button .cold-number {
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease-in-out, display 0s 0.3s;
+}
+
+.temperature-button:hover .hot-number,
+.temperature-button:hover .cold-number {
+  opacity: 1;
+  display: inline-block;
+  transition: opacity 0.3s ease-in-out, display 0s;
+}
+
+.temperature-button:hover {
+  width: 180px;
+}
+
+.temperature-number {
+  padding: 10px 10px;
+  background-color: #FF5722;
+  color: white;
+}
+
+/* .fire-icon, .hot-number {
+  color: red;
+}
+
+.snowflake-icon, .cold-number {
+  color: blue;
+} */
+.fire-icon, .snowflake-icon {
+  color: gray;
+}
+
+.fire-icon.active, .hot-number.active {
+  color: red;
+}
+
+.snowflake-icon.active, .cold-number.active {
+  color: blue;
+}
+
+.temperature-button {
+  /* ostali stilovi */
+  transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.temperature-button.hot {
+  background-color: #fb8787; /* svetlo crvena */
+  box-shadow: 0 0 10px red;
+}
+
+.temperature-button.cold {
+  background-color: #81b3fd; /* svetlo plava */
+  box-shadow: 0 0 10px blue;
+}

@@ -1,6 +1,6 @@
 import { Role } from "../../../common/enums/role.enum";
 import { Post } from "../../post/models/post.model";
-import { Reaction } from "../../post/models/reaction.model";
+import { Reaction } from "../../reaction/models/reaction.model";
 
 export interface User {
   id: number;

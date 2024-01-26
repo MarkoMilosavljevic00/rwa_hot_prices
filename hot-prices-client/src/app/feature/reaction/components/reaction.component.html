@@ -1,0 +1,25 @@
+<div
+  [ngClass]="{ hot: isHotReaction, cold: isColdReaction }"
+  class="temperature-button"
+  fxLayoutAlign="space-between center"
+>
+  <mat-icon
+    [ngClass]="{ active: isColdReaction }"
+    (click)="onColdReact()"
+    class="snowflake-icon clickable"
+    >ac_unit</mat-icon
+  >
+  <span [ngClass]="{ active: isColdReaction }" class="cold-number">{{
+    numOfColdReactions
+  }}</span>
+  <span class="temperature-number">{{ numOfDegrees }}°</span>
+  <span [ngClass]="{ active: isHotReaction }" class="hot-number">{{
+    numOfHotReactions
+  }}</span>
+  <mat-icon
+    [ngClass]="{ active: isHotReaction }"
+    (click)="onHotReact()"
+    class="fire-icon clickable"
+    >whatshot</mat-icon
+  >
+</div>

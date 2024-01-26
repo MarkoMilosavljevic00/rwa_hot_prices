@@ -7,6 +7,8 @@ import { OfferModule } from './modules/offer/offer.module';
 import { FileModule } from './modules/file/file.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { ReactionModule } from './modules/reaction/reaction.module';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { CommentModule } from './modules/comment/comment.module';
     FileModule,
     CategoryModule,
     CommentModule,
+    ReactionModule,
+    PostModule,
   ],
   controllers: [],
   providers: [],
