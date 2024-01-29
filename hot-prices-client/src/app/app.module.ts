@@ -1,7 +1,8 @@
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   NgModule,
-  NO_ERRORS_SCHEMA, isDevMode,
+  NO_ERRORS_SCHEMA,
+  isDevMode,
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +19,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppState } from './state/app.state';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { appReducers } from './state/app.reducers';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './feature/auth/interceptors/auth.interceptor';
+import { AuthEffects } from './feature/auth/state/auth.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,10 +32,13 @@ import { appReducers } from './state/app.reducers';
     SharedModule,
     StoreModule.forRoot<AppState>(appReducers),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([AuthEffects]),
     StoreRouterConnectingModule.forRoot(),
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
   schemas: [NO_ERRORS_SCHEMA],
 })

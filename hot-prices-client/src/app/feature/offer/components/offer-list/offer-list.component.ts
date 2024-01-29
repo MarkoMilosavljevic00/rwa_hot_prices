@@ -7,6 +7,7 @@ import { Observable, Subscription, skip } from 'rxjs';
 import {
   changePaginationFilter,
   changeSearchFilter,
+  clearFilter,
   loadOffers,
   loadTitles,
 } from '../../state/offer.action';
@@ -49,7 +50,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
       .select(selectFilterOffer)
       .subscribe((filter) => {
         console.log('loadujem offere');
-        this.store.dispatch(loadOffers({ filterOfferDto: filter }));
+        this.store.dispatch(loadOffers({ filterOfferDto: filter ? filter : { }}));
       });
     this.offer$ = this.store.select(selectOffersList);
     this.length$ = this.store.select(selectLengthOfOffers);

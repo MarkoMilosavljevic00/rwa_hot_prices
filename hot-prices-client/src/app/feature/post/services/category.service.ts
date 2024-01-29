@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TreeNode } from 'primeng/api';
+import { MenuItem, TreeNode } from 'primeng/api';
 import { Category } from '../models/category.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -22,7 +22,7 @@ export class CategoryService {
       key: keyPrefix + category.id,
       label: category.name,
       data: category,
-      icon: 'pi pi-fw pi-inbox', // Ovde možete postaviti ikonicu koju želite da koristite za kategorije
+      // icon: 'pi pi-fw pi-inbox',
       children: category.children?.map((child, index) =>
         this.convertCategoryToTreeNode(child, keyPrefix + category.id + '-')
       ),
@@ -30,6 +30,19 @@ export class CategoryService {
     };
 
     return node;
+  }
+
+  convertCategoryToMenuItems(category: Category): MenuItem[] {
+    const categoryMenuItems = [];
+    let currentCategory: Category | undefined = category;
+    while (currentCategory) {
+      categoryMenuItems.unshift({
+        label: currentCategory.name,
+        // routerLink: `/category/${currentCategory.id}`,
+      });
+      currentCategory = currentCategory.parent;
+    }
+    return categoryMenuItems;
   }
 
   convertTreeNodeToCategory(treeNode: TreeNode): Category {

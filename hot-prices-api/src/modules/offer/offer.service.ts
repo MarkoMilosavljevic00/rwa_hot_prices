@@ -15,6 +15,7 @@ import { SortBy, SortType } from 'src/common/enums/sort.enum';
 import { CategoryService } from '../category/category.service';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from 'src/models/entities/comment.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class OfferService {
@@ -25,6 +26,7 @@ export class OfferService {
     private categoryRepository: Repository<Category>,
     private fileService: FileService,
     private categoryService: CategoryService,
+    private userService: UserService,
     private commentService: CommentService,
   ) {}
 
@@ -184,14 +186,15 @@ export class OfferService {
   async getById(id: number): Promise<Offer> {
     const offer = await this.offerRepository.findOne({
       where: { id },
-      relations: ['category'],
+      relations: ['category', 'owner'],
     });
   
     if (!offer) {
       throw new NotFoundException(`Offer with ID ${id} not found`);
     }
 
-    offer.comments = await this.commentService.getCommentsByPostId(id, 3);
+    if(offer.category)
+      offer.category = await this.categoryService.getAncestorsTree(offer.category.id);
   
     return offer;
   }
@@ -251,10 +254,23 @@ export class OfferService {
   }
 
   async post(formOfferDto: FormOfferDto): Promise<Offer> {
+    const { categoryId, ownerId } = formOfferDto;
+
+    const owner = await this.userService.getUserById(ownerId);
+    if (!owner) {
+      throw new NotFoundException(`Owner with ID ${ownerId} not found`);
+    }
+
+    const category = await this.categoryService.getCategoryById(categoryId);
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found`);
+    }
+
     const offer = this.offerRepository.create({
       ...formOfferDto,
+      category,
+      owner,
     });
-    console.log(formOfferDto);
     try {
       await this.offerRepository.save(offer);
     } catch (error) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Report, ReportTest } from 'src/app/feature/post/models/report.model';
+import { Report } from 'src/app/feature/post/models/report.model';
 import { ReportService } from '../../service/report.service';
 
 @Component({
@@ -8,8 +8,8 @@ import { ReportService } from '../../service/report.service';
   styleUrls: ['./report-list.component.css']
 })
 export class ReportListComponent implements OnInit {
-  reports: ReportTest[];
-  onePageReports: ReportTest[];
+  reports: Report[];
+  onePageReports: Report[];
 
   page = 0;
   size = 5;
@@ -19,9 +19,9 @@ export class ReportListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.reports = this.reportService.getReports();
-    console.log(this.reports)
-    this.getData({ pageIndex: this.page, pageSize: this.size });
+    // this.reports = this.reportService.getReports();
+    // console.log(this.reports)
+    // this.getData({ pageIndex: this.page, pageSize: this.size });
   }
 
   getData(obj: any) {

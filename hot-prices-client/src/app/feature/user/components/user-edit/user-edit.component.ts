@@ -5,6 +5,26 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { YesNoDialogComponent } from 'src/app/shared/components/yes-no-dialog/yes-no-dialog.component';
 import { User } from '../../models/user.model';
 import { UserService } from '../../service/user.service';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+import { selectCurrentUser } from '../../state/user.selector';
+import {
+  DEFAULT,
+  IMAGES_URL,
+  LIMITS,
+  UPLOAD_IMAGES_URL,
+} from 'src/app/common/constants';
+import {
+  FileSelectEvent,
+  FileUpload,
+  FileUploadEvent,
+} from 'primeng/fileupload';
+import { ImageType } from 'src/app/common/enums/image-type.enum';
+import {
+  updatePassword,
+  updateProfilePicture,
+  updateUsername,
+} from '../../state/user.action';
 
 // import { PasswordDialogComponent } from './password-dialog/password-dialog.component';
 
@@ -14,15 +34,17 @@ import { UserService } from '../../service/user.service';
   styleUrls: ['./user-edit.component.css'],
 })
 export class UserEditComponent implements OnInit {
-  user: User;
+  user?: User;
 
-  constructor(private dialog: MatDialog, private userService: UserService) {}
+  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.UserImage;
+  readonly USERNAME_MIN_LENGTH = LIMITS.USER.USERNAME_MIN_LENGTH;
+
+  constructor(private dialog: MatDialog, private store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.userService.getUser(5).subscribe((user) => {
-      this.user = user;
-      console.log(user);
-    });
+    this.store
+      .select(selectCurrentUser)
+      .subscribe((user) => (this.user = { ...user! }));
   }
 
   openDialog() {
@@ -34,22 +56,37 @@ export class UserEditComponent implements OnInit {
     this.dialog.open(YesNoDialogComponent, dialogConfig);
   }
 
-  changeImage() {
-    // implement the logic to change the user image
+  onSelectProfilePicture(fileUpload: FileUpload, event: FileSelectEvent) {
+    fileUpload.upload();
   }
 
-  onFileSelected($event: any) {}
+  onUploadProfilePicture(event: any) {
+    const serverFilename = event.originalEvent.body[0];
+    this.store.dispatch(
+      updateProfilePicture({
+        id: this.user!.id,
+        profilePicture: serverFilename,
+      })
+    );
+  }
 
   onChangeUsername(usernameForm: NgForm) {
-    // implement the logic to change the username
-    // this.username = usernameForm.value.username;
-    // console.log("Novi username:" + this.username);
-    console.log(usernameForm);
+    this.store.dispatch(
+      updateUsername({
+        id: this.user!.id,
+        username: usernameForm.value.username,
+      })
+    );
   }
 
   onChangePassword(passwordForm: NgForm) {
-    // open a dialog to enter the current and new passwords
-    // this.dialog.open(PasswordDialogComponent);
+    this.store.dispatch(
+      updatePassword({
+        id: this.user!.id,
+        currentPassword: passwordForm.value.currentPassword,
+        newPassword: passwordForm.value.newPassword,
+      })
+    );
   }
 
   onDeleteAccount() {
@@ -61,5 +98,13 @@ export class UserEditComponent implements OnInit {
       if (result) console.log('Brisanje naloga'); // Brisanje naloga
       else console.log('Otkazano brisanje naloga'); // Otkazano brisanje naloga
     });
+  }
+
+  formatImage(imgPath: string | undefined) {
+    if (imgPath) {
+      return IMAGES_URL + `/${ImageType.UserImage}/` + imgPath;
+    } else {
+      return DEFAULT.USER.IMAGE;
+    }
   }
 }

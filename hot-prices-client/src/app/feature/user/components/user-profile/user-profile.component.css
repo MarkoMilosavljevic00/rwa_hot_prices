@@ -24,7 +24,7 @@
 .stats {
   font-size: 1.4rem;
   color: rgba(0, 0, 0, 0.54);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  /* border: 1px solid rgba(0, 0, 0, 0.12); */
   padding: 10px;
 }
 

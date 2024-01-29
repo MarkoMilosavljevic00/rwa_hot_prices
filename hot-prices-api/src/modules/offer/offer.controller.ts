@@ -13,6 +13,7 @@ import {
   ParseArrayPipe,
   ValidationPipe,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { Offer } from 'src/models/entities/offer.entity';
@@ -20,11 +21,13 @@ import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
 import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
 import { FilterOfferValidationPipe } from './pipes/filter-offer.pipe';
 import { InitialValues } from 'src/common/interfaces/initial-values.interface';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('offers')
 export class OfferController {
   constructor(private offerService: OfferService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   getOffers(
     @Query()

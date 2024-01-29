@@ -1,34 +1,44 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserSignupDto } from 'src/models/dtos/user-signup.dto';
+import { UserSignupDto } from 'src/models/dtos/signup-auth.dto';
 import { JwtPayload } from 'src/common/interfaces/jwt-payload.interface';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import { AuthCredentialsDto } from 'src/models/dtos/auth-credentials.dto';
+import { LoginAuthDto } from 'src/models/dtos/login-auth.dto';
+import { User } from 'src/models/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UsersService,
+    private userService: UserService,
     private jwtService: JwtService,
   ) {}
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const user = await this.userService.getUserByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User with this email does not exist');
+    } else if (!(await bcrypt.compare(password, user.password)))
+      throw new UnauthorizedException('Incorrect password');
+    return user;
+  }
 
   async signUp(userDto: UserSignupDto): Promise<void> {
     await this.userService.createUser(userDto);
   }
 
-  async signIn(authDto: AuthCredentialsDto): Promise<{ accessToken: string }> {
-    const user = await this.userService.getUserByUsername(authDto.username);
-    if(!user) {
-      throw new NotFoundException('User with this username does not exist');
-    } else if (!await bcrypt.compare(authDto.password, user.password)){
-      throw new UnauthorizedException('Incorrect password');
-    }
-    else {
-      const payload: JwtPayload = { username: user.username };
-      const accessToken: string = await this.jwtService.sign(payload);
-      return { accessToken };
-    }
+  async login(user: User): Promise<{ user: User; accessToken: string }> {
+    const payload: JwtPayload = {
+      userId: user.id,
+      username: user.username,
+      role: user.role,
+    };
+    const accessToken: string = await this.jwtService.sign(payload);
+    return { user, accessToken };
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ReportTest } from 'src/app/feature/post/models/report.model';
+import {  } from 'src/app/feature/post/models/report.model';
 
 @Component({
   selector: 'app-report-item',
@@ -7,5 +7,5 @@ import { ReportTest } from 'src/app/feature/post/models/report.model';
   styleUrls: ['./report-item.component.css']
 })
 export class ReportItemComponent {
-  @Input() report!: ReportTest;
+  @Input() report!: Report;
 }

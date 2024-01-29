@@ -62,7 +62,10 @@ export class OfferEffects {
       ofType(OfferActions.loadDetailedOffer),
       switchMap(({ offerId }) =>
         this.offerService.getOfferById(offerId).pipe(
-          map((offer) => OfferActions.loadDetailedOfferSuccess({ offer })),
+          map((offer) => {
+            console.log(offer);
+            return OfferActions.loadDetailedOfferSuccess({ offer })
+          }),
           catchError(() => of(OfferActions.loadDetailedOfferFailure()))
         )
       )

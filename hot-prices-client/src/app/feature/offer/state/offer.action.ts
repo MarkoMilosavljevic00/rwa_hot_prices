@@ -17,6 +17,10 @@ export const loadOffersSuccess = createAction(
   props<{ offers: Offer[]; length: number }>()
 );
 
+export const clearFilter = createAction(
+  '[Offer] Clear filter'
+);
+
 export const changeFilter = createAction(
   '[Offer] Change filter',
   props<{ filterOffer: FilterOffer }>()

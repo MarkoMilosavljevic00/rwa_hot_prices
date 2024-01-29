@@ -7,6 +7,10 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 import { UsersComponent } from './components/users/users.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserItemComponent } from './components/user-item/user-item.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './state/user.effects';
+import { userReducer } from './state/user.reducer';
 
 @NgModule({
   declarations: [
@@ -19,7 +23,9 @@ import { UserItemComponent } from './components/user-item/user-item.component';
   ],
   imports: [
     SharedModule,
-    UserRoutingModule
+    UserRoutingModule,
+    StoreModule.forFeature('user', userReducer),
+    EffectsModule.forFeature([UserEffects]),
   ],
   schemas: [NO_ERRORS_SCHEMA]
 })

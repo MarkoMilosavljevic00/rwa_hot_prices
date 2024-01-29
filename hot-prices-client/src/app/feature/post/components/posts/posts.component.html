@@ -2,6 +2,7 @@
   <mat-sidenav #filterSidenav>
     <app-offer-filter
       [sidenavControl]="filterSidenav"
+      [isUserPosts]="isUserPosts"
       *ngIf="postType === PostType.Offer"
     ></app-offer-filter>
   </mat-sidenav>

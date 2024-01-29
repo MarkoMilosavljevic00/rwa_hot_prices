@@ -1,0 +1,5 @@
+export enum DateFormat {
+  BASIC_DATE_FORMAT = 'BASIC_DATE_FORMAT',
+  TIME_AGO = 'TIME_AGO',
+  EXPIRES_IN = 'EXPIRES_IN',
+}

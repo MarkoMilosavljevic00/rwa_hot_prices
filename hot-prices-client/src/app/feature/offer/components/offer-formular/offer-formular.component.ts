@@ -22,6 +22,7 @@ import {
   LIMITS,
   NOT_FOUND,
   TIME,
+  UPLOAD_IMAGES_URL,
   YES_NO_OPTIONS,
 } from 'src/app/common/constants';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
@@ -73,6 +74,7 @@ import {
   selectRouteParams,
 } from 'src/app/state/app.selectors';
 import { isNotUndefined } from 'src/app/common/type-guards';
+import { ImageType } from 'src/app/common/enums/image-type.enum';
 
 @Component({
   selector: 'app-offer-formular',
@@ -97,6 +99,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   expiryDateOptions: Option[];
 
   readonly SaleType = SaleType;
+  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.OfferImage;
 
   get specificationsFormArray(): FormArray {
     return this.offerForm.get('specificationsFormArray') as FormArray;
@@ -318,6 +321,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     const offer: FormOfferDto = {
       title: this.offerForm.value.title,
       categoryId: this.offerForm.value.selectedCategory.data.id,
+      ownerId: DEFAULT.USER.ID,
       description: this.offerForm.value.description,
       saleType: this.offerForm.value.saleType,
       link:

@@ -1,5 +1,3 @@
-<p-toast></p-toast>
-
 <form
   fxLayout="column"
   fxLayoutGap="40px"
@@ -150,7 +148,7 @@
       <mat-card-subtitle fxFlex="15%">Upload Images: </mat-card-subtitle>
       <p-fileUpload
         name="images[]"
-        [url]="fileService.UPLOAD_IMAGES_URL"
+        [url]="UPLOAD_IMAGES_URL"
         #fileUpload
         (onUpload)="onUploadImages($event)"
         (onSelect)="onSelectImages($event, fileUpload)"

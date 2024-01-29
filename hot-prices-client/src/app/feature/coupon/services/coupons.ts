@@ -1,6 +1,7 @@
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
 import { Coupon } from '../models/coupon.model';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
+import { Role } from 'src/app/common/enums/role.enum';
 
 export const COUPONS: Coupon[] = [
   {
@@ -15,7 +16,15 @@ export const COUPONS: Coupon[] = [
     numOfDegrees: 8,
     postedDate: new Date('2023-12-04T15:48:07'),
     status: PostStatus.Expired,
-    owner: 'Bing',
+    owner: {
+      id: 1,
+      username: 'Bing',
+      email:'',
+      // password:'',
+      profilePicture:'',
+      role: Role.User,
+      registrationDate: new Date("2023-12-04T15:48:07"),
+    },
     category: {
       id: 1,
       name: 'Kategorija 1',
@@ -49,7 +58,15 @@ export const COUPONS: Coupon[] = [
 
     postedDate: new Date('2023-12-03T12:30:00'),
     status: PostStatus.Available,
-    owner: 'Bing',
+    owner: {
+      id: 1,
+      username: 'Bing',
+      email:'',
+      // password:'',
+      profilePicture:'',
+      role: Role.User,
+      registrationDate: new Date("2023-12-04T15:48:07"),
+    },
     category: {
       id: 1,
       name: 'Kategorija 1',
@@ -83,7 +100,15 @@ export const COUPONS: Coupon[] = [
 
     postedDate: new Date('2023-12-02T10:15:00'),
     status: PostStatus.Available,
-    owner: 'Bing',
+    owner: {
+      id: 1,
+      username: 'Bing',
+      email:'',
+      // password:'',
+      profilePicture:'',
+      role: Role.User,
+      registrationDate: new Date("2023-12-04T15:48:07"),
+    },
     category: {
       id: 1,
       name: 'Kategorija 1',
@@ -117,7 +142,15 @@ export const COUPONS: Coupon[] = [
 
     postedDate: new Date('2023-12-01T16:45:00'),
     status: PostStatus.Available,
-    owner: 'Bing',
+    owner: {
+      id: 1,
+      username: 'Bing',
+      email:'',
+      // password:'',
+      profilePicture:'',
+      role: Role.User,
+      registrationDate: new Date("2023-12-04T15:48:07"),
+    },
     category: {
       id: 1,
       name: 'Kategorija 1',

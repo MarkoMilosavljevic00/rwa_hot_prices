@@ -1,0 +1,16 @@
+h1{
+  font-size: 5rem;
+  font-weight: bold;
+  margin: 0px;
+} 
+
+h2{
+  font-size: 3rem;
+  font-weight: 400;
+  margin: 0px;
+}
+
+div{
+  color: #FF5722;
+  height: 500px;
+}

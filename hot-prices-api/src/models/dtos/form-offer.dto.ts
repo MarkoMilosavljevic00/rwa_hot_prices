@@ -3,13 +3,16 @@ import { SaleType } from "../../common/enums/sale-type.enum";
 import { Category } from "../entities/category.entity";
 
 export class FormOfferDto {
-  @IsOptional()
+  // @IsOptional()
   @IsString()
-  title?: string;
+  title: string;
 
-  @IsOptional()
   @IsNumber()
-  categoryId?: number;
+  ownerId: number;
+
+  // @IsOptional()
+  @IsNumber()
+  categoryId: number;
 
   @IsOptional()
   // @ValidateNested()
@@ -21,17 +24,17 @@ export class FormOfferDto {
   @IsString({ each: true })
   imgPaths?: string[];
 
-  @IsOptional()
+  // @IsOptional()
   @IsEnum(SaleType)
-  saleType?: SaleType;
+  saleType: SaleType;
 
   @IsOptional()
   @IsString()
   description?: string;
 
-  @IsOptional()
+  // @IsOptional()
   @IsNumber()
-  price?: number;
+  price: number;
 
   @IsOptional()
   @IsNumber()

@@ -1,5 +1,6 @@
 import { getRouterSelectors } from "@ngrx/router-store";
 import { createSelector } from "@ngrx/store";
+import { isNotUndefined } from "../common/type-guards";
 
 export const {
   selectCurrentRoute, // select the current route
@@ -17,4 +18,4 @@ export const {
 export const selectIdFromRouteParams = createSelector(
   selectRouteParams,
   ({id}): string | undefined => id
-);
+)

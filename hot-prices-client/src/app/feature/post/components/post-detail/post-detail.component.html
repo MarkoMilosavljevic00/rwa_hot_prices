@@ -1,14 +1,17 @@
-<div class="gray-bg" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%">
+<div
+  class="gray-bg"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxFlex="100%"
+>
   <div class="top-margin" fxLayout="column" fxFlex="100%">
     <mat-card fxLayout="column" fxFlex="100%">
       <mat-toolbar color="warn" class="row-1 border-shadow">
-        <!-- <app-user-avatar
-          [name]="post?.owner"
-          [imgSrc]="
-            'https://material.angular.io/assets/img/examples/shiba1.jpg'
-          "
+        <app-user-avatar
+          [name]="post?.owner?.username"
+          [imgSrc]="post?.owner?.profilePicture"
           [nameFirst]="false"
-        ></app-user-avatar> -->
+        ></app-user-avatar>
         <div fxLayoutAlign="end start" fxFlex>
           <mat-icon class="clickable" (click)="onEditPost()">edit</mat-icon>
           <mat-icon class="clickable">delete</mat-icon>
@@ -18,5 +21,7 @@
       <router-outlet></router-outlet>
     </mat-card>
   </div>
-  <app-comment-section class="border-rounded border-shadow top-margin"></app-comment-section>
+  <app-comment-section
+    class="border-rounded border-shadow top-margin"
+  ></app-comment-section>
 </div>

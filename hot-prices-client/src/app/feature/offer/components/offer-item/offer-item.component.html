@@ -19,7 +19,7 @@
       >
         <div fxLayout="column" fxLayoutAlign="end">
           <app-user-avatar
-            [name]="offer.owner"
+            [name]="offer.owner.username"
             [imgSrc]="
               'https://material.angular.io/assets/img/examples/shiba1.jpg'
             "
@@ -57,6 +57,9 @@
         >
           <a fxLayoutAlign="center center">{{ offer.title }}</a>
         </mat-card-title>
+        <mat-card-subtitle>
+          {{offer.category ? offer.category.name : ''}}
+        </mat-card-subtitle>
         <app-price
           [price]="offer.price"
           [oldPrice]="offer.oldPrice!"

@@ -28,7 +28,7 @@
     ></p-treeSelect>
   </div>
 
-  <div class="field" fxFlex="100%">
+  <div *ngIf="!isUserPosts" class="field" fxFlex="100%">
     <label> Owner: </label>
     <mat-divider></mat-divider>
     <p-autoComplete

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, UrlSegment } from '@angular/router';
+import { KEYS } from 'src/app/common/constants';
 import { PostType } from 'src/app/common/enums/post-type.enum';
 
 @Injectable({
@@ -20,14 +21,14 @@ export class RouteMappingService {
     return Object.values(PostType).map((value): string => value.toLowerCase());
   }
 
+  getSegmet(urlString: string, offset: number): string {
+    const segments = urlString.split('/');
+    return segments[offset];
+  }
+
   getSegmentFromBottom(urlString: string, offset: number): string {
     const segments = urlString.split('/');
     return segments[segments.length - offset];
-  }
-
-  isEditMode(urlString: string): boolean {
-      const lastSegment = this.getSegmentFromBottom(urlString, 1);
-      return !this.getPostTypesValuesLowerCase().includes(lastSegment.toLowerCase());
   }
 
   mapUrlToPostType(urlString: string, plural: boolean = false, offset: number = 1): PostType {
@@ -57,5 +58,15 @@ export class RouteMappingService {
       const segments = urlString.split('/');
       return Number(segments[segments.length - offset]);
     }
+  }
+
+  isEditMode(urlString: string): boolean {
+    const lastSegment = this.getSegmentFromBottom(urlString, 1);
+    return !this.getPostTypesValuesLowerCase().includes(lastSegment.toLowerCase());
+}
+
+  isUserPosts(url: string): boolean {
+    const firstSegment = this.getSegmet(url, 1);
+    return firstSegment.toLowerCase() === KEYS.USER;
   }
 }

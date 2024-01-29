@@ -19,6 +19,7 @@ import { EditorComponent } from './components/editor/editor.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PriceComponent } from './components/price/price.component';
 import { InputDialogComponent } from './components/input-dialog/input-dialog.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 
@@ -33,7 +34,8 @@ import { InputDialogComponent } from './components/input-dialog/input-dialog.com
     CheckTextLengthDirective,
     EditorComponent,
     PriceComponent,
-    InputDialogComponent
+    InputDialogComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,

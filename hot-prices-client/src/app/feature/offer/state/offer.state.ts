@@ -8,7 +8,7 @@ import { FilterOffer } from "src/app/common/interfaces/filter-offer.interface";
 export interface OfferState extends EntityState<Offer> {
   detailedOffer?: Offer;
   editingOffer?: Offer;
-  filter: FilterOffer;
+  filter?: FilterOffer;
   titles: string[]
   length: number;
 }

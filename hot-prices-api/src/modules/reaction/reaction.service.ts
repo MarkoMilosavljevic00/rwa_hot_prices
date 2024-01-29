@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Reaction } from '../../models/entities/reaction.entity';
 import { Repository } from 'typeorm';
 import { ReactionDto } from './dtos/reaction.dto';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { Post } from 'src/models/entities/post.entity';
 import { PostService } from '../post/post.service';
 
@@ -13,7 +13,7 @@ export class ReactionService {
     @InjectRepository(Reaction)
     private readonly reactionRepository: Repository<Reaction>,
     private readonly postService: PostService,
-    private readonly userService: UsersService,
+    private readonly userService: UserService,
   ) {}
 
   async getReaction(userId: number, postId: number) {

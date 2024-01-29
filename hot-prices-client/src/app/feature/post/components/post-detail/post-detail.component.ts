@@ -6,7 +6,7 @@ import { PostType } from 'src/app/common/enums/post-type.enum';
 import { CONVERSATIONS } from 'src/app/feature/conversation/services/conversations.model';
 import { Coupon } from 'src/app/feature/coupon/models/coupon.model';
 import { Conversation } from 'src/app/feature/conversation/models/conversation.model';
-import { Report, ReportTest } from '../../models/report.model';
+import { Report } from '../../models/report.model';
 import { MatDialog } from '@angular/material/dialog';
 import { InputDialogComponent } from 'src/app/shared/components/input-dialog/input-dialog.component';
 import { Store } from '@ngrx/store';
@@ -98,22 +98,22 @@ export class PostDetailComponent implements OnInit {
   }
 
   onReportPost() {
-    const dialogRef = this.dialog.open(InputDialogComponent, {
-      data: {
-        title: 'Report Post',
-        message: 'Please enter your report:',
-        maxLength: 300,
-      },
-    });
+    // const dialogRef = this.dialog.open(InputDialogComponent, {
+    //   data: {
+    //     title: 'Report Post',
+    //     message: 'Please enter your report:',
+    //     maxLength: 300,
+    //   },
+    // });
 
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        const report: ReportTest = {
-          id: 1,
-          description: result,
-        };
-        console.log(report);
-      } else console.log('Otkazan report');
-    });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   if (result) {
+    //     const report: Report = {
+    //       id: 1,
+    //       description: result,
+    //     };
+    //     console.log(report);
+    //   } else console.log('Otkazan report');
+    // });
   }
 }

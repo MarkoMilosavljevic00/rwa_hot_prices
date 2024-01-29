@@ -13,7 +13,7 @@ export interface Post {
   numOfDegrees: number;
   postedDate: Date;
   status: PostStatus;
-  owner: string;
+  owner: User;
   category: Category;
   restricted: boolean;
   reactions: Reaction[];

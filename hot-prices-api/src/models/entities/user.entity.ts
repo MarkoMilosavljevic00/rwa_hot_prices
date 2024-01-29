@@ -26,7 +26,7 @@ export class User {
   @Column({ nullable: false })
   password: string;
 
-  @Column({ type: 'enum', enum: Role, default: Role.User })
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @Column({
@@ -36,8 +36,8 @@ export class User {
   })
   registrationDate: Date;
 
-  @Column({ nullable: true})
-  imgPath: string;
+  @Column({ nullable: true })
+  profilePicture: string;
 
   @OneToMany(() => Post, post => post.owner)
   posts: Post[];

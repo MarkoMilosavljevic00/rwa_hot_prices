@@ -6,6 +6,13 @@
     ></app-date-display>
   </div>
 
+  <p-breadcrumb
+    class="max-w-full"
+    [model]="categoryMenuItems"
+    [home]="homeMenuItem"
+    [style]="{'border': 'none'}"
+  ></p-breadcrumb>
+
   <div class="row-2">
     <mat-card-title class="post-title">
       {{ offer.title }}

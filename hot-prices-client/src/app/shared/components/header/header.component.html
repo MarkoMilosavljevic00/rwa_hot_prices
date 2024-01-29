@@ -17,7 +17,7 @@
             Posts
           </button>
         </li>
-        <li>
+        <li *ngIf="isAdmin()">
           <button mat-button routerLink="/admin">
             <mat-icon>admin_panel_settings</mat-icon>
             Admin
@@ -68,7 +68,7 @@
           <span>Posts</span>
         </button>
         <mat-divider> </mat-divider>
-        <button mat-menu-item routerLink="/admin">
+        <button *ngIf="isAdmin()" mat-menu-item routerLink="/admin">
           <mat-icon>admin_panel_settings</mat-icon>
           <span>Admin</span>
         </button>

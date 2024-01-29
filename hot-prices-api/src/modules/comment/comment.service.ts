@@ -8,7 +8,7 @@ import { Comment } from 'src/models/entities/comment.entity';
 import { Repository } from 'typeorm';
 import { PostCommentDto } from './dtos/post-comment.dto';
 import { Post } from 'src/models/entities/post.entity';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { PostService } from '../post/post.service';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     private postService: PostService,
-    private usersService: UsersService,
+    private usersService: UserService,
   ) {}
 
   async getCommentsByPostId(

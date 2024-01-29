@@ -41,6 +41,12 @@ export const offerReducer = createReducer(
       },
     };
   }),
+  on(Actions.clearFilter, (state) => {
+    return {
+      ...state,
+      filter: undefined,
+    };
+  }),
   on(Actions.loadTitlesSuccess, (state, { titles }) => {
     return {
       ...state,

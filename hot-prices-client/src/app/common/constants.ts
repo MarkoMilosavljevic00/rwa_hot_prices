@@ -6,6 +6,8 @@ export const YES_NO_OPTIONS = {
 };
 
 export const KEYS = {
+  USER: 'user',
+  TOKEN: 'access_token',
   OFFER: {
     STORE: 'store',
     LOCATION: 'location',
@@ -51,6 +53,7 @@ export const NOT_FOUND = {
 }
 
 export const IMAGES_URL = `${environment.api}/file/image`
+export const UPLOAD_IMAGES_URL = environment.api + '/file/uploadImages/'
 
 export const LIMITS = {
   OFFER:{
@@ -59,6 +62,9 @@ export const LIMITS = {
     DESCRIPTION_CHARS: 1000,
     MIN_PRICE: 0,
     MAX_PRICE: 1000000,
+  },
+  USER: {
+    USERNAME_MIN_LENGTH: 4,
   }
 }
 

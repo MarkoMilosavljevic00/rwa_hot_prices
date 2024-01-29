@@ -4,7 +4,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Category } from 'src/app/feature/post/models/category.model';
 import { TreeNode } from 'primeng/api';
-import { Observable, of } from 'rxjs';
+import { Observable, of, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/app.state';
 import { selectCategoriesList } from 'src/app/feature/post/state/category/category.selector';
@@ -16,9 +16,15 @@ import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { OfferService } from '../../services/offer.service';
 import { SortBy, SortType } from 'src/app/common/enums/sort.enum';
 import { UserService } from 'src/app/feature/user/service/user.service';
-import { changeFilter } from '../../state/offer.action';
+import { changeFilter, clearFilter } from '../../state/offer.action';
 import { selectFilterOffer } from '../../state/offer.selector';
 import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
+import { selectCurrentReaction } from 'src/app/feature/reaction/state/reaction.selector';
+import { selectCurrentRoute, selectUrl } from 'src/app/state/app.selectors';
+import {
+  selectCurrentUser,
+  selectCurrentUserId,
+} from 'src/app/feature/user/state/user.selector';
 
 @Component({
   selector: 'app-offer-filter',
@@ -27,6 +33,7 @@ import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
 })
 export class OfferFilterComponent implements OnInit {
   @Input() sidenavControl: MatSidenav;
+  @Input() isUserPosts: boolean;
   filterOffer: FilterOffer;
 
   // availableValues: InitialValues;
@@ -58,17 +65,29 @@ export class OfferFilterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('init offer filter');
     this.initValues();
-    this.store.select(selectFilterOffer).subscribe((filterOffer) => {
-      if (filterOffer.selectedCategory)
-        this.selectedTreeNode = this.categoryService.convertCategoryToTreeNode(
-          filterOffer.selectedCategory
-        );
-      this.filterOffer = {
-        ...filterOffer,
-      };
-    });
+    if (this.isUserPosts) {
+      this.setUserFilter();
+    }
+    // this.store.select(selectFilterOffer).subscribe((filterOffer) => {
+    //   if (filterOffer.selectedCategory)
+    //     this.selectedTreeNode = this.categoryService.convertCategoryToTreeNode(
+    //       filterOffer.selectedCategory
+    //     );
+    //   this.filterOffer = {
+    //     ...filterOffer,
+    //   };
+    // });
+  }
+
+
+  setUserFilter() {
+    this.store
+      .select(selectCurrentUserId)
+      .pipe(take(1))
+      .subscribe((userId) => {
+        this.store.dispatch(changeFilter({ filterOffer: { ownerId: userId } }));
+      });
   }
 
   // patchValues(filterOffer: FilterOfferDto) {
@@ -89,7 +108,10 @@ export class OfferFilterComponent implements OnInit {
     this.sortByOptions = Object.values(SortBy);
     this.sortTypesOptions = Object.values(SortType);
 
-    this.userService.getUsers().subscribe((users) => (this.users = users));
+    if (!this.isUserPosts) {
+      this.userService.getUsers().subscribe((users) => (this.users = users));
+    }
+
     this.categoryService
       .getAllCategoriesAsTreeNodes()
       .subscribe((categories) => {

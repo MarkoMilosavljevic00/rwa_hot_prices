@@ -1,17 +1,26 @@
 <div fxLayout="column">
-  <div fxFlex fxLayoutAlign="end end" fxLayoutGap="5px" class="clickable">
-    <span> Ban </span>
+  <div
+    *ngIf="isAdmin()"
+    fxFlex
+    fxLayoutAlign="end end"
+    fxLayoutGap="5px"
+    class="clickable"
+  >
+    <span> Restrict User </span>
     <mat-icon>group_remove</mat-icon>
+  </div>
+  <div fxLayout="column" fxLayoutAlign="end end" fxFlex fxHide.lt-sm>
+    <app-date-display
+      [date]="formatDate(user?.registrationDate!)"
+      [isDateFormat]="true"
+      textBeforeDate="Registered on"
+    ></app-date-display>
   </div>
   <div fxLayout="column" fxLayoutAlign="center center">
     <img
       mat-card-image
       class="profile-picture"
-      [src]="
-        user
-          ? user.imgPath
-          : 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg'
-      "
+      [src]="formatImage(user?.profilePicture)"
     />
     <div
       class="generals"
@@ -24,12 +33,20 @@
       </div>
       <div class="email">{{ user?.email }}</div>
     </div>
-    <div fxLayout="column" fxLayoutAlign="center center" class="stats">
-      <div class="stat-padding">Number of:</div>
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="30px" class="stats">
+      <div class="stat-padding">User Activity:</div>
 
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
         <span class="stat-label" mat-typography mat-body-2>Posts</span>
-        <span class="stat-number" mat-typography mat-display-1> 5 </span>
+        <span class="stat-number" mat-typography mat-display-1>
+          {{ userActivity?.numberOfPosts }}
+        </span>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+        <span class="stat-label" mat-typography mat-body-2>Comments</span>
+        <span class="stat-number" mat-typography mat-display-1>
+          {{ userActivity?.numberOfComments }}
+        </span>
       </div>
       <div fxLayout="row" fxLayoutGap="20px">
         <div
@@ -47,7 +64,9 @@
           >
             Hot Reactions</span
           >
-          <span class="stat-number" mat-typography mat-display-1> 19 </span>
+          <span class="stat-number" mat-typography mat-display-1>
+            {{ userActivity?.numberOfHotReactions }}
+          </span>
         </div>
         <div
           class="cold"
@@ -64,8 +83,24 @@
           >
             Cold Reactions</span
           >
-          <span class="stat-number" mat-typography mat-display-1> 5 </span>
+          <span class="stat-number" mat-typography mat-display-1>
+            {{ userActivity?.numberOfColdReactions }}
+          </span>
         </div>
+      </div>
+      <div
+        [ngClass]="{
+          hot: userActivity?.numberOfDegrees! > 0,
+          cold: userActivity?.numberOfDegrees! < 0
+        }"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="5px"
+      >
+        <span class="stat-label" mat-typography mat-body-2>Total Degrees</span>
+        <span class="stat-number" mat-typography mat-display-1>
+          {{ userActivity?.numberOfDegrees }}
+        </span>
       </div>
     </div>
   </div>
