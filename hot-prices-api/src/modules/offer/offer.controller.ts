@@ -14,6 +14,7 @@ import {
   ValidationPipe,
   UsePipes,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { Offer } from 'src/models/entities/offer.entity';
@@ -28,25 +29,15 @@ export class OfferController {
   constructor(private offerService: OfferService) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Get()
-  getOffers(
+  @Get('/get-offers-by-filter')
+  getOffersByFilter(
     @Query()
     filterOfferDto: FilterOfferDto,
   ): Promise<{ offers: Offer[]; length: number }> {
-    return this.offerService.getOffersFilter(filterOfferDto);
+    return this.offerService.getByFilter(filterOfferDto);
   }
 
-  // @Get('stores')
-  // getOffersAllStores(): Promise<string[]> {
-  //   return this.offerService.getAllStores();
-  // }
-
-  @Get('distinct-property/:key')
-  getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
-    return this.offerService.getDistinctProperty(key);
-  }
-
-  @Get('distinct-property-filter/:key')
+  @Get('/distinct-property-filter/:key')
   getOffersDistinctPropertyFilter(
     @Param('key') key: string,
     @Query() filterOfferDto: FilterOfferDto,
@@ -54,20 +45,12 @@ export class OfferController {
     return this.offerService.getDistinctProperty(key, filterOfferDto);
   }
 
-  // @Get('available-values')
-  // getOffersAvailableValues(
-  //   @Query()
-  //   filterOfferDto: FilterOfferDto,
-  // ): Promise<InitialValues> {
-  //   return this.offerService.getAvailableValues(filterOfferDto);
-  // }
+  @Get('/distinct-property/:key')
+  getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
+    return this.offerService.getDistinctProperty(key);
+  }
 
-  // @Get('titles')
-  // getOffersTitles(@Query('search') search: string): Promise<string[]> {
-  //   return this.offerService.getTitles(search);
-  // }
-
-  @Get('all')
+  @Get('/all')
   getAllOffers(): Promise<Offer[]> {
     return this.offerService.getAll();
   }
@@ -79,15 +62,7 @@ export class OfferController {
 
   @Post()
   postOffer(@Body() formOfferDto: FormOfferDto) {
-    return this.offerService.post(formOfferDto);
-  }
-
-  @Patch('/:id')
-  async updateOffer(
-    @Param('id') id: number,
-    @Body() updateOfferDto: FormOfferDto,
-  ): Promise<Offer> {
-    return this.offerService.update(id, updateOfferDto);
+    return this.offerService.create(formOfferDto);
   }
 
   @Patch('cleanNotFoundedImages')
@@ -95,4 +70,18 @@ export class OfferController {
     const offers = await this.offerService.getAll();
     return this.offerService.cleanNotFoundedImages(offers);
   }
+
+  @Patch('/:id')
+  updateOffer(
+    @Param('id') id: number,
+    @Body() updateOfferDto: FormOfferDto,
+  ): Promise<Offer> {
+    return this.offerService.update(id, updateOfferDto);
+  }
+
+  @Delete('/:id')
+  deleteOffer(@Param('id') id: number): Promise<Offer> {
+    return this.offerService.delete(id);
+  }
+
 }

@@ -21,13 +21,11 @@ export class Comment {
   @Column({ type: 'boolean', default: false })
   restricted: boolean;
 
-  @ManyToOne(() => Post, post => post.comments)
+  @ManyToOne(() => Post, post => post.comments, { onDelete: 'CASCADE' })
   post: Post;
 
-  @ManyToOne(() => User, user => user.comments)
+  @ManyToOne(() => User, user => user.comments, { onDelete: 'CASCADE' })
   owner: User;
-
-  
 
   @OneToMany(() => Report, report => report.comment)
   reports: Report[];

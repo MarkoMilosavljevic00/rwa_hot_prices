@@ -16,6 +16,7 @@ import { CategoryService } from '../category/category.service';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from 'src/models/entities/comment.entity';
 import { UserService } from '../user/user.service';
+import { Reaction } from 'src/models/entities/reaction.entity';
 
 @Injectable()
 export class OfferService {
@@ -24,19 +25,66 @@ export class OfferService {
     private offerRepository: Repository<Offer>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+    @InjectRepository(Comment)
+    private commentRepository: Repository<Comment>,
+    @InjectRepository(Reaction)
+    private reactionRepository: Repository<Reaction>,
     private fileService: FileService,
     private categoryService: CategoryService,
     private userService: UserService,
-    private commentService: CommentService,
+    // private commentService: CommentService,
   ) {}
 
-  async getAll(): Promise<Offer[]> {
-    const offers = await this.offerRepository.find({ relations: ['category'] });
-    // await this.cleanNotFoundedImages(offers);
-    return offers;
+  async create(formOfferDto: FormOfferDto): Promise<Offer> {
+    const { categoryId, ownerId } = formOfferDto;
+
+    const owner = await this.userService.getUserById(ownerId);
+    if (!owner) {
+      throw new NotFoundException(`Owner with ID ${ownerId} not found`);
+    }
+
+    const category = await this.categoryService.getCategoryById(categoryId);
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found`);
+    }
+
+    const offer = this.offerRepository.create({
+      ...formOfferDto,
+      category,
+      owner,
+    });
+    try {
+      await this.offerRepository.save(offer);
+    } catch (error) {
+      throw new InternalServerErrorException(`Failed to create the offer: ${error}`);
+    }
+    return offer;
   }
 
-  async getOffersFilter(
+  async update(id: number, updateOfferDto: FormOfferDto): Promise<any> {
+    if (updateOfferDto.categoryId) {
+      const category = await this.categoryRepository.findOne({
+        where: { id: updateOfferDto.categoryId },
+      });
+      if (!category) {
+        throw new NotFoundException(
+          `Category with ID ${updateOfferDto.categoryId} not found`,
+        );
+      }
+      updateOfferDto.category = category;
+      delete updateOfferDto.categoryId;
+    }
+    try {
+      await this.offerRepository.update(id, updateOfferDto);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Failed to update the offer');
+    }
+
+    return this.offerRepository.findOne({ where: { id } });
+  }
+
+  async getByFilter(
     filterOfferDto: FilterOfferDto,
   ): Promise<{ offers: Offer[]; length: number }> {
     let query = await this.getQueryFromFilter(filterOfferDto);
@@ -56,6 +104,75 @@ export class OfferService {
 
     const offers = await query.getMany();
     return { offers, length };
+  }
+
+  async getById(id: number): Promise<Offer> {
+    const offer = await this.offerRepository.findOne({
+      where: { id },
+      relations: ['category', 'owner'],
+    });
+  
+    if (!offer) {
+      throw new NotFoundException(`Offer with ID ${id} not found`);
+    }
+
+    if(offer.category)
+      offer.category = await this.categoryService.getAncestorsTree(offer.category.id);
+  
+    return offer;
+  }
+
+  async delete(id: number): Promise<Offer> {
+    const offer = await this.offerRepository.findOne({
+      where: { id },
+      relations: [ 'comments', 'reactions' ],
+    });
+    if (!offer) {
+      throw new NotFoundException(`Offer with ID "${id}" not found`);
+    }
+
+    if(offer.imgPaths){
+      for (let imgPath of offer.imgPaths) {
+        this.fileService.deleteImage(ImageType.OfferImage, imgPath);
+      }
+    }
+
+    // await this.commentRepository.remove(offer.comments);
+    // await this.reactionRepository.remove(offer.reactions);
+
+    return await this.offerRepository.remove(offer);
+  }
+
+  async getAll(): Promise<Offer[]> {
+    const offers = await this.offerRepository.find({ relations: ['category'] });
+    return offers;
+  }
+
+  async getDistinctProperty(
+    key: string,
+    filterOferrDto?: FilterOfferDto,
+  ): Promise<string[]> {
+    let query;
+
+    if (filterOferrDto) {
+      query = await this.getQueryFromFilter(filterOferrDto);
+    } else {
+      query = this.offerRepository.createQueryBuilder('offer')
+      .andWhere('offer.expiryDate > CURRENT_TIMESTAMP');
+    }
+    query = query
+      .select(`offer.${key}`, key)
+      .andWhere(`offer.${key} IS NOT NULL`)
+      .andWhere(`offer.${key} != ''`)
+      .distinct(true);
+
+    let offers = await query.getRawMany();
+
+    // console.log(offers);
+
+    return offers.map((offer) => {
+      return offer[key];
+    });
   }
 
   async getQueryFromFilter(
@@ -182,125 +299,6 @@ export class OfferService {
   //     relations: ['category', 'comments'],
   //   });
   // }
-
-  async getById(id: number): Promise<Offer> {
-    const offer = await this.offerRepository.findOne({
-      where: { id },
-      relations: ['category', 'owner'],
-    });
-  
-    if (!offer) {
-      throw new NotFoundException(`Offer with ID ${id} not found`);
-    }
-
-    if(offer.category)
-      offer.category = await this.categoryService.getAncestorsTree(offer.category.id);
-  
-    return offer;
-  }
-
-  // getAvailableValues(filterOfferDto: FilterOfferDto): Promise<InitialValues> {
-  //   return {}
-  // }
-
-  async getDistinctProperty(
-    key: string,
-    filterOferrDto?: FilterOfferDto,
-  ): Promise<string[]> {
-    let query;
-
-    if (filterOferrDto) {
-      query = await this.getQueryFromFilter(filterOferrDto);
-    } else {
-      query = this.offerRepository.createQueryBuilder('offer')
-      .andWhere('offer.expiryDate > CURRENT_TIMESTAMP');
-    }
-    query = query
-      .select(`offer.${key}`, key)
-      .andWhere(`offer.${key} IS NOT NULL`)
-      .andWhere(`offer.${key} != ''`)
-      .distinct(true);
-
-    let offers = await query.getRawMany();
-
-    // console.log(offers);
-
-    return offers.map((offer) => {
-      return offer[key];
-    });
-  }
-
-  async getAllStores(): Promise<string[]> {
-    const offers = await this.offerRepository.find({ select: ['store'] });
-    return offers.map((offer) => offer.store);
-  }
-
-  async getTitles(search?: string): Promise<string[]> {
-    let offers: Offer[];
-
-    if (search && search.trim().length > 0) {
-      const whereClause = {
-        title: ILike(`%${search}%`),
-      };
-      offers = await this.offerRepository.find({
-        where: whereClause,
-        select: ['title'],
-      });
-    } else {
-      offers = await this.offerRepository.find({ select: ['title'] });
-    }
-
-    return offers.map((offer) => offer.title);
-  }
-
-  async post(formOfferDto: FormOfferDto): Promise<Offer> {
-    const { categoryId, ownerId } = formOfferDto;
-
-    const owner = await this.userService.getUserById(ownerId);
-    if (!owner) {
-      throw new NotFoundException(`Owner with ID ${ownerId} not found`);
-    }
-
-    const category = await this.categoryService.getCategoryById(categoryId);
-    if (!category) {
-      throw new NotFoundException(`Category with ID ${categoryId} not found`);
-    }
-
-    const offer = this.offerRepository.create({
-      ...formOfferDto,
-      category,
-      owner,
-    });
-    try {
-      await this.offerRepository.save(offer);
-    } catch (error) {
-      throw new InternalServerErrorException(`Failed to create the offer: ${error}`);
-    }
-    return offer;
-  }
-
-  async update(id: number, updateOfferDto: FormOfferDto): Promise<any> {
-    if (updateOfferDto.categoryId) {
-      const category = await this.categoryRepository.findOne({
-        where: { id: updateOfferDto.categoryId },
-      });
-      if (!category) {
-        throw new NotFoundException(
-          `Category with ID ${updateOfferDto.categoryId} not found`,
-        );
-      }
-      updateOfferDto.category = category;
-      delete updateOfferDto.categoryId;
-    }
-    try {
-      await this.offerRepository.update(id, updateOfferDto);
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Failed to update the offer');
-    }
-
-    return this.offerRepository.findOne({ where: { id } });
-  }
 
   async cleanNotFoundedImages(offers: Offer[]) {
     let offersToUpdate = [];

@@ -16,13 +16,7 @@ export class OfferService {
     return this.http.get<Offer>(`${environment.api}/offer/${id}`);
   }
 
-  getOffers(filterOfferDto?: FilterOfferDto) {
-    if (!filterOfferDto)
-      return this.http.get<{ offers: Offer[]; length: number }>(
-        `${environment.api}/offer`
-      );
-
-    // const { title, pageSize, pageIndex } = filterOfferDto;
+  getOffersByFilter(filterOfferDto: FilterOfferDto) {
     let params = new HttpParams();
 
     Object.keys(filterOfferDto).forEach((key: string) => {
@@ -31,45 +25,9 @@ export class OfferService {
         params = params.set(key, value.toString());
       }
     });
-
-    // console.log(params);
-
-    // if (pageSize != undefined && pageIndex != undefined) {
-    //   params = params
-    //     .set('pageSize', pageSize.toString())
-    //     .set('pageIndex', pageIndex.toString());
-    // }
-
-    console.log(params)
 
     return this.http.get<{ offers: Offer[]; length: number }>(
-      `${environment.api}/offer`,
-      { params }
-    );
-  }
-
-  getOffersTitles(search?: string) {
-    let params = new HttpParams();
-    if (search) {
-      params = params.set('search', search);
-    }
-    return this.http.get<string[]>(`${environment.api}/offer/titles`, {
-      params,
-    });
-  }
-
-  getAvailableValues(filterOfferDto: FilterOfferDto) {
-    let params = new HttpParams();
-
-    Object.keys(filterOfferDto).forEach((key: string) => {
-      const value = filterOfferDto[key as keyof FilterOfferDto];
-      if (value != undefined) {
-        params = params.set(key, value.toString());
-      }
-    });
-
-    return this.http.get<InitialValues>(
-      `${environment.api}/offer/available-values`,
+      `${environment.api}/offer/get-offers-by-filter`,
       { params }
     );
   }
@@ -80,7 +38,7 @@ export class OfferService {
     );
   }
 
-  getOfferDistinctPropertyFilter(key: string, filterOfferDto: FilterOfferDto) {
+  getOfferDistinctPropertyByFilter(key: string, filterOfferDto: FilterOfferDto) {
     let params = new HttpParams();
 
     Object.keys(filterOfferDto).forEach((key: string) => {

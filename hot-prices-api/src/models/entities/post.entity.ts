@@ -36,10 +36,10 @@ export class Post {
   @Column({ type: 'boolean', default: false })
   restricted: boolean;
 
-  @ManyToOne(() => User, user => user.posts)
+  @ManyToOne(() => User, user => user.posts, { onDelete: 'CASCADE' })
   owner: User;
 
-  @ManyToOne(() => Category, user => user.posts)
+  @ManyToOne(() => Category, user => user.posts, { onDelete: 'CASCADE' })
   category: Category;
 
   @OneToMany(() => Reaction, reaction => reaction.post)

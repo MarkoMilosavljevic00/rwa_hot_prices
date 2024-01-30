@@ -25,7 +25,7 @@ export class OfferEffects {
       ofType(OfferActions.loadOffers),
       switchMap(({ filterOfferDto: filterOffer }) => {
         const filterOfferDto: FilterOfferDto = filterOffer;
-        return this.offerService.getOffers(filterOfferDto).pipe(
+        return this.offerService.getOffersByFilter(filterOfferDto).pipe(
           map(({ offers, length }) =>
             OfferActions.loadOffersSuccess({ offers, length })
           ),
@@ -48,7 +48,7 @@ export class OfferEffects {
         } = filter;
         console.log(filterOfferDto);
         return this.offerService
-          .getOfferDistinctPropertyFilter('title', filterOfferDto)
+          .getOfferDistinctPropertyByFilter('title', filterOfferDto)
           .pipe(
             map((titles) => OfferActions.loadTitlesSuccess({ titles })),
             catchError(() => of())

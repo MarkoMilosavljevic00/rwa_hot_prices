@@ -17,15 +17,15 @@ export class Report {
   @Column({ nullable: true})
   description: string;
 
-  @ManyToOne(() => User, user => user.submittedReports)
+  @ManyToOne(() => User, user => user.submittedReports, { onDelete: 'CASCADE' })
   reportedBy: User;
   
-  @ManyToOne(() => User, user => user.receivedReports)
+  @ManyToOne(() => User, user => user.receivedReports, { onDelete: 'CASCADE' })
   reportedUser: User;
 
-  @ManyToOne(() => Post, post => post.reports)
+  @ManyToOne(() => Post, post => post.reports, { onDelete: 'CASCADE' })
   post: Post;
 
-  @ManyToOne(() => Comment, comment => comment.reports)
+  @ManyToOne(() => Comment, comment => comment.reports, { onDelete: 'CASCADE' })
   comment: Comment;
 }

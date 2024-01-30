@@ -11,9 +11,9 @@ export class Reaction {
   @Column({type: 'enum', enum: ReactionType})
   type: ReactionType;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user: User;
 
-  @ManyToOne(() => Post)
+  @ManyToOne(() => Post, { onDelete: 'CASCADE' })
   post: Post;
 }

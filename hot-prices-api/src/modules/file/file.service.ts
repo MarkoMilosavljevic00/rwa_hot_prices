@@ -63,7 +63,8 @@ export class FileService implements MulterOptionsFactory {
 
   deleteImage(imageType: ImageType, imageName: string) {
     if (!this.isExists(imageType, imageName)) {
-      throw new NotFoundException(`Image with filename " ${imageName} " not found`);
+      console.log('Image not found');
+      // throw new NotFoundException(`Image with filename " ${imageName} " not found`);
     } else {
       const imagePath = this.getImageLocation(imageType, imageName);
       unlinkSync(imagePath);
