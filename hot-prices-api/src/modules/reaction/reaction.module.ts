@@ -8,6 +8,7 @@ import { User } from 'src/models/entities/user.entity';
 import { Post } from 'src/models/entities/post.entity';
 import { PostService } from '../post/post.service';
 import { FileService } from '../file/file.service';
+import { CommentService } from '../comment/comment.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Reaction, User, Post])],

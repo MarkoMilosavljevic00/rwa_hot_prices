@@ -1,10 +1,12 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginAuthDto } from 'src/models/dtos/login-auth.dto';
@@ -21,32 +23,40 @@ import { UpdateUserDto } from 'src/models/dtos/update-user.dto';
 import { FileService } from '../file/file.service';
 import { ImageType } from 'src/common/enums/image-type.enum';
 import { AuthService } from '../auth/auth.service';
+import { Post } from 'src/models/entities/post.entity';
+import { Reaction } from 'src/models/entities/reaction.entity';
+import { Comment } from 'src/models/entities/comment.entity';
+import { ReactionService } from '../reaction/reaction.service';
+import { CommentService } from '../comment/comment.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    // @InjectRepository(Post) private postRepository: Repository<Post>,
+    // @InjectRepository(Reaction) private reactionRepository: Repository<Reaction>,
+    // @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     private postService: PostService,
+    // private reactionService: ReactionService,
+    // @Inject(forwardRef(() => CommentService))private commentService: CommentService,
     private fileService: FileService,
   ) {}
 
-  async createUser(userSignupDto: UserSignupDto): Promise<void> {
-    const { email, username, password } = userSignupDto;
+  async createUser(userSignupDto: UserSignupDto): Promise<User> {
+    const { email, username, password, profilePicture } = userSignupDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     const user = this.userRepository.create({
       email,
       username,
       password: hashedPassword,
-      profilePicture:
-        'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg',
+      profilePicture,
     });
     try {
-      await this.userRepository.save(user);
+      return await this.userRepository.save(user);
     } catch (error) {
-      console.log(error);
       if (error.code === '23505') {
-        throw new ConflictException('Username already exists');
+        throw new ConflictException('Username or Email already exists');
       } else {
         throw new InternalServerErrorException('Unexpected error');
       }
@@ -134,7 +144,7 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     user.password = hashedPassword;
-    
+
     return await this.userRepository.save(user);
   }
 
@@ -159,5 +169,23 @@ export class UserService {
     user.username = username;
     // await this.userRepository.update({ id }, { username });
     return await this.userRepository.save(user);
+  }
+
+  async deleteUser(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      // relations: ['posts', 'reactions', 'comments'],
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
+    }
+
+    // Obrisi sve postove, reakcije i komentare
+    // await this.postRepository.remove(user.posts);
+    // await this.reactionRepository.remove(user.reactions);
+    // await this.commentRepository.remove(user.comments);
+
+    // Obrisi korisnika
+    await this.userRepository.remove(user);
   }
 }

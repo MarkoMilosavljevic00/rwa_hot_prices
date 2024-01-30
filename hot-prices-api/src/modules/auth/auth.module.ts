@@ -26,6 +26,6 @@ import { FileService } from '../file/file.service';
   ],
   providers: [AuthService, UserService, JwtStrategy, LocalStrategy, PostService, FileService],
   controllers: [AuthController],
-  exports: [JwtStrategy, PassportModule, LocalStrategy],
+  exports: [AuthService, JwtStrategy, PassportModule, LocalStrategy],
 })
 export class AuthModule {}

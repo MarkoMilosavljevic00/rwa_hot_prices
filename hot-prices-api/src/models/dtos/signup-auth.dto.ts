@@ -1,16 +1,16 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { isString } from 'util';
 
 export class UserSignupDto {
   @IsString()
   @IsEmail()
   @MinLength(4)
-  @MaxLength(20)
+  @MaxLength(30)
   email: string;
 
   @IsString()
   @MinLength(4)
-  @MaxLength(20)
+  @MaxLength(30)
   username: string;
 
   @IsString()
@@ -20,4 +20,8 @@ export class UserSignupDto {
   //   message: 'password too weak',
   // })
   password: string;
+
+  @IsOptional()
+  @IsString()
+  profilePicture: string;
 }

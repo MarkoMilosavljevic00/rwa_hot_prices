@@ -38,11 +38,11 @@ mat-card{
 }
 
 .click-region:hover .profile-picture {
-  filter: brightness(0.7); /* Zatamnjujemo sliku prilikom hovera */
+  filter: brightness(0.7);
 }
 
 .click-region:hover .edit-icon {
-  opacity: 1; /* Prikazujemo ikonu prilikom hovera */
+  opacity: 1;
 }
 
 h2{

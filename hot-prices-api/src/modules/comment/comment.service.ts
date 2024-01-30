@@ -2,6 +2,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/models/entities/comment.entity';
@@ -16,7 +17,7 @@ export class CommentService {
   constructor(
     @InjectRepository(Comment) private commentRepository: Repository<Comment>,
     private postService: PostService,
-    private usersService: UserService,
+    @Inject(forwardRef(() => UserService))private usersService: UserService,
   ) {}
 
   async getCommentsByPostId(

@@ -91,12 +91,13 @@ export class UserEditComponent implements OnInit {
 
   onDeleteAccount() {
     let dialogRef = this.dialog.open(YesNoDialogComponent, {
-      data: 'Deleting your account will delete all your posts, comments, and conversations.',
+      data: 'Deleting your account will delete all your offers, coupons, conversations, and comments.',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) console.log('Brisanje naloga'); // Brisanje naloga
-      else console.log('Otkazano brisanje naloga'); // Otkazano brisanje naloga
+      if (result) {
+
+      }
     });
   }
 

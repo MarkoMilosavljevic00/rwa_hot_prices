@@ -13,9 +13,35 @@
       <form
         fxLayout="column"
         fxLayoutGap="40px"
-        #form="ngForm"
-        (ngSubmit)="onSubmit(form)"
+        #signupForm="ngForm"
+        (ngSubmit)="onSubmit(signupForm)"
       >
+        <div fxFlex fxLayoutAlign="center center">
+          <a class="click-region" (click)="fileUpload.choose()">
+            <p-avatar
+              [image]="formatImage(uploadedImage)"
+              size="xlarge"
+              shape="circle"
+              class="profile-picture"
+              [style]="AVATAR_STYLE"
+            >
+            </p-avatar>
+            <mat-icon class="edit-icon" color="warn">edit</mat-icon>
+            <p-fileUpload
+              name="images[]"
+              [url]="UPLOAD_IMAGES_URL"
+              #fileUpload
+              (onSelect)="onSelectProfilePicture(fileUpload, $event)"
+              (onUpload)="onUploadProfilePicture($event)"
+              [multiple]="true"
+              accept="image/*"
+              [maxFileSize]="1000000"
+              [style]="{ display: 'none' }"
+            >
+            </p-fileUpload>
+          </a>
+        </div>
+
         <mat-form-field>
           <mat-label>Email</mat-label>
           <mat-icon matPrefix>email</mat-icon>
@@ -97,7 +123,7 @@
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="form.invalid"
+          [disabled]="signupForm.invalid"
         >
           SIGN UP
         </button>

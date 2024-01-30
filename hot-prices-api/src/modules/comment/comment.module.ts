@@ -10,8 +10,13 @@ import { PostService } from '../post/post.service';
 import { FileService } from '../file/file.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Comment, User, Post])],
+  imports: [
+    TypeOrmModule.forFeature([Comment]),
+    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Post]),
+  ],
   controllers: [CommentController],
-  providers: [CommentService, UserService, PostService, FileService]
+  providers: [CommentService, UserService, PostService, FileService],
+  exports: [CommentService],
 })
 export class CommentModule {}

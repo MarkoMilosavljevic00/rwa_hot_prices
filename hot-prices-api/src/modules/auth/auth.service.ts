@@ -11,6 +11,7 @@ import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LoginAuthDto } from 'src/models/dtos/login-auth.dto';
 import { User } from 'src/models/entities/user.entity';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -28,8 +29,11 @@ export class AuthService {
     return user;
   }
 
-  async signUp(userDto: UserSignupDto): Promise<void> {
-    await this.userService.createUser(userDto);
+  async signUp(
+    userDto: UserSignupDto,
+  ): Promise<{ user: User; accessToken: string }> {
+    const user = await this.userService.createUser(userDto);
+    return await this.login(user);
   }
 
   async login(user: User): Promise<{ user: User; accessToken: string }> {
