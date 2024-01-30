@@ -1,6 +1,22 @@
 import { createAction, props } from '@ngrx/store';
 import { LoginAuthDto } from '../dtos/login-auth.dto';
 import { User } from '../../user/models/user.model';
+import { SignupAuthDto } from '../dtos/signup-auth.dto';
+
+export const signup = createAction(
+  '[Auth] Signup',
+  props<{ signupAuthDto: SignupAuthDto }>()
+);
+
+export const signupSuccess = createAction(
+  '[Auth] Signup success',
+  props<{ user: User; accessToken: string }>()
+);
+
+export const signupFailure = createAction(
+  '[Auth] Signup failure',
+  props<{ error: any }>()
+);
 
 export const login = createAction(
   '[Auth] Login',

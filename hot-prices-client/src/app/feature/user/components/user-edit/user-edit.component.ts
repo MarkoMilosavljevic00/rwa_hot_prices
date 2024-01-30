@@ -21,6 +21,7 @@ import {
 } from 'primeng/fileupload';
 import { ImageType } from 'src/app/common/enums/image-type.enum';
 import {
+  deleteUser,
   updatePassword,
   updateProfilePicture,
   updateUsername,
@@ -96,7 +97,7 @@ export class UserEditComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-
+        this.store.dispatch(deleteUser({ id: this.user!.id }));
       }
     });
   }

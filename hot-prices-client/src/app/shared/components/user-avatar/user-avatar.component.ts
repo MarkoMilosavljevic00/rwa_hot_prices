@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { DEFAULT } from 'src/app/common/constants';
+import { DEFAULT, IMAGES_URL } from 'src/app/common/constants';
+import { ImageType } from 'src/app/common/enums/image-type.enum';
 
 @Component({
   selector: 'app-user-avatar',
@@ -8,13 +9,17 @@ import { DEFAULT } from 'src/app/common/constants';
 })
 export class UserAvatarComponent {
   @Input() name?: string;
-  @Input() id?: string;
+  @Input() id?: number;
   @Input() _imgSrc?: string;
+  @Input() imageType?: ImageType;
   @Input() nameFirst?: boolean;
 
   @Input()
   set imgSrc(value: string | undefined) {
-    this._imgSrc = value && value.trim() !== '' ? value : DEFAULT.USER.IMAGE;
+    this._imgSrc =
+      value && value.trim() !== ''
+        ? `${IMAGES_URL}/${ImageType.UserImage}/${value}`
+        : DEFAULT.USER.IMAGE;
   }
 
   get imgSrc(): string | undefined {

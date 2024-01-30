@@ -29,6 +29,11 @@ export class UserController {
     return this.userService.getUserById(id);
   }
 
+  @Get('getUserWithActivity/:id')
+  getUserWithActivity(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.getUserWithActivity(id);
+  }
+
   @Get('getUserActivity/:id')
   getUserActivity(@Param('id', ParseIntPipe) id: number) {
     return this.userService.getUserActivity(id);

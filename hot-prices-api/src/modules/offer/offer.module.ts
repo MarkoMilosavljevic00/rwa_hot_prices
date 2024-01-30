@@ -12,10 +12,12 @@ import { CommentService } from '../comment/comment.service';
 import { Comment } from 'src/models/entities/comment.entity';
 import { UserService } from '../user/user.service';
 import { PostService } from '../post/post.service';
+import { Reaction } from 'src/models/entities/reaction.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Offer, Category, Comment, User, Post])],
+  imports: [TypeOrmModule.forFeature([Offer, Category, Comment, User, Post, Reaction])],
   controllers: [OfferController],
-  providers: [OfferService, FileService, CategoryService, CommentService, UserService, PostService]
+  providers: [OfferService, FileService, CategoryService, CommentService, UserService, PostService],
+  exports: [OfferService],
 })
 export class OfferModule {}

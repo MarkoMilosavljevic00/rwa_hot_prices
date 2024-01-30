@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserSignupDto } from 'src/models/dtos/signup-auth.dto';
+import { SignupAuthDto } from 'src/models/dtos/signup-auth.dto';
 import { JwtPayload } from 'src/common/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   async signUp(
-    userDto: UserSignupDto,
+    userDto: SignupAuthDto,
   ): Promise<{ user: User; accessToken: string }> {
     const user = await this.userService.createUser(userDto);
     return await this.login(user);

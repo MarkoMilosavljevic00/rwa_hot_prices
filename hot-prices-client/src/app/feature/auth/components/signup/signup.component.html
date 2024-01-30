@@ -70,17 +70,17 @@
             type="text"
             name="username"
             required
-            minlength="6"
+            [minlength]="USERNAME_MIN_LENGTH"
             #usernameInput="ngModel"
           />
           <mat-hint
-            >Please enter a username with at least 6 characters.</mat-hint
+            >Please enter a username with at least {{USERNAME_MIN_LENGTH}} characters.</mat-hint
           >
           <mat-error *ngIf="usernameInput.hasError('required')"
             >Field must not be empty</mat-error
           >
           <mat-error *ngIf="usernameInput.hasError('minlength')"
-            >Username must be at least 6 characters long.</mat-error
+            >Username must be at least {{USERNAME_MIN_LENGTH}} characters long.</mat-error
           >
         </mat-form-field>
         <mat-form-field>
@@ -92,17 +92,17 @@
             type="password"
             name="password"
             required
-            minlength="6"
+            [minlength]="PASSWORD_MIN_LENGTH"
             #passwordInput="ngModel"
           />
           <mat-hint
-            >Please enter a password with at least 6 characters.</mat-hint
+            >Please enter a password with at least {{PASSWORD_MIN_LENGTH}} characters.</mat-hint
           >
           <mat-error *ngIf="passwordInput.hasError('required')"
             >Field must not be empty</mat-error
           >
           <mat-error *ngIf="passwordInput.hasError('minlength')"
-            >Password must be at least 6 characters long.</mat-error
+            >Password must be at least {{PASSWORD_MIN_LENGTH}} characters long.</mat-error
           >
         </mat-form-field>
         <!-- <mat-form-field>

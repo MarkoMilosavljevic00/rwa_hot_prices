@@ -64,7 +64,8 @@ export const LIMITS = {
     MAX_PRICE: 1000000,
   },
   USER: {
-    USERNAME_MIN_LENGTH: 4,
+    USERNAME_MIN_LENGTH: 3,
+    PASSWORD_MIN_LENGTH: 5,
   }
 }
 

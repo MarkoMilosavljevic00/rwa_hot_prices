@@ -11,6 +11,8 @@ import { LocalStrategy } from './local.strategy';
 import { Post } from 'src/models/entities/post.entity';
 import { PostService } from '../post/post.service';
 import { FileService } from '../file/file.service';
+import { Reaction } from 'src/models/entities/reaction.entity';
+import { Comment } from 'src/models/entities/comment.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { FileService } from '../file/file.service';
         expiresIn: 3600,
       },
     }),
-    TypeOrmModule.forFeature([User, Post])
+    TypeOrmModule.forFeature([User, Post, Reaction, Comment])
   ],
   providers: [AuthService, UserService, JwtStrategy, LocalStrategy, PostService, FileService],
   controllers: [AuthController],

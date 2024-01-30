@@ -8,7 +8,7 @@ export const initialState: AuthState = {
 
 export const authReducer = createReducer(
   initialState,
-  on(Actions.loginSuccess, Actions.autoLoginSuccess, (state, { accessToken }) => {
+  on(Actions.loginSuccess, Actions.autoLoginSuccess, Actions.signupSuccess, (state, { accessToken }) => {
     return {
       ...state,
       isAuthenticated: true,

@@ -20,9 +20,8 @@
         <div fxLayout="column" fxLayoutAlign="end">
           <app-user-avatar
             [name]="offer.owner.username"
-            [imgSrc]="
-              'https://material.angular.io/assets/img/examples/shiba1.jpg'
-            "
+            [id]="offer.owner.id"
+            [imgSrc]="offer.owner.profilePicture"
             [nameFirst]="true"
           ></app-user-avatar>
         </div>

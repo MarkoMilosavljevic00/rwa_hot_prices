@@ -11,8 +11,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoginAuthDto } from 'src/models/dtos/login-auth.dto';
 import {
-  UserSignupDto as string,
-  UserSignupDto,
+  SignupAuthDto as string,
+  SignupAuthDto,
 } from 'src/models/dtos/signup-auth.dto';
 import { User } from 'src/models/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -33,16 +33,14 @@ import { CommentService } from '../comment/comment.service';
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    // @InjectRepository(Post) private postRepository: Repository<Post>,
-    // @InjectRepository(Reaction) private reactionRepository: Repository<Reaction>,
-    // @InjectRepository(Comment) private commentRepository: Repository<Comment>,
-    private postService: PostService,
-    // private reactionService: ReactionService,
-    // @Inject(forwardRef(() => CommentService))private commentService: CommentService,
+    @InjectRepository(Reaction)
+    private reactionRepository: Repository<Reaction>,
+    @InjectRepository(Comment) private commentRepository: Repository<Comment>,
+    @InjectRepository(Post) private postRepository: Repository<Post>,
     private fileService: FileService,
   ) {}
 
-  async createUser(userSignupDto: UserSignupDto): Promise<User> {
+  async createUser(userSignupDto: SignupAuthDto): Promise<User> {
     const { email, username, password, profilePicture } = userSignupDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -75,29 +73,57 @@ export class UserService {
     return await this.userRepository.findOne({ where: { id: id } });
   }
 
-  async getUserActivity(id: number): Promise<UserActivityDto> {
+  async getUserWithActivity(
+    id: number,
+  ): Promise<{ user: User; activity: UserActivityDto }> {
     const user = await this.userRepository.findOne({
       where: { id: id },
       relations: ['posts', 'comments'],
     });
-    const posts = user.posts;
-    const comments = user.comments;
-    const { totalHotReactions, totalColdReactions } = posts.reduce(
-      (acc, post) => {
-        acc.totalHotReactions += post.numOfHotReactions;
-        acc.totalColdReactions += post.numOfColdReactions;
-        return acc;
-      },
-      { totalHotReactions: 0, totalColdReactions: 0 },
-    );
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const activity: UserActivityDto = {
+      numberOfPosts: 0,
+      numberOfComments: 0,
+      numberOfHotReactions: 0,
+      numberOfColdReactions: 0,
+      numberOfDegrees: 0,
+    };
+
+    if (user.posts) {
+      const posts = user.posts;
+      const { totalHotReactions, totalColdReactions } = posts.reduce(
+        (acc, post) => {
+          acc.totalHotReactions += post.numOfHotReactions;
+          acc.totalColdReactions += post.numOfColdReactions;
+          return acc;
+        },
+        { totalHotReactions: 0, totalColdReactions: 0 },
+      );
+
+      activity.numberOfPosts = posts.length;
+      activity.numberOfHotReactions = totalHotReactions;
+      activity.numberOfColdReactions = totalColdReactions;
+      activity.numberOfDegrees = totalHotReactions - totalColdReactions;
+      user.posts = undefined;
+    }
+
+    if (user.comments) {
+      activity.numberOfComments = user.comments.length;
+      user.comments = undefined;
+    }
 
     return {
-      numberOfPosts: posts.length,
-      numberOfComments: comments.length,
-      numberOfHotReactions: totalHotReactions,
-      numberOfColdReactions: totalColdReactions,
-      numberOfDegrees: totalHotReactions - totalColdReactions,
+      user,
+      activity,
     };
+  }
+
+  async getUserActivity(id: number): Promise<UserActivityDto> {
+    return (await this.getUserWithActivity(id)).activity;
   }
 
   async updateProfilePicture(id: number, updateUserDto: UpdateUserDto) {
@@ -174,18 +200,26 @@ export class UserService {
   async deleteUser(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
-      // relations: ['posts', 'reactions', 'comments'],
+      relations: ['posts', 'reactions', 'comments'],
     });
     if (!user) {
       throw new NotFoundException(`User with ID "${id}" not found`);
     }
 
-    // Obrisi sve postove, reakcije i komentare
-    // await this.postRepository.remove(user.posts);
-    // await this.reactionRepository.remove(user.reactions);
-    // await this.commentRepository.remove(user.comments);
+    if (
+      user.profilePicture &&
+      this.fileService.isExists(ImageType.UserImage, user.profilePicture)
+    ) {
+      await this.fileService.deleteImage(
+        ImageType.UserImage,
+        user.profilePicture,
+      );
+    }
 
-    // Obrisi korisnika
-    await this.userRepository.remove(user);
+    await this.postRepository.remove(user.posts);
+    await this.reactionRepository.remove(user.reactions);
+    await this.commentRepository.remove(user.comments);
+
+    return await this.userRepository.remove(user);
   }
 }

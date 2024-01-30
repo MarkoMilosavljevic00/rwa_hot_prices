@@ -9,6 +9,11 @@ export const selectCurrentUser = createSelector(
   (state: UserState) => state.currentUser
 );
 
+export const selectSelectedUser = createSelector(
+  selectUserFeature,
+  (state: UserState) => state.selectedUser
+);
+
 export const selectCurrentUserActivity = createSelector(
   selectUserFeature,
   (state: UserState) => state.currentUserActivity

@@ -2,9 +2,16 @@ import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
-import { DEFAULT, IMAGES_URL, UPLOAD_IMAGES_URL } from 'src/app/common/constants';
+import {
+  DEFAULT,
+  IMAGES_URL,
+  LIMITS,
+  UPLOAD_IMAGES_URL,
+} from 'src/app/common/constants';
 import { ImageType } from 'src/app/common/enums/image-type.enum';
 import { AppState } from 'src/app/state/app.state';
+import { SignupAuthDto } from '../../dtos/signup-auth.dto';
+import { signup } from '../../state/auth.action';
 
 @Component({
   selector: 'app-signup',
@@ -15,6 +22,8 @@ export class SignupComponent {
   @ViewChild('signupForm') signupForm: FormGroup;
   uploadedImage: string;
 
+  readonly USERNAME_MIN_LENGTH = LIMITS.USER.USERNAME_MIN_LENGTH;
+  readonly PASSWORD_MIN_LENGTH = LIMITS.USER.PASSWORD_MIN_LENGTH;
   readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.UserImage;
   readonly AVATAR_STYLE = {
     width: '150px',
@@ -33,9 +42,12 @@ export class SignupComponent {
   }
 
   onSubmit(form: NgForm) {
-    if(this.uploadedImage && this.uploadedImage.trim() !== '') {
-      form.value.image = this.uploadedImage;
-    }
+    const signupAuthDto: SignupAuthDto = {
+      ...this.signupForm.value,
+      profilePicture: this.uploadedImage,
+    };
+
+    this.store.dispatch(signup({ signupAuthDto }));
   }
 
   formatImage(imgPath: string | undefined) {

@@ -12,22 +12,21 @@ import { ReactionService } from '../reaction/reaction.service';
 import { CommentService } from '../comment/comment.service';
 import { Reaction } from 'src/models/entities/reaction.entity';
 import { Comment } from 'src/models/entities/comment.entity';
+import { ReactionModule } from '../reaction/reaction.module';
+import { CommentModule } from '../comment/comment.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Post]),
-    TypeOrmModule.forFeature([Reaction]),
-    TypeOrmModule.forFeature([Comment]),
+    TypeOrmModule.forFeature([User, Post, Reaction, Comment]),
+    // TypeOrmModule.forFeature([Post]),
+    // TypeOrmModule.forFeature([Reaction]),
+    // TypeOrmModule.forFeature([Comment]),
     AuthModule,
   ],
   controllers: [UserController],
   providers: [
     UserService,
-    PostService,
     FileService,
-    ReactionService,
-    CommentService,
   ],
   exports: [UserService],
 })

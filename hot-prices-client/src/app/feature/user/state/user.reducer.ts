@@ -23,7 +23,16 @@ export const userReducer = createReducer(
       currentUser: undefined,
     };
   }),
-  on(UserActions.loadUserActivitySuccess, (state, { userActivity }) => {
+  on(UserActions.loadSelectedUserSuccess, (state, { user, userActivity }) => {
+    return {
+      ...state,
+      selectedUser: {
+        ...user,
+        userActivity,
+      },
+    };
+  }),
+  on(UserActions.loadCurrentUserActivitySuccess, (state, { userActivity }) => {
     return {
       ...state,
       currentUserActivity: userActivity,

@@ -6,9 +6,9 @@ import { InitialValues } from "src/app/common/interfaces/initial-values.interfac
 import { FilterOffer } from "src/app/common/interfaces/filter-offer.interface";
 
 export interface OfferState extends EntityState<Offer> {
-  detailedOffer?: Offer;
-  editingOffer?: Offer;
   filter?: FilterOffer;
-  titles: string[]
   length: number;
+  titles: string[]
+  editingOffer?: Offer;
+  detailedOffer?: Offer;
 }

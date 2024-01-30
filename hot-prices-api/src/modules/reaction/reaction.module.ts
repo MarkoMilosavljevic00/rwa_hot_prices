@@ -8,11 +8,12 @@ import { User } from 'src/models/entities/user.entity';
 import { Post } from 'src/models/entities/post.entity';
 import { PostService } from '../post/post.service';
 import { FileService } from '../file/file.service';
-import { CommentService } from '../comment/comment.service';
+import { Comment } from 'src/models/entities/comment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reaction, User, Post])],
+  imports: [TypeOrmModule.forFeature([Reaction, User, Post, Comment])],
   controllers: [ReactionController],
-  providers: [ReactionService, UserService, PostService, FileService]
+  providers: [ReactionService, UserService, PostService, FileService],
+  exports: [ReactionService],
 })
 export class ReactionModule {}

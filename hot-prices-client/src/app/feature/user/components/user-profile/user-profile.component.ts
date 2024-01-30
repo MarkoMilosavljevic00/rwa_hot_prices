@@ -8,12 +8,18 @@ import { AppState } from 'src/app/state/app.state';
 import {
   selectCurrentUser,
   selectCurrentUserActivity,
+  selectSelectedUser,
 } from '../../state/user.selector';
 import { Role } from 'src/app/common/enums/role.enum';
 import { DEFAULT, IMAGES_URL } from 'src/app/common/constants';
 import { UserActivity } from '../../models/user-activity';
-import { switchMap, tap } from 'rxjs';
-import { loadUserActivity } from '../../state/user.action';
+import { Subscription, combineLatest, skip, switchMap, tap } from 'rxjs';
+import {
+  loadCurrentUserActivity,
+  loadSelectedUser,
+} from '../../state/user.action';
+import { selectIdFromRouteParams } from 'src/app/state/app.selectors';
+import { ImageType } from 'src/app/common/enums/image-type.enum';
 
 @Component({
   selector: 'app-user-profile',
@@ -24,17 +30,42 @@ export class UserProfileComponent implements OnInit {
   user?: User;
   userActivity?: UserActivity;
 
+  userSubscription: Subscription;
+
   constructor(private store: Store<AppState>, private router: Router) {}
 
   ngOnInit() {
-    this.store
-      .select(selectCurrentUser)
+    this.userSubscription = combineLatest([
+      this.store.select(selectIdFromRouteParams),
+      this.store.select(selectCurrentUser),
+    ])
       .pipe(
-        tap((user) => (this.user = user)),
-        tap((user) => this.store.dispatch(loadUserActivity({ id: user!.id }))),
-        switchMap(() => this.store.select(selectCurrentUserActivity))
+        
+        switchMap(([routeId, currentUser]) => {
+          if (routeId) {
+            this.store.dispatch(loadSelectedUser({ id: +routeId }));
+            return this.store.select(selectSelectedUser);
+          } else {
+            this.user = currentUser;
+            this.store.dispatch(
+              loadCurrentUserActivity({ id: currentUser!.id })
+            );
+            return this.store.select(selectCurrentUserActivity);
+          }
+        })
       )
-      .subscribe((userActivity) => (this.userActivity = userActivity));
+      .subscribe((userOrActivity: User | UserActivity | undefined) => {
+        if (userOrActivity && 'userActivity' in userOrActivity) {
+          this.user = userOrActivity;
+          this.userActivity = userOrActivity.userActivity;
+        } else {
+          this.userActivity = userOrActivity as UserActivity;
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
   }
 
   isAdmin(): boolean {
@@ -47,9 +78,13 @@ export class UserProfileComponent implements OnInit {
 
   formatImage(imgPath: string | undefined) {
     if (imgPath) {
-      return IMAGES_URL + '/users-pictures/' + imgPath;
+      return `${IMAGES_URL}/${ImageType.UserImage}/${imgPath}`;
     } else {
       return DEFAULT.USER.IMAGE;
     }
   }
 }
+
+// function instanceOfUser(data: any): data is User {
+//   return 'userActivity' in data;
+// }

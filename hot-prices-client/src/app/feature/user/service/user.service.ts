@@ -21,6 +21,12 @@ export class UserService {
     return this.http.get<User[]>(`${environment.api}/user`);
   }
 
+  getUserWithActivity(id: number) {
+    return this.http.get<{user: User, activity: UserActivity}>(
+      `${environment.api}/user/getUserWithActivity/${id}`
+    );
+  }
+
   getUserActivity(id: number) {
     return this.http.get<UserActivity>(
       `${environment.api}/user/getUserActivity/${id}`
@@ -46,5 +52,9 @@ export class UserService {
       `${environment.api}/user/updatePassword/${id}`,
       { currentPassword, newPassword }
     );
+  }
+
+  deleteUser(id: number) {
+    return this.http.delete(`${environment.api}/user/${id}`);
   }
 }

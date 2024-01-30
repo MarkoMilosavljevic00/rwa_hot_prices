@@ -10,6 +10,37 @@ import { KEYS } from 'src/app/common/constants';
 
 @Injectable()
 export class AuthEffects {
+  signup$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(AuthActions.signup),
+      switchMap(({ signupAuthDto }) =>
+        this.authService.signup(signupAuthDto).pipe(
+          map(({ user, accessToken }) =>
+            AuthActions.signupSuccess({ user, accessToken })
+          ),
+          catchError((error) => of(AuthActions.signupFailure({ error })))
+        )
+      )
+    )
+  );
+
+  signupSuccess$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(AuthActions.signupSuccess),
+        tap(({ user, accessToken }) => {
+          localStorage.setItem(KEYS.TOKEN, accessToken);
+          this.router.navigate(['/posts/offers']);
+          this.notificationService.showMessage(
+            MessageSeverity.SUCCESS,
+            'Success',
+            `Congrulations ${user.username}! You have successfully signed up`
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
   login$ = createEffect(() =>
     this.action$.pipe(
       ofType(AuthActions.login),
@@ -24,38 +55,9 @@ export class AuthEffects {
             AuthActions.loginSuccess({ user, accessToken })
           ),
           catchError((error) => of(AuthActions.loginFailure({ error })))
-        )
+        );
       })
     )
-  );
-
-
-  autoLogin$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(AuthActions.autoLogin),
-      tap(() => console.log('autologin effect')),
-      switchMap(({ accessToken }) =>
-        this.authService.loginByToken(accessToken).pipe(
-          tap(() => console.log('autologin')),
-          map(({ user, accessToken }) =>
-            AuthActions.autoLoginSuccess({ user, accessToken })
-          ),
-          catchError((error) => of(AuthActions.autoLoginFaliure({error})))
-        )
-      )
-    )
-  );
-
-  logout$ = createEffect(
-    () =>
-      this.action$.pipe(
-        ofType(AuthActions.logout),
-        tap(() => {
-          localStorage.removeItem(KEYS.TOKEN);
-          this.router.navigate(['/auth/login']);
-        })
-      ),
-    { dispatch: false }
   );
 
   loginSuccess$ = createEffect(
@@ -75,6 +77,22 @@ export class AuthEffects {
     { dispatch: false }
   );
 
+  autoLogin$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(AuthActions.autoLogin),
+      tap(() => console.log('autologin effect')),
+      switchMap(({ accessToken }) =>
+        this.authService.loginByToken(accessToken).pipe(
+          tap(() => console.log('autologin')),
+          map(({ user, accessToken }) =>
+            AuthActions.autoLoginSuccess({ user, accessToken })
+          ),
+          catchError((error) => of(AuthActions.autoLoginFaliure({ error })))
+        )
+      )
+    )
+  );
+
   autoLoginSuccess$ = createEffect(
     () =>
       this.action$.pipe(
@@ -86,7 +104,19 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-  loginFailure$ = createEffect(
+  logout$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(AuthActions.logout),
+        tap(() => {
+          localStorage.removeItem(KEYS.TOKEN);
+          this.router.navigate(['/auth/login']);
+        })
+      ),
+    { dispatch: false }
+  );
+
+  authFailure$ = createEffect(
     () =>
       this.action$.pipe(
         ofType(AuthActions.loginFailure),

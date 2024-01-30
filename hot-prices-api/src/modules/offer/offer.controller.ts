@@ -23,7 +23,7 @@ import { FilterOfferValidationPipe } from './pipes/filter-offer.pipe';
 import { InitialValues } from 'src/common/interfaces/initial-values.interface';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('offers')
+@Controller('offer')
 export class OfferController {
   constructor(private offerService: OfferService) {}
 
