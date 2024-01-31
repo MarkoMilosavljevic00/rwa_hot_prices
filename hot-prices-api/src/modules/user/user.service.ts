@@ -9,17 +9,17 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LoginAuthDto } from 'src/models/dtos/login-auth.dto';
+import { LoginAuthDto } from 'src/modules/auth/dtos/login-auth.dto';
 import {
   SignupAuthDto as string,
   SignupAuthDto,
-} from 'src/models/dtos/signup-auth.dto';
+} from 'src/modules/auth/dtos/signup-auth.dto';
 import { User } from 'src/models/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { UserActivityDto } from 'src/models/dtos/activity-user-dto';
+import { UserActivityDto } from 'src/modules/user/dtos/activity-user-dto';
 import { PostService } from '../post/post.service';
-import { UpdateUserDto } from 'src/models/dtos/update-user.dto';
+import { UpdateUserDto } from 'src/modules/user/dtos/update-user.dto';
 import { FileService } from '../file/file.service';
 import { ImageType } from 'src/common/enums/image-type.enum';
 import { AuthService } from '../auth/auth.service';
@@ -141,10 +141,10 @@ export class UserService {
 
     if (
       user.profilePicture &&
-      this.fileService.isExists(ImageType.UserImage, user.profilePicture)
+      this.fileService.isExists(ImageType.PROFILE_PICTURE, user.profilePicture)
     ) {
       await this.fileService.deleteImage(
-        ImageType.UserImage,
+        ImageType.PROFILE_PICTURE,
         user.profilePicture,
       );
     }
@@ -208,10 +208,10 @@ export class UserService {
 
     if (
       user.profilePicture &&
-      this.fileService.isExists(ImageType.UserImage, user.profilePicture)
+      this.fileService.isExists(ImageType.PROFILE_PICTURE, user.profilePicture)
     ) {
       await this.fileService.deleteImage(
-        ImageType.UserImage,
+        ImageType.PROFILE_PICTURE,
         user.profilePicture,
       );
     }

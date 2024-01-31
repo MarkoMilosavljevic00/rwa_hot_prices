@@ -1,5 +1,5 @@
 <div
-  class="avatar clickable"
+  class="avatar-container clickable"
   [routerLink]="['/user/profile', id]"
   [fxLayout]="nameFirst ? 'row' : 'row-reverse'"
   fxLayoutGap="10%"
@@ -7,9 +7,10 @@
 >
   <h3>{{ name }}</h3>
   <p-avatar
+    class="user-avatar"
     [image]="imgSrc"
     shape="circle"
-    size="large"
+    size="normal"
     mat-card-avatar
   >
   </p-avatar>

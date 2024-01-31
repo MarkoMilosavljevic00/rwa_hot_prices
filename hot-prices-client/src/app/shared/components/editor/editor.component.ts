@@ -31,6 +31,7 @@ export class EditorComponent {
       quill.deleteText(this.maxLength, quill.getLength() - 1);
     }
     this.content = quill.root.innerHTML;
+
   }
 
   onTextChange() {

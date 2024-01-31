@@ -17,8 +17,7 @@ import { OfferService } from '../../services/offer.service';
 import { SortBy, SortType } from 'src/app/common/enums/sort.enum';
 import { UserService } from 'src/app/feature/user/service/user.service';
 import { changeFilter, clearFilter } from '../../state/offer.action';
-import { selectFilterOffer } from '../../state/offer.selector';
-import { FilterOffer } from 'src/app/common/interfaces/filter-offer.interface';
+import { FilterOffer } from 'src/app/feature/offer/models/offer.filter';
 import { selectCurrentReaction } from 'src/app/feature/reaction/state/reaction.selector';
 import { selectCurrentRoute, selectUrl } from 'src/app/state/app.selectors';
 import {

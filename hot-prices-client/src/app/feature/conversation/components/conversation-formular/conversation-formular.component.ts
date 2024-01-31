@@ -65,8 +65,13 @@ export class ConversationFormularComponent {
         nonNullable: true,
         validators: [Validators.required],
       }),
+      contentPlainText: new FormControl(''),
       selectedCategory: new FormControl(),
     });
+  }
+
+  onContentChange(content: string) {
+    this.contentControl?.setValue(content);
   }
 
   onSubmit() {

@@ -78,7 +78,7 @@ export class UserProfileComponent implements OnInit {
 
   formatImage(imgPath: string | undefined) {
     if (imgPath) {
-      return `${IMAGES_URL}/${ImageType.UserImage}/${imgPath}`;
+      return `${IMAGES_URL}/${ImageType.PROFILE_PICTURE}/${imgPath}`;
     } else {
       return DEFAULT.USER.IMAGE;
     }

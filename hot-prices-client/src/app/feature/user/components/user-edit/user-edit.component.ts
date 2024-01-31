@@ -37,7 +37,7 @@ import {
 export class UserEditComponent implements OnInit {
   user?: User;
 
-  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.UserImage;
+  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.PROFILE_PICTURE;
   readonly USERNAME_MIN_LENGTH = LIMITS.USER.USERNAME_MIN_LENGTH;
 
   constructor(private dialog: MatDialog, private store: Store<AppState>) {}
@@ -104,7 +104,7 @@ export class UserEditComponent implements OnInit {
 
   formatImage(imgPath: string | undefined) {
     if (imgPath) {
-      return IMAGES_URL + `/${ImageType.UserImage}/` + imgPath;
+      return IMAGES_URL + `/${ImageType.PROFILE_PICTURE}/` + imgPath;
     } else {
       return DEFAULT.USER.IMAGE;
     }

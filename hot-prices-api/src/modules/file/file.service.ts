@@ -68,6 +68,7 @@ export class FileService implements MulterOptionsFactory {
     } else {
       const imagePath = this.getImageLocation(imageType, imageName);
       unlinkSync(imagePath);
+      console.log('Image deleted' + imageName);
       return true;
     };
   }

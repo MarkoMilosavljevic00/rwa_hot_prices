@@ -18,7 +18,7 @@ export class UserAvatarComponent {
   set imgSrc(value: string | undefined) {
     this._imgSrc =
       value && value.trim() !== ''
-        ? `${IMAGES_URL}/${ImageType.UserImage}/${value}`
+        ? `${IMAGES_URL}/${ImageType.PROFILE_PICTURE}/${value}`
         : DEFAULT.USER.IMAGE;
   }
 

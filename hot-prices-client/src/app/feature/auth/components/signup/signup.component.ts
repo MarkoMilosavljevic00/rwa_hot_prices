@@ -24,7 +24,7 @@ export class SignupComponent {
 
   readonly USERNAME_MIN_LENGTH = LIMITS.USER.USERNAME_MIN_LENGTH;
   readonly PASSWORD_MIN_LENGTH = LIMITS.USER.PASSWORD_MIN_LENGTH;
-  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.UserImage;
+  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.PROFILE_PICTURE;
   readonly AVATAR_STYLE = {
     width: '150px',
     height: '150px',
@@ -52,7 +52,7 @@ export class SignupComponent {
 
   formatImage(imgPath: string | undefined) {
     if (imgPath) {
-      return IMAGES_URL + `/${ImageType.UserImage}/` + imgPath;
+      return IMAGES_URL + `/${ImageType.PROFILE_PICTURE}/` + imgPath;
     } else {
       return DEFAULT.USER.IMAGE;
     }

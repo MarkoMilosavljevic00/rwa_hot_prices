@@ -53,9 +53,7 @@
       <mat-card-subtitle>Content: </mat-card-subtitle>
       <app-editor
         fxFlex="100%"
-        [maxLength]="300"
-        formControlName="content"
-        (onContentChange)="content = $event"
+        (onContentChange)="onContentChange($event)"
         [content]="contentControl?.value"
       >
       </app-editor>

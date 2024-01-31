@@ -11,9 +11,9 @@ export class RouteMappingService {
 
   constructor(private route: ActivatedRoute) {
     this.postsRouteToPostType = new Map<string, PostType>([
-      ['offer', PostType.Offer],
-      ['conversation', PostType.Conversation],
-      ['coupon', PostType.Coupon],
+      ['offer', PostType.OFFER],
+      ['conversation', PostType.CONVERSATION],
+      ['coupon', PostType.COUPON],
     ]);
   }
 
@@ -33,11 +33,11 @@ export class RouteMappingService {
 
   mapUrlToPostType(urlString: string, plural: boolean = false, offset: number = 1): PostType {
     if (!urlString || urlString.trim() === '') {
-      return PostType.Offer;
+      return PostType.OFFER;
     } else {
       let segment = this.getSegmentFromBottom(urlString, 1);
       segment = plural ? segment.substring(0, segment.length - 1) : segment;
-      return this.postsRouteToPostType.get(segment) || PostType.Offer;
+      return this.postsRouteToPostType.get(segment) || PostType.OFFER;
     }
   }
 

@@ -56,9 +56,9 @@
         >
           <a fxLayoutAlign="center center">{{ offer.title }}</a>
         </mat-card-title>
-        <mat-card-subtitle>
+        <mat-chip>
           {{offer.category ? offer.category.name : ''}}
-        </mat-card-subtitle>
+        </mat-chip>
         <app-price
           [price]="offer.price"
           [oldPrice]="offer.oldPrice!"

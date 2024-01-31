@@ -25,7 +25,7 @@ export class PostDetailComponent implements OnInit {
   post?: Post;
   post$: Observable<Post | undefined>;
 
-  currentPostType: PostType = PostType.Offer;
+  currentPostType: PostType = PostType.OFFER;
 
   constructor(
     private route: ActivatedRoute,
@@ -51,7 +51,7 @@ export class PostDetailComponent implements OnInit {
       }
     });
 
-    if (this.currentPostType === PostType.Offer) {
+    if (this.currentPostType === PostType.OFFER) {
       // this.store.dispatch(loadDetailedOffer({ offerId: this.routeMappingService.getIdFromUrl(this.router.url, 1) }));
       this.store.select(selectDetailedOffer).subscribe((offer) => {
         if (offer) {

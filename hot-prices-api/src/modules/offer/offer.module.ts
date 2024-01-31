@@ -13,11 +13,15 @@ import { Comment } from 'src/models/entities/comment.entity';
 import { UserService } from '../user/user.service';
 import { PostService } from '../post/post.service';
 import { Reaction } from 'src/models/entities/reaction.entity';
+import { ConversationService } from '../conversation/conversation.service';
+import { Conversation } from 'src/models/entities/conversation.entity';
+import { Coupon } from 'src/models/entities/coupon.entity';
+import { CouponService } from '../coupon/coupon.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Offer, Category, Comment, User, Post, Reaction])],
+  imports: [TypeOrmModule.forFeature([Offer, Category, Comment, User, Post, Reaction, Conversation, Coupon])],
   controllers: [OfferController],
-  providers: [OfferService, FileService, CategoryService, CommentService, UserService, PostService],
+  providers: [OfferService, FileService, CategoryService, CommentService, UserService, PostService, ConversationService, CouponService],
   exports: [OfferService],
 })
 export class OfferModule {}

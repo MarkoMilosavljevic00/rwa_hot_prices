@@ -3,7 +3,7 @@ import { SaleType } from 'src/app/common/enums/sale-type.enum';
 export class FormOfferDto {
   title: string;
   categoryId: number;
-  ownerId: number;
+  // ownerId: number;
   imgPaths?: string[];
   saleType: SaleType;
   description?: string;

@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SignupAuthDto } from 'src/models/dtos/signup-auth.dto';
+import { SignupAuthDto } from 'src/modules/auth/dtos/signup-auth.dto';
 import { JwtPayload } from 'src/common/interfaces/jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import { LoginAuthDto } from 'src/models/dtos/login-auth.dto';
+import { LoginAuthDto } from 'src/modules/auth/dtos/login-auth.dto';
 import { User } from 'src/models/entities/user.entity';
 import { log } from 'console';
 

@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, TreeRepository } from 'typeorm';
-import { CreateCategoryDto } from 'src/models/dtos/create-category.dto';
+import { CreateCategoryDto } from 'src/modules/category/dtos/create-category.dto';
 import { Category } from 'src/models/entities/category.entity';
-import { GetCategoryDto } from 'src/models/dtos/get-category.dto';
-import { DeleteCategoryDto } from 'src/models/dtos/delete-category.dto';
+import { GetCategoryDto } from 'src/modules/category/dtos/get-category.dto';
+import { DeleteCategoryDto } from 'src/modules/category/dtos/delete-category.dto';
 import { ChildHandlingMethod } from 'src/common/enums/child-handling-method.enum';
 
 @Injectable()

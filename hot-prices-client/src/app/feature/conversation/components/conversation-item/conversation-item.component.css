@@ -18,9 +18,16 @@ mat-card-title {
   color: #FF5722;
 }
 
-.price{
-  color: #FF5722;
-  font-size: 0.9rem;
+.category {
+  color: #FF5722; /* Boja teksta */
+  font-size: 0.9rem; /* Veličina fonta */
+  font-weight: bold; /* Debljina fonta */
+  text-transform: uppercase; /* Sva slova u velika */
+  margin-bottom: 10px; /* Razmak ispod teksta */
+  padding: 5px 10px; /* Unutrašnji razmak */
+  border: 1px solid #FF5722; /* Border oko teksta */
+  border-radius: 5px; /* Zaobljeni uglovi */
+  /* display: inline-block; Da bi border bio oko teksta, a ne cele linije */
 }
 
 .old-price {

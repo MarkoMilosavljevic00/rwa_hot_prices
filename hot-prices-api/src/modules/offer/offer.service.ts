@@ -4,19 +4,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
+import { FormOfferDto } from 'src/modules/offer/dtos/form-offer.dto';
 import { Category } from 'src/models/entities/category.entity';
 import { Offer } from 'src/models/entities/offer.entity';
 import { ILike, Like, Repository, SelectQueryBuilder } from 'typeorm';
 import { FileService } from '../file/file.service';
 import { ImageType } from 'src/common/enums/image-type.enum';
-import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
+import { FilterOfferDto } from 'src/modules/offer/dtos/filter-offer.dto';
 import { SortBy, SortType } from 'src/common/enums/sort.enum';
 import { CategoryService } from '../category/category.service';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from 'src/models/entities/comment.entity';
 import { UserService } from '../user/user.service';
 import { Reaction } from 'src/models/entities/reaction.entity';
+import { Post } from 'src/models/entities/post.entity';
 
 @Injectable()
 export class OfferService {
@@ -36,12 +37,12 @@ export class OfferService {
   ) {}
 
   async create(formOfferDto: FormOfferDto): Promise<Offer> {
-    const { categoryId, ownerId } = formOfferDto;
+    const { categoryId } = formOfferDto;
 
-    const owner = await this.userService.getUserById(ownerId);
-    if (!owner) {
-      throw new NotFoundException(`Owner with ID ${ownerId} not found`);
-    }
+    // const owner = await this.userService.getUserById(ownerId);
+    // if (!owner) {
+    //   throw new NotFoundException(`Owner with ID ${ownerId} not found`);
+    // }
 
     const category = await this.categoryService.getCategoryById(categoryId);
     if (!category) {
@@ -51,7 +52,7 @@ export class OfferService {
     const offer = this.offerRepository.create({
       ...formOfferDto,
       category,
-      owner,
+      // owner,
     });
     try {
       await this.offerRepository.save(offer);
@@ -82,6 +83,27 @@ export class OfferService {
     }
 
     return this.offerRepository.findOne({ where: { id } });
+  }
+
+  async delete(id: number): Promise<Offer> {
+    const offer = await this.offerRepository.findOne({
+      where: { id },
+      relations: [ 'comments', 'reactions' ],
+    });
+    if (!offer) {
+      throw new NotFoundException(`Offer with ID "${id}" not found`);
+    }
+
+    if(offer.imgPaths){
+      for (let imgPath of offer.imgPaths) {
+        this.fileService.deleteImage(ImageType.POST_IMAGE, imgPath);
+      }
+    }
+
+    // await this.commentRepository.remove(offer.comments);
+    // await this.reactionRepository.remove(offer.reactions);
+
+    return await this.offerRepository.remove(offer);
   }
 
   async getByFilter(
@@ -122,27 +144,6 @@ export class OfferService {
     return offer;
   }
 
-  async delete(id: number): Promise<Offer> {
-    const offer = await this.offerRepository.findOne({
-      where: { id },
-      relations: [ 'comments', 'reactions' ],
-    });
-    if (!offer) {
-      throw new NotFoundException(`Offer with ID "${id}" not found`);
-    }
-
-    if(offer.imgPaths){
-      for (let imgPath of offer.imgPaths) {
-        this.fileService.deleteImage(ImageType.OfferImage, imgPath);
-      }
-    }
-
-    // await this.commentRepository.remove(offer.comments);
-    // await this.reactionRepository.remove(offer.reactions);
-
-    return await this.offerRepository.remove(offer);
-  }
-
   async getAll(): Promise<Offer[]> {
     const offers = await this.offerRepository.find({ relations: ['category'] });
     return offers;
@@ -175,6 +176,84 @@ export class OfferService {
     });
   }
 
+  async getQueryFromFilter1(
+    query: SelectQueryBuilder<Post>,
+    filterOfferDto: FilterOfferDto,
+  ): Promise<SelectQueryBuilder<Post>> {
+    const {
+      title,
+      categoryId,
+      ownerId,
+      minPrice,
+      maxPrice,
+      minDiscount,
+      maxDiscount,
+      saleType,
+      store,
+      location,
+      expired,
+    } = filterOfferDto;
+
+    console.log(title);
+
+    if (title) {
+      query.andWhere('LOWER(post.title) LIKE LOWER(:title)', {
+        title: `%${title}%`,
+      });
+    }
+
+
+    if (categoryId) {
+      const descendantIds =
+        await this.categoryService.getAllDescendantIds(categoryId);
+      query.andWhere('post.categoryId IN (:...ids)', {
+        ids: [categoryId, ...descendantIds],
+      });
+    }
+
+    if (ownerId) {
+      query.andWhere('post.ownerId = :ownerId', { ownerId });
+    }
+
+    if (minPrice) {
+      query.andWhere('post.price >= :minPrice', { minPrice });
+    }
+
+    if (maxPrice) {
+      query.andWhere('post.price <= :maxPrice', { maxPrice });
+    }
+
+    if (minDiscount) {
+      query.andWhere('post.discount >= :minDiscount', { minDiscount });
+    }
+
+    if (maxDiscount) {
+      query.andWhere('post.discount <= :maxDiscount', { maxDiscount });
+    }
+
+    if (saleType) {
+      query.andWhere('post.saleType = :saleType', { saleType });
+    }
+
+    if (store) {
+      query.andWhere('LOWER(post.store) LIKE LOWER(:store)', {
+        store: `%${store}%`,
+      });
+    }
+
+    if (location) {
+      query.andWhere('LOWER(post.location) LIKE LOWER(:location)', {
+        location: `%${location}%`,
+      });
+    }
+
+    if (expired === undefined || expired === false) {
+      query.andWhere('(post.expiryDate IS NULL OR post.expiryDate > CURRENT_TIMESTAMP)');
+    }
+
+    return query;
+  }
+
   async getQueryFromFilter(
     filterOfferDto: FilterOfferDto,
   ): Promise<SelectQueryBuilder<Offer>> {
@@ -202,9 +281,6 @@ export class OfferService {
       });
     }
 
-    // if (categoryId) {
-    //   query.andWhere('offer.categoryId = :categoryId', { categoryId });
-    // }
     if (categoryId) {
       const descendantIds =
         await this.categoryService.getAllDescendantIds(categoryId);
@@ -307,7 +383,7 @@ export class OfferService {
       if (offer.imgPaths)
         for (let i = 0; i < offer.imgPaths.length; i++) {
           if (
-            !this.fileService.isExists(ImageType.OfferImage, offer.imgPaths[i])
+            !this.fileService.isExists(ImageType.POST_IMAGE, offer.imgPaths[i])
           ) {
             offer.imgPaths.splice(i, 1);
             i--;

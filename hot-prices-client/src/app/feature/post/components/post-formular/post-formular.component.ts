@@ -9,7 +9,7 @@ import { RouteMappingService } from 'src/app/shared/services/route-mapping.servi
 })
 export class PostFormularComponent {
   editMode: boolean = false;
-  postType: PostType = PostType.Offer;
+  postType: PostType = PostType.OFFER;
 
   constructor(
     private routeMappingService: RouteMappingService,

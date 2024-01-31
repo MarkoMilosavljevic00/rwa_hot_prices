@@ -7,11 +7,35 @@ import { ConversationListComponent } from './components/conversation-list/conver
 import { ConversationItemComponent } from './components/conversation-item/conversation-item.component';
 import { ConversationDetailsComponent } from './components/conversation-details/conversation-details.component';
 import { ConversationFormularComponent } from './components/conversation-formular/conversation-formular.component';
+import { ReactionModule } from '../reaction/reaction.module';
+import { CommentModule } from '../comment/comment.module';
+import { Store, StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { conversationReducer } from './state/conversation.reducer';
+import { ConversationEffects } from './state/conversation.effects';
 
 @NgModule({
-  declarations: [ConversationListComponent, ConversationItemComponent, ConversationDetailsComponent, ConversationFormularComponent],
-  imports: [RouterModule, SharedModule],
-  exports: [ConversationListComponent, ConversationItemComponent, ConversationDetailsComponent],
+  declarations: [
+    ConversationListComponent,
+    ConversationItemComponent,
+    ConversationDetailsComponent,
+    ConversationFormularComponent,
+  ],
+  imports: [
+    RouterModule,
+    SharedModule,
+    ReactionModule,
+    CommentModule,
+    StoreModule.forFeature('conversations', conversationReducer),
+    EffectsModule.forFeature([ConversationEffects]),
+    StoreRouterConnectingModule,
+  ],
+  exports: [
+    ConversationListComponent,
+    ConversationItemComponent,
+    ConversationDetailsComponent,
+  ],
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class ConversationModule {}

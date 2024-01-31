@@ -1,23 +1,24 @@
 import { Allow, IsArray, IsDateString, IsEnum, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
-import { SaleType } from "../../common/enums/sale-type.enum";
-import { Category } from "../entities/category.entity";
+import { SaleType } from "../../../common/enums/sale-type.enum";
+import { Category } from "../../../models/entities/category.entity";
+import { FormPostDto } from "src/modules/post/dtos/form-post.dto";
 
-export class FormOfferDto {
+export class FormOfferDto extends FormPostDto {
   // @IsOptional()
-  @IsString()
-  title: string;
+  // @IsString()
+  // title: string;
 
-  @IsNumber()
-  ownerId: number;
+  // @IsNumber()
+  // ownerId: number;
 
   // @IsOptional()
-  @IsNumber()
-  categoryId: number;
+  // @IsNumber()
+  // categoryId: number;
 
-  @IsOptional()
+  // @IsOptional()
   // @ValidateNested()
   // @Type(() => Category)
-  category?: Category;
+  // category?: Category;
 
   @IsOptional()
   @IsArray()

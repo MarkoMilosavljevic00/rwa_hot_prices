@@ -10,12 +10,12 @@ import {
   Delete,
   ParseEnumPipe,
 } from '@nestjs/common';
-import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
+import { FormOfferDto } from 'src/modules/offer/dtos/form-offer.dto';
 import { Category } from 'src/models/entities/category.entity';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from 'src/models/dtos/create-category.dto';
-import { GetCategoryDto } from 'src/models/dtos/get-category.dto';
-import { DeleteCategoryDto } from 'src/models/dtos/delete-category.dto';
+import { CreateCategoryDto } from 'src/modules/category/dtos/create-category.dto';
+import { GetCategoryDto } from 'src/modules/category/dtos/get-category.dto';
+import { DeleteCategoryDto } from 'src/modules/category/dtos/delete-category.dto';
 import { ChildHandlingMethod } from 'src/common/enums/child-handling-method.enum';
 
 @Controller('category')

@@ -1,5 +1,5 @@
 import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-import { Category } from "../entities/category.entity";
+import { Category } from "../../../models/entities/category.entity";
 import { Type } from "class-transformer";
 
 export class CreateCategoryDto {

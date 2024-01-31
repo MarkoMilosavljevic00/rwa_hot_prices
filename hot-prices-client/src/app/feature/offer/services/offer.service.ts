@@ -5,6 +5,7 @@ import { Offer } from '../models/offer.model';
 import { FormOfferDto } from '../models/dtos/form-offer.dto';
 import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 import { InitialValues } from 'src/app/common/interfaces/initial-values.interface';
+import { PostType } from 'src/app/common/enums/post-type.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,8 @@ export class OfferService {
         params = params.set(key, value.toString());
       }
     });
+
+    params = params.set('postType', PostType.OFFER)
 
     return this.http.get<{ offers: Offer[]; length: number }>(
       `${environment.api}/offer/get-offers-by-filter`,
@@ -47,6 +50,8 @@ export class OfferService {
         params = params.set(key, value.toString());
       }
     });
+
+    params = params.set('postType', PostType.OFFER)
 
     return this.http.get<string[]>(
       `${environment.api}/offer/distinct-property-filter/${key}`,

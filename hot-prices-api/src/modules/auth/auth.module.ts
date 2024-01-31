@@ -13,6 +13,14 @@ import { PostService } from '../post/post.service';
 import { FileService } from '../file/file.service';
 import { Reaction } from 'src/models/entities/reaction.entity';
 import { Comment } from 'src/models/entities/comment.entity';
+import { OfferService } from '../offer/offer.service';
+import { Offer } from 'src/models/entities/offer.entity';
+import { ConversationService } from '../conversation/conversation.service';
+import { Conversation } from 'src/models/entities/conversation.entity';
+import { Category } from 'src/models/entities/category.entity';
+import { CategoryService } from '../category/category.service';
+import { Coupon } from 'src/models/entities/coupon.entity';
+import { CouponService } from '../coupon/coupon.service';
 
 @Module({
   imports: [
@@ -24,9 +32,29 @@ import { Comment } from 'src/models/entities/comment.entity';
         expiresIn: 3600,
       },
     }),
-    TypeOrmModule.forFeature([User, Post, Reaction, Comment])
+    TypeOrmModule.forFeature([
+      User,
+      Post,
+      Reaction,
+      Comment,
+      Offer,
+      Conversation,
+      Category,
+      Coupon
+    ]),
   ],
-  providers: [AuthService, UserService, JwtStrategy, LocalStrategy, PostService, FileService],
+  providers: [
+    AuthService,
+    UserService,
+    JwtStrategy,
+    LocalStrategy,
+    PostService,
+    FileService,
+    OfferService,
+    ConversationService,
+    CategoryService,
+    CouponService
+  ],
   controllers: [AuthController],
   exports: [AuthService, JwtStrategy, PassportModule, LocalStrategy],
 })

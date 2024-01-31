@@ -60,7 +60,7 @@ export class PostsComponent implements OnInit, OnDestroy {
         switchMap((url) => {
           this.isUserPosts = this.routeMappingService.isUserPosts(url);
           this.postType = this.routeMappingService.mapUrlToPostType(url, true);
-          if (this.postType === PostType.Offer){
+          if (this.postType === PostType.OFFER){
             this.store.dispatch(loadTitles({ filterOffer: {} }));
             return this.store.select(selectOffersTitles);
             // return this.offerService.getOfferDistinctProperty(KEYS.OFFER.TITLE);

@@ -4,12 +4,16 @@ import { OfferState } from "../feature/offer/state/offer.state";
 import { CategoryState } from "../feature/post/state/category/category.state";
 import { ReactionState } from "../feature/reaction/state/reaction.state";
 import { AuthState } from "../feature/auth/state/auth.state";
+import { UserState } from "../feature/user/state/user.state";
+import { ConversationState } from "../feature/conversation/state/conversation.state";
 
 export interface AppState {
   auth: AuthState;
-  router: RouterReducerState;
+  user: UserState;
   offers: OfferState;
-  categories: CategoryState;
-  reaction: ReactionState;
+  conversations: ConversationState;
   comments: CommentState;
+  reaction: ReactionState;
+  categories: CategoryState;
+  router: RouterReducerState;
 }

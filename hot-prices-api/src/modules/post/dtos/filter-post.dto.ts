@@ -5,10 +5,14 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { SaleType } from '../../common/enums/sale-type.enum';
+import { SaleType } from '../../../common/enums/sale-type.enum';
 import { SortBy, SortType } from 'src/common/enums/sort.enum';
+import { PostType } from 'src/common/enums/post-type.enum';
 
-export class FilterOfferDto {
+export class FilterPostDto {
+  @IsEnum(PostType)
+  postType: PostType;
+
   @IsOptional()
   @IsString()
   title?: string;
@@ -20,38 +24,6 @@ export class FilterOfferDto {
   @IsOptional()
   @IsNumberString()
   ownerId?: number;
-
-  @IsOptional()
-  @IsNumberString()
-  minPrice?: number;
-
-  @IsOptional()
-  @IsNumberString()
-  maxPrice?: number;
-
-  @IsOptional()
-  @IsNumberString()
-  minDiscount?: number;
-
-  @IsOptional()
-  @IsNumberString()
-  maxDiscount?: number;
-
-  @IsOptional()
-  @IsEnum(SaleType)
-  saleType?: SaleType;
-
-  @IsOptional()
-  @IsString()
-  store?: string;
-
-  @IsOptional()
-  @IsString()
-  location?: string;
-
-  @IsOptional()
-  @IsBooleanString()
-  expired?: boolean;
 
   @IsOptional()
   @IsEnum(SortBy)

@@ -99,7 +99,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   expiryDateOptions: Option[];
 
   readonly SaleType = SaleType;
-  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.OfferImage;
+  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.POST_IMAGE;
 
   get specificationsFormArray(): FormArray {
     return this.offerForm.get('specificationsFormArray') as FormArray;
@@ -321,7 +321,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     const offer: FormOfferDto = {
       title: this.offerForm.value.title,
       categoryId: this.offerForm.value.selectedCategory.data.id,
-      ownerId: DEFAULT.USER.ID,
+      // ownerId: DEFAULT.USER.ID,
       description: this.offerForm.value.description,
       saleType: this.offerForm.value.saleType,
       link:

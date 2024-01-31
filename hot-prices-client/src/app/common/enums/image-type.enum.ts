@@ -1,5 +1,5 @@
 export enum ImageType {
-  OfferImage = 'offers',
+  POST_IMAGE = 'offers',
   CouponImage = 'coupons',
-  UserImage = 'users-pictures',
+  PROFILE_PICTURE = 'users-pictures',
 }

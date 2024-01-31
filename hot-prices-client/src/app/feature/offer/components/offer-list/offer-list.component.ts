@@ -26,9 +26,6 @@ import { FilterOfferDto } from '../../models/dtos/filter-offer.dto';
   styleUrls: ['./offer-list.component.css'],
 })
 export class OfferListComponent implements OnInit, OnDestroy {
-  offers: Offer[] = [];
-  onePageOffers: Offer[] = [];
-
   offer$: Observable<Offer[]>;
   length$: Observable<number>;
   filter$: Observable<FilterOfferDto>;

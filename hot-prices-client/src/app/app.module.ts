@@ -22,6 +22,8 @@ import { appReducers } from './state/app.reducers';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './feature/auth/interceptors/auth.interceptor';
 import { AuthEffects } from './feature/auth/state/auth.effects';
+import { ConversationEffects } from './feature/conversation/state/conversation.effects';
+import { appEffects } from './state/app.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +34,7 @@ import { AuthEffects } from './feature/auth/state/auth.effects';
     SharedModule,
     StoreModule.forRoot<AppState>(appReducers),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot(appEffects),
     StoreRouterConnectingModule.forRoot(),
   ],
   providers: [

@@ -9,6 +9,8 @@ import { CategoryModule } from './modules/category/category.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { ReactionModule } from './modules/reaction/reaction.module';
 import { PostModule } from './modules/post/post.module';
+import { ConversationModule } from './modules/conversation/conversation.module';
+import { CouponModule } from './modules/coupon/coupon.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { PostModule } from './modules/post/post.module';
     CommentModule,
     ReactionModule,
     PostModule,
+    ConversationModule,
+    CouponModule,
   ],
   controllers: [],
   providers: [],

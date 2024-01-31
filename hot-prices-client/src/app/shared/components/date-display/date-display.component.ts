@@ -6,11 +6,20 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./date-display.component.css']
 })
 export class DateDisplayComponent {
-  @Input() date: Date = new Date();
+  @Input() _date: Date = new Date();
   @Input() isPostedDate: boolean = false;
   @Input() isExpiringDate: boolean = false;
   @Input() isDateFormat: boolean = false;
   @Input() textBeforeDate: string;
+
+  @Input()
+  set date(value: Date) {
+    this._date = new Date(value);
+  }
+
+  get date(): Date {
+    return this._date;
+  }
 
   formatDate(date: Date): string {
     const formattedDate = new Date(date).toLocaleDateString('en-GB', {

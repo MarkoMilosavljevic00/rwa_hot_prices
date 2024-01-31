@@ -18,9 +18,8 @@ import {
 } from '@nestjs/common';
 import { OfferService } from './offer.service';
 import { Offer } from 'src/models/entities/offer.entity';
-import { FormOfferDto } from 'src/models/dtos/form-offer.dto';
-import { FilterOfferDto } from 'src/models/dtos/filter-offer.dto';
-import { FilterOfferValidationPipe } from './pipes/filter-offer.pipe';
+import { FormOfferDto } from 'src/modules/offer/dtos/form-offer.dto';
+import { FilterOfferDto } from 'src/modules/offer/dtos/filter-offer.dto';
 import { InitialValues } from 'src/common/interfaces/initial-values.interface';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -30,39 +29,39 @@ export class OfferController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/get-offers-by-filter')
-  getOffersByFilter(
+  async getOffersByFilter(
     @Query()
     filterOfferDto: FilterOfferDto,
   ): Promise<{ offers: Offer[]; length: number }> {
-    return this.offerService.getByFilter(filterOfferDto);
+    return await this.offerService.getByFilter(filterOfferDto);
   }
 
   @Get('/distinct-property-filter/:key')
-  getOffersDistinctPropertyFilter(
+  async getOffersDistinctPropertyFilter(
     @Param('key') key: string,
     @Query() filterOfferDto: FilterOfferDto,
   ): Promise<string[]> {
-    return this.offerService.getDistinctProperty(key, filterOfferDto);
+    return await this.offerService.getDistinctProperty(key, filterOfferDto);
   }
 
   @Get('/distinct-property/:key')
-  getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
-    return this.offerService.getDistinctProperty(key);
+  async getOffersDistinctProperty(@Param('key') key: string): Promise<string[]> {
+    return await this.offerService.getDistinctProperty(key);
   }
 
   @Get('/all')
-  getAllOffers(): Promise<Offer[]> {
-    return this.offerService.getAll();
+  async getAllOffers(): Promise<Offer[]> {
+    return await this.offerService.getAll();
   }
 
   @Get('/:id')
-  getOfferById(@Param('id', ParseIntPipe) id: number): Promise<Offer> {
-    return this.offerService.getById(id);
+  async getOfferById(@Param('id', ParseIntPipe) id: number): Promise<Offer> {
+    return await this.offerService.getById(id);
   }
 
   @Post()
-  postOffer(@Body() formOfferDto: FormOfferDto) {
-    return this.offerService.create(formOfferDto);
+  async createOffer(@Body() formOfferDto: FormOfferDto) {
+    return await this.offerService.create(formOfferDto);
   }
 
   @Patch('cleanNotFoundedImages')
@@ -72,16 +71,16 @@ export class OfferController {
   }
 
   @Patch('/:id')
-  updateOffer(
+  async updateOffer(
     @Param('id') id: number,
     @Body() updateOfferDto: FormOfferDto,
   ): Promise<Offer> {
-    return this.offerService.update(id, updateOfferDto);
+    return await this.offerService.update(id, updateOfferDto);
   }
 
   @Delete('/:id')
-  deleteOffer(@Param('id') id: number): Promise<Offer> {
-    return this.offerService.delete(id);
+  async deleteOffer(@Param('id') id: number): Promise<Offer> {
+    return await this.offerService.delete(id);
   }
 
 }

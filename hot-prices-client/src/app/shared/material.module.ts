@@ -21,6 +21,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
 
 const modules = [
   MatButtonModule,
@@ -46,6 +47,7 @@ const modules = [
   MatSliderModule,
   MatSlideToggleModule,
   MatSelectModule,
+  MatChipsModule,
 ];
 
 @NgModule({
