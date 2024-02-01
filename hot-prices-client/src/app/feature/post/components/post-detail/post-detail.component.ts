@@ -3,7 +3,6 @@ import { Post } from '../../models/post.model';
 import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
 import { PostType } from 'src/app/common/enums/post-type.enum';
-import { CONVERSATIONS } from 'src/app/feature/conversation/services/conversations.model';
 import { Coupon } from 'src/app/feature/coupon/models/coupon.model';
 import { Conversation } from 'src/app/feature/conversation/models/conversation.model';
 import { Report } from '../../models/report.model';
@@ -12,9 +11,13 @@ import { InputDialogComponent } from 'src/app/shared/components/input-dialog/inp
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/app.state';
 import { selectDetailedOffer } from 'src/app/feature/offer/state/offer.selector';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, of, switchMap } from 'rxjs';
 import { loadDetailedOffer } from 'src/app/feature/offer/state/offer.action';
-
+import { selectUrl } from 'src/app/state/app.selectors';
+import { selectDetailedConversation } from 'src/app/feature/conversation/state/conversation.selector';
+import { deleteConversation } from 'src/app/feature/conversation/state/conversation.action';
+import { selectDetailedCoupon } from 'src/app/feature/coupon/state/coupon.selector';
+import { deleteCoupon } from 'src/app/feature/coupon/state/coupon.action';
 
 @Component({
   selector: 'app-post-detail',
@@ -23,12 +26,11 @@ import { loadDetailedOffer } from 'src/app/feature/offer/state/offer.action';
 })
 export class PostDetailComponent implements OnInit {
   post?: Post;
-  post$: Observable<Post | undefined>;
+  postSubscription: Subscription;
 
-  currentPostType: PostType = PostType.OFFER;
+  postType?: PostType;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private routeMappingService: RouteMappingService,
     public dialog: MatDialog,
@@ -36,84 +38,43 @@ export class PostDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentPostType = this.routeMappingService.mapUrlToPostType(
-      this.router.url,
-      false,
-      2
-    );
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.currentPostType = this.routeMappingService.mapUrlToPostType(
-          event.url,
-          false,
-          2
-        );
-      }
-    });
-
-    if (this.currentPostType === PostType.OFFER) {
-      // this.store.dispatch(loadDetailedOffer({ offerId: this.routeMappingService.getIdFromUrl(this.router.url, 1) }));
-      this.store.select(selectDetailedOffer).subscribe((offer) => {
-        if (offer) {
-          this.post = offer;
-        }
+    this.postSubscription = this.store
+      .select(selectUrl)
+      .pipe(
+        switchMap((url) => {
+          this.postType = this.routeMappingService.getPostTypeFromUrl(url);
+          if (this.postType === PostType.OFFER) {
+            return this.store.select(selectDetailedOffer);
+          } else if (this.postType === PostType.CONVERSATION) {
+            return this.store.select(selectDetailedConversation);
+          } else if (this.postType === PostType.COUPON) {
+            return this.store.select(selectDetailedCoupon);
+          } else return of();
+        })
+      )
+      .subscribe((post) => {
+        this.post = post;
       });
-    }
-    // let DATA: Post[] | Conversation[] | Coupon[];
-
-    // switch (this.currentPostType) {
-    //   case PostType.Offer:
-    //     DATA = OFFERS;
-    //     break;
-    //   case PostType.Conversation:
-    //     DATA = CONVERSATIONS;
-    //     break;
-    //   case PostType.Coupon:
-    //     DATA = COUPONS;
-    //     break;
-    // }
-
-    // this.post = DATA.find(
-    //   (post) =>
-    //     post.id === this.routeMappingService.getIdFromUrl(this.router.url, 1)
-    // );
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //     this.post = DATA.find(
-    //       (post) =>
-    //         post.id === this.routeMappingService.getIdFromUrl(event.url, 1)
-    //     );
-    //   }
-    // });
-
-    // console.log(this.post);
   }
 
   onEditPost() {
     this.router.navigate([
-      `/posts/formular/${this.routeMappingService.mapPostTypeToUrl(
-        this.currentPostType
-      )}/${this.post?.id}`,
+      `/posts/formular/${this.postType?.toLowerCase()}/${this.post?.id}`,
     ]);
   }
 
-  onReportPost() {
-    // const dialogRef = this.dialog.open(InputDialogComponent, {
-    //   data: {
-    //     title: 'Report Post',
-    //     message: 'Please enter your report:',
-    //     maxLength: 300,
-    //   },
-    // });
+  onDeletePost() {
+    if(this.postType === PostType.OFFER){
+      // this.store.dispatch(deleteOffer({ offerId: this.post?.id! }));
+    }
+    else if(this.postType === PostType.CONVERSATION){
+      this.store.dispatch(deleteConversation({ id: this.post?.id! }));
+    }
+    else if(this.postType === PostType.COUPON){
+      this.store.dispatch(deleteCoupon({ id: this.post?.id! }));
+    }
+  }
 
-    // dialogRef.afterClosed().subscribe((result: any) => {
-    //   if (result) {
-    //     const report: Report = {
-    //       id: 1,
-    //       description: result,
-    //     };
-    //     console.log(report);
-    //   } else console.log('Otkazan report');
-    // });
+  onReportPost() {
   }
 }

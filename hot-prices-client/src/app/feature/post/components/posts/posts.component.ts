@@ -2,9 +2,13 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
-import { map, Observable, of, startWith, Subscription, switchMap } from 'rxjs';
+import { map, Observable, of, skip, startWith, Subscription, switchMap } from 'rxjs';
 import { KEYS } from 'src/app/common/constants';
 import { PostType } from 'src/app/common/enums/post-type.enum';
+import { loadConversationTitles } from 'src/app/feature/conversation/state/conversation.action';
+import { selectConversationsTitles } from 'src/app/feature/conversation/state/conversation.selector';
+import { loadCouponTitles } from 'src/app/feature/coupon/state/coupon.action';
+import { selectCouponsTitles } from 'src/app/feature/coupon/state/coupon.selector';
 import { OfferService } from 'src/app/feature/offer/services/offer.service';
 import { changeSearchFilter, clearFilter, loadTitles } from 'src/app/feature/offer/state/offer.action';
 import { selectOffersTitles } from 'src/app/feature/offer/state/offer.selector';
@@ -64,20 +68,20 @@ export class PostsComponent implements OnInit, OnDestroy {
             this.store.dispatch(loadTitles({ filterOffer: {} }));
             return this.store.select(selectOffersTitles);
             // return this.offerService.getOfferDistinctProperty(KEYS.OFFER.TITLE);
+          } else if(this.postType === PostType.CONVERSATION) {
+            this.store.dispatch(loadConversationTitles({ filterConversation: {} }));
+            return this.store.select(selectConversationsTitles);
+          } else if(this.postType === PostType.COUPON) {
+            this.store.dispatch(loadCouponTitles({ filterCoupon: {} }));
+            return this.store.select(selectCouponsTitles);
           }
           else return of([]);
         })
-      )
+      ).pipe(skip(1))
       .subscribe((titles) => {
-        console.log('loadujem titles')
         this.titlesOptions = titles;
         this.filteredTitlesOptions = titles;
       });
-  }
-
-  ngOnDestroy() {
-    this.store.dispatch(clearFilter());
-    this.subscription.unsubscribe();
   }
 
   onSearchChange(search: string){
@@ -101,5 +105,10 @@ export class PostsComponent implements OnInit, OnDestroy {
         this.postType
       )}`,
     ]);
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(clearFilter());
+    this.subscription.unsubscribe();
   }
 }

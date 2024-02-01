@@ -27,11 +27,6 @@ export const selectConversationsList = createSelector(selectConversationsFeature
   )
 );
 
-// export const selectConversationsList = createSelector(
-//   selectConversationsFeature,
-//   selectAll
-// );
-
 export const selectDetailedConversation = createSelector(
   selectConversationsFeature,
   (conversationState) => conversationState.detailedConversation

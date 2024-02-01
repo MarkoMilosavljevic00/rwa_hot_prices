@@ -6,14 +6,10 @@ import { Conversation } from '../../models/conversation.model';
   templateUrl: './conversation-item.component.html',
   styleUrls: ['./conversation-item.component.css'],
 })
-export class ConversationItemComponent implements OnInit {
-  @Input() conversation: Conversation;
+export class ConversationItemComponent {
+  @Input() conversation!: Conversation;
 
   constructor() {}
-
-  ngOnInit(): void {
-    console.log('conversation-item');
-  }
 
   formatContent(content: string): string {
     const parser = new DOMParser();

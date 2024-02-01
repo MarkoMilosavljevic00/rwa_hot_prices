@@ -37,10 +37,10 @@
     >
       <mat-card-subtitle fxFlex="15%">Category: </mat-card-subtitle>
       <p-treeSelect
+        [options]="categoryOptions"
         class="centered-field"
         containerStyleClass="w-full"
         formControlName="selectedCategory"
-        [options]="categoryOptions"
         placeholder="Select Category"
       ></p-treeSelect>
     </div>
@@ -60,8 +60,16 @@
     </div>
 
     <div fxFlex fxLayoutAlign="center center">
-      <button mat-fab extended class="submit-button" color="warn" fxFlex.lt-sm="100%">
-        SUBMIT CONVERSATION
+      <button
+        mat-fab
+        extended
+        type="submit"
+        class="submit-button"
+        color="warn"
+        [disabled]="!conversationForm.valid"
+        fxFlex.lt-sm="100%"
+      >
+        {{ (editMode ? "SAVE " : "SUBMIT ") + "OFFER" }}
       </button>
     </div>
   </section>

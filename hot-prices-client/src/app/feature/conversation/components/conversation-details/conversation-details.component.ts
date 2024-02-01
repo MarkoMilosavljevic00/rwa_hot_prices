@@ -3,7 +3,6 @@ import { FormRecord } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Conversation } from '../../models/conversation.model';
-import { CONVERSATIONS } from '../../services/conversations.model';
 import { Subscription, filter, skip, switchMap } from 'rxjs';
 import { AppState } from 'src/app/state/app.state';
 import { Store } from '@ngrx/store';
@@ -13,11 +12,7 @@ import { selectDetailedConversation } from '../../state/conversation.selector';
 import { Category } from 'src/app/feature/post/models/category.model';
 import { MenuItem } from 'primeng/api';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
-
-export interface ImageInfo {
-  itemImageSrc: string;
-  thumbnailImageSrc: string;
-}
+import { loadDetailedConversation } from '../../state/conversation.action';
 
 @Component({
   selector: 'app-conversation-details',
@@ -45,10 +40,8 @@ export class ConversationDetailsComponent implements OnInit {
       .select(selectIdFromRouteParams)
       .pipe(
         filter(isNotUndefined),
-        switchMap((offerId) => {
-          if (offerId) {
-            this.store.dispatch(loadDetailedConversation({ offerId: +offerId }));
-          }
+        switchMap((id) => {
+          this.store.dispatch(loadDetailedConversation({ id: +id }));
           return this.store.select(selectDetailedConversation);
         }),
         skip(1)

@@ -76,7 +76,7 @@ export class DateDisplayComponent {
     } else if (minutes > 0) {
       return `Expires in ${minutes} minute${minutes > 1 ? 's' : ''}`;
     } else {
-      return 'Expires soon';
+      return 'Expired';
     }
   }
 }

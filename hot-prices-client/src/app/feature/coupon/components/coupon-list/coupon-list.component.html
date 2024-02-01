@@ -1,5 +1,23 @@
 <div fxLayout="column" fxLayoutAlign="space-between">
   <mat-list fxLayout="column" fxLayoutGap="2%">
+    <mat-list-item *ngFor="let coupon of coupon$ | async">
+      <app-coupon-item
+        [coupon]="coupon"
+      ></app-coupon-item>
+    </mat-list-item>
+  </mat-list>
+
+  <mat-paginator
+    [length]="length$ | async"
+    [pageSize]="pagination.pageSize"
+    [pageIndex]="pagination.pageIndex"
+    (page)="getData($event)"
+  >
+  </mat-paginator>
+</div>
+
+<!-- <div fxLayout="column" fxLayoutAlign="space-between">
+  <mat-list fxLayout="column" fxLayoutGap="2%">
     <mat-list-item *ngFor="let coupon of onePageCoupons">
       <app-coupon-item [coupon]="coupon"></app-coupon-item>
     </mat-list-item>
@@ -10,4 +28,4 @@
               [pageIndex]="page"
               (page)="getData($event)">
 </mat-paginator>
-</div>
+</div> -->

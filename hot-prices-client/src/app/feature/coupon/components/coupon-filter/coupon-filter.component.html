@@ -1,0 +1,146 @@
+<div class="placeholder" fxLayout="column" fxLayoutGap="12%">
+  <div>
+    <mat-icon
+      (click)="sidenavControl.toggle()"
+      class="clickable"
+      color="warn"
+      fxFlex
+      fxLayoutAlign="end end"
+      >close</mat-icon
+    >
+  </div>
+
+  <div fxLayoutAlign="center center">
+    <h2>Filter Coupons</h2>
+  </div>
+
+  <div class="field">
+    <label> Category: </label>
+    <mat-divider></mat-divider>
+    <p-treeSelect
+      [ngModel]="selectedTreeNode"
+      (ngModelChange)="onCategoryChanged($event)"
+      [options]="categoriesOptions"
+      [showClear]="true"
+      placeholder="All categories..."
+      fxFlex="100%"
+      fxLayout="column"
+    ></p-treeSelect>
+  </div>
+
+  <div *ngIf="!isUserPosts" class="field" fxFlex="100%">
+    <label> Owner: </label>
+    <mat-divider></mat-divider>
+    <p-autoComplete
+      [ngModel]="filterCoupon.selectedUser"
+      (ngModelChange)="onOwnerChanged($event)"
+      [suggestions]="filteredUsersSuggestions"
+      [completeOnFocus]="true"
+      [forceSelection]="true"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      (completeMethod)="filterOwner($event)"
+      field="username"
+      placeholder="All owners..."
+    ></p-autoComplete>
+  </div>
+
+  <div class="field">
+    <div fxFlex>
+      <label fxFlex>Discount:</label>
+      <mat-slide-toggle
+        [ngModel]="filterCoupon.isDiscountEnabled"
+        (ngModelChange)="onDiscountChanged($event)"
+        fxFlex
+        fxLayoutAlign="end end"
+        color="warn"
+      >
+      </mat-slide-toggle>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-slider
+      [disabled]="!filterCoupon.isDiscountEnabled"
+      color="warn"
+      min="0"
+      max="100"
+      discrete
+    >
+      <input matSliderStartThumb [(ngModel)]="filterCoupon.minDiscount" />
+      <input matSliderEndThumb [(ngModel)]="filterCoupon.maxDiscount" />
+    </mat-slider>
+  </div>
+
+  <div class="field">
+    <label> Sale Type: </label>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterCoupon.saleType"
+      [options]="saleTypesOptions"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      placeholder="All sale types..."
+    ></p-dropdown>
+  </div>
+
+  <div class="field">
+    <label> Store: </label>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterCoupon.store"
+      [options]="storesOptions"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      placeholder="All stores..."
+    ></p-dropdown>
+  </div>
+
+  <div class="field">
+    <label> Location: </label>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterCoupon.location"
+      [options]="locationsOptions"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      placeholder="All locations..."
+    ></p-dropdown>
+  </div>
+
+  <div class="field">
+    <label> Sort: </label>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterCoupon.sortBy"
+      [options]="sortByOptions"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      placeholder="Sort By"
+    ></p-dropdown>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterCoupon.sortType"
+      [options]="sortTypesOptions"
+      [showClear]="true"
+      placeholder="Sort Type"
+      [style]="DROPDOWN_STYLE"
+    ></p-dropdown>
+  </div>
+
+  <div class="field">
+    <div fxFlex>
+      <label fxFlex>Show Expired:</label>
+      <mat-slide-toggle
+        [ngModel]="filterCoupon.expired"
+        (ngModelChange)="onShowExpiredChanged($event)"
+        fxFlex
+        fxLayoutAlign="end end"
+        color="warn"
+      >
+      </mat-slide-toggle>
+    </div>
+  </div>
+
+  <button mat-raised-button color="warn" (click)="applyFilter()">
+    Apply Filter
+  </button>
+</div>

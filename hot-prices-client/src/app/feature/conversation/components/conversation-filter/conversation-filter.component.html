@@ -1,0 +1,79 @@
+<div class="placeholder" fxLayout="column" fxLayoutGap="12%">
+  <div>
+    <mat-icon
+      (click)="sidenavControl.toggle()"
+      class="clickable"
+      color="warn"
+      fxFlex
+      fxLayoutAlign="end end"
+      >close</mat-icon
+    >
+  </div>
+
+  <div fxLayoutAlign="center center">
+    <h2>Filter Conversations</h2>
+  </div>
+  <!-- [options]="(categoriesOption$ | async) || []" -->
+  <div class="field">
+    <label> Category: </label>
+    <mat-divider></mat-divider>
+    <p-treeSelect
+      [ngModel]="selectedTreeNode"
+      (ngModelChange)="onCategoryChanged($event)"
+      [options]="categoriesOptions"
+      [showClear]="true"
+      placeholder="All categories..."
+      fxFlex="100%"
+      fxLayout="column"
+    ></p-treeSelect>
+  </div>
+
+  <div *ngIf="!isUserPosts" class="field" fxFlex="100%">
+    <label> Owner: </label>
+    <mat-divider></mat-divider>
+    <p-autoComplete
+      [ngModel]="filterOffer.selectedUser"
+      (ngModelChange)="onOwnerChanged($event)"
+      [suggestions]="filteredUsersSuggestions"
+      [completeOnFocus]="true"
+      [forceSelection]="true"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      (completeMethod)="filterOwner($event)"
+      field="username"
+      placeholder="All owners..."
+    ></p-autoComplete>
+    <!-- <p-autoComplete
+      [(ngModel)]="filterOffer.ownerId"
+      [suggestions]="filteredOwners"
+      (completeMethod)="filterOwner($event)"
+      field="name"
+      [forceSelection]="true"
+      placeholder="Select owner..."
+    ></p-autoComplete> -->
+  </div>
+
+  <div class="field">
+    <label> Sort: </label>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterOffer.sortBy"
+      [options]="sortByOptions"
+      [showClear]="true"
+      [style]="DROPDOWN_STYLE"
+      placeholder="Sort By"
+    ></p-dropdown>
+    <mat-divider></mat-divider>
+    <p-dropdown
+      [(ngModel)]="filterOffer.sortType"
+      [options]="sortTypesOptions"
+      [showClear]="true"
+      placeholder="Sort Type"
+      [style]="DROPDOWN_STYLE"
+    ></p-dropdown>
+  </div>
+
+  <button mat-raised-button color="warn" (click)="applyFilter()">
+    Apply Filter
+  </button>
+</div>

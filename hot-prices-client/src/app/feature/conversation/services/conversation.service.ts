@@ -12,11 +12,23 @@ import { FormConversationDto } from '../models/dtos/form-conversation.dto';
 export class ConversationService {
   constructor(private readonly http: HttpClient) {}
 
-  getOfferById(id: number) {
+  createConversation(formConversationDto: FormConversationDto) {
+    return this.http.post<Conversation>(`${environment.api}/post`, formConversationDto);
+  }
+
+  updateConversation(id: number, formConversationDto: FormConversationDto) {
+    return this.http.patch<Conversation>(`${environment.api}/post/${id}`, formConversationDto);
+  }
+  
+  deleteConversation(id: number) {
+    return this.http.delete<Conversation>(`${environment.api}/post/${id}`);
+  }
+
+  getConversationById(id: number) {
     return this.http.get<Conversation>(`${environment.api}/post/${id}`);
   }
 
-  getConversationByFilter(filterConversationDto: FilterConversationDto) {
+  getConversationsByFilter(filterConversationDto: FilterConversationDto) {
     let params = new HttpParams();
 
     Object.keys(filterConversationDto).forEach((key: string) => {
@@ -34,13 +46,13 @@ export class ConversationService {
     );
   }
 
-  getOfferDistinctProperty(key: string) {
+  getConversationsDistinctProperty(key: string) {
     return this.http.get<string[]>(
       `${environment.api}/post/distinct-property/${key}`
     );
   }
 
-  getOfferDistinctPropertyByFilter(
+  getConversationsDistinctPropertyByFilter(
     key: string,
     filterConversationDto: FilterConversationDto
   ) {
@@ -59,13 +71,5 @@ export class ConversationService {
       `${environment.api}/post/distinct-property-filter/${key}`,
       { params }
     );
-  }
-
-  postOffer(formConversationDto: FormConversationDto) {
-    return this.http.post<Conversation>(`${environment.api}/post`, formConversationDto);
-  }
-
-  updateOffer(id: number, formConversationDto: FormConversationDto) {
-    return this.http.patch<Conversation>(`${environment.api}/post/${id}`, formConversationDto);
   }
 }

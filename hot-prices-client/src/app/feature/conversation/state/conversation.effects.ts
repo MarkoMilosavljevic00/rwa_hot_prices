@@ -13,58 +13,136 @@ import {
 import * as ConversationActions from './conversation.action';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { PAGE } from 'src/app/common/constants';
+import { KEYS, PAGE } from 'src/app/common/constants';
 import { CommentService } from '../../comment/services/comment.service';
 import { ConversationService } from '../services/conversation.service';
 import { FilterConversationDto } from '../models/dtos/filter-conversation.dto';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { MessageSeverity } from 'src/app/common/enums/message-severity.enum';
 
 @Injectable()
 export class ConversationEffects {
-  postConversation$ = createEffect(() =>
+  createConversation$ = createEffect(() =>
     this.action$.pipe(
       ofType(ConversationActions.createConversation),
       switchMap(({ formConversationDto }) =>
-        this.conversationService.postOffer(formConversationDto).pipe(
+        this.conversationService.createConversation(formConversationDto).pipe(
           concatMap((conversation) => {
             return [
-              ConversationActions.submittedConversationSuccess({
+              ConversationActions.createConversationSuccess({
                 conversation,
               }),
-              ConversationActions.loadConversations({
-                filterConversationDto: {
-                  pageIndex: PAGE.INITIAL_INDEX,
-                  pageSize: PAGE.SIZE,
-                },
-              }),
+              // ConversationActions.loadConversations({
+              //   filterConversationDto: {
+              //     pageIndex: PAGE.INITIAL_INDEX,
+              //     pageSize: PAGE.SIZE,
+              //   },
+              // }),
             ];
           }),
-          catchError(() => of())
+          catchError(({ error }) =>
+            of(ConversationActions.createConversationFailure(error))
+          )
         )
       )
     )
   );
 
-  // updateffer$ = createEffect(() =>
-  //   this.action$.pipe(
-  //     ofType(OfferActions.updateOffer),
-  //     switchMap(({ offerId, formOfferDto }) =>
-  //       this.offerService.updateOffer(offerId, formOfferDto).pipe(
-  //         concatMap((offer) => {
-  //           return [
-  //             OfferActions.submittedOfferSuccess({ offer }),
-  //             OfferActions.loadOffers({
-  //               filterOfferDto: {
-  //                 pageIndex: PAGE.INITIAL_INDEX,
-  //                 pageSize: PAGE.SIZE,
-  //               },
-  //             }),
-  //           ];
-  //         }),
-  //         catchError(() => of())
-  //       )
-  //     )
-  //   )
-  // );
+  updateConversation$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(ConversationActions.updateConversation),
+      switchMap(({ id, formConversationDto }) =>
+        this.conversationService
+          .updateConversation(id, formConversationDto)
+          .pipe(
+            concatMap((conversation) => {
+              return [
+                ConversationActions.updateConversationSuccess({ conversation }),
+                // OfferActions.loadOffers({
+                //   filterOfferDto: {
+                //     pageIndex: PAGE.INITIAL_INDEX,
+                //     pageSize: PAGE.SIZE,
+                //   },
+                // }),
+              ];
+            }),
+            catchError((error) =>
+              of(ConversationActions.updateConversationFailure({ error }))
+            )
+          )
+      )
+    )
+  );
+
+  submittedConversationSuccess$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(
+          ConversationActions.createConversationSuccess,
+          ConversationActions.updateConversationSuccess
+        ),
+        tap(({ conversation }) => {
+          this.router.navigate([
+            '/posts/details/conversation/' + conversation.id,
+          ]);
+          this.notificationService.showMessage(
+            MessageSeverity.SUCCESS,
+            'Success',
+            'Conversation saved successfully'
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  submittedConversationFailure$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(
+          ConversationActions.createConversationFailure,
+          ConversationActions.updateConversationFailure,
+          ConversationActions.deleteConversationFailure
+        ),
+        tap(({ error }) => {
+          this.notificationService.showMessage(
+            MessageSeverity.ERROR,
+            'Error',
+            error.error.message
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  deleteConversation$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(ConversationActions.deleteConversation),
+      switchMap(({ id }) =>
+        this.conversationService.deleteConversation(id).pipe(
+          map(() => ConversationActions.deleteConversationSuccess()),
+          catchError((error) =>
+            of(ConversationActions.deleteConversationFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  deleteConversationSuccess$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(ConversationActions.deleteConversationSuccess),
+        tap(() => {
+          this.router.navigate(['/posts/conversations']);
+          this.notificationService.showMessage(
+            MessageSeverity.SUCCESS,
+            'Success',
+            'Conversation deleted successfully'
+          );
+        })
+      ),
+    { dispatch: false }
+  );
 
   loadConversation$ = createEffect(() =>
     this.action$.pipe(
@@ -72,7 +150,7 @@ export class ConversationEffects {
       switchMap(({ filterConversationDto: filterConversation }) => {
         const filterConversationDto: FilterConversationDto = filterConversation;
         return this.conversationService
-          .getConversationByFilter(filterConversationDto)
+          .getConversationsByFilter(filterConversationDto)
           .pipe(
             tap(({ posts }) => console.log(posts)),
             map(({ posts, length }) => {
@@ -90,42 +168,83 @@ export class ConversationEffects {
     )
   );
 
-    loadDetailedOffer$ = createEffect(() =>
+  loadDetailedConversation$ = createEffect(() =>
     this.action$.pipe(
       ofType(ConversationActions.loadDetailedConversation),
-      switchMap(({ offerId }) =>
+      switchMap(({ id: offerId }) =>
         this.conversationService.getConversationById(offerId).pipe(
-          map((offer) => {
-            console.log(offer);
-            return OfferActions.loadDetailedOfferSuccess({ offer })
-          }),
-          catchError(() => of(OfferActions.loadDetailedOfferFailure()))
+          map(
+            (offer) =>
+              ConversationActions.loadDetailedConversationSuccess({
+                conversation: offer,
+              }),
+            catchError((error) =>
+              of(ConversationActions.loadDetailedConversationFailure({ error }))
+            )
+          )
         )
       )
     )
   );
 
-  // loadAvailableTitles$ = createEffect(() =>
-  //   this.action$.pipe(
-  //     ofType(OfferActions.changeFilter, OfferActions.loadTitles),
-  //     switchMap(({ filterOffer: filter }) => {
-  //       const {
-  //         isDiscountEnabled,
-  //         isPricingEnabled,
-  //         selectedCategory,
-  //         selectedUser,
-  //         ...filterOfferDto
-  //       } = filter;
-  //       console.log(filterOfferDto);
-  //       return this.offerService
-  //         .getOfferDistinctPropertyByFilter('title', filterOfferDto)
-  //         .pipe(
-  //           map((titles) => OfferActions.loadTitlesSuccess({ titles })),
-  //           catchError(() => of())
-  //         );
-  //     })
-  //   )
-  // );
+  loadEditingConversation$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(ConversationActions.loadEditingConversation),
+      switchMap(({ id }) =>
+        this.conversationService.getConversationById(id).pipe(
+          map((conversation) =>
+            ConversationActions.loadEditingConversationSuccess({ conversation })
+          ),
+          catchError((error) =>
+            of(ConversationActions.loadEditingConversationFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  changeConversationFilter$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(ConversationActions.changeConversationFilter),
+      switchMap(({ filterConversation }) => {
+        const { selectedCategory, selectedUser, ...filterConversationDto } =
+          filterConversation;
+        return this.conversationService
+          .getConversationsByFilter(filterConversationDto)
+          .pipe(
+            map(({ posts, length }) =>
+              ConversationActions.loadConversationsSuccess({
+                conversations: posts,
+                length,
+              })
+            ),
+            catchError((error) =>
+              of(ConversationActions.loadConversationsFailure({ error }))
+            )
+          );
+      })
+    )
+  );
+
+  loadAvailableTitles$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(
+        ConversationActions.changeConversationFilter,
+        ConversationActions.loadConversationTitles
+      ),
+      switchMap(({ filterConversation: filter }) => {
+        const { selectedCategory, selectedUser, ...filterOfferDto } = filter;
+        return this.conversationService
+          .getConversationsDistinctPropertyByFilter(KEYS.TITLE, filterOfferDto)
+          .pipe(
+            map((titles) =>
+              ConversationActions.loadConversationTitlesSuccess({ titles })
+            ),
+            catchError(() => of())
+          );
+      })
+    )
+  );
 
   // // loadAllCommentsFromOffer$ = createEffect(() =>
   // //   this.action$.pipe(
@@ -141,39 +260,11 @@ export class ConversationEffects {
   // //   )
   // // );
 
-  // loadEditingOffer$ = createEffect(() =>
-  //   this.action$.pipe(
-  //     ofType(OfferActions.loadEditingOffer),
-  //     switchMap(({ offerId }) =>
-  //       this.offerService.getOfferById(offerId).pipe(
-  //         map((offer) => OfferActions.loadEditingOfferSuccess({ offer })),
-  //         catchError(() => of())
-  //       )
-  //     )
-  //   )
-  // );
-
-  // navigateToOffer$ = createEffect(
-  //   () =>
-  //     this.action$.pipe(
-  //       ofType(OfferActions.submittedOfferSuccess),
-  //       tap(({ offer }) => {
-  //         this.router.navigate(['/posts/details/offer/' + offer.id]);
-  //         this.messageService.add({
-  //           severity: 'success',
-  //           summary: 'Successly Submitted Offer',
-  //           detail: 'You have successfully submitted your offer.',
-  //         });
-  //       })
-  //     ),
-  //   { dispatch: false }
-  // );
-
   constructor(
     private action$: Actions,
     private conversationService: ConversationService,
+    private notificationService: NotificationService,
     private commentService: CommentService,
-    private messageService: MessageService,
     private router: Router
   ) {}
 }

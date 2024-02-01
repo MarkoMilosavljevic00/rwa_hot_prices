@@ -1,10 +1,20 @@
 <mat-sidenav-container class="container">
   <mat-sidenav #filterSidenav>
     <app-offer-filter
+      *ngIf="postType === PostType.OFFER"
       [sidenavControl]="filterSidenav"
       [isUserPosts]="isUserPosts"
-      *ngIf="postType === PostType.OFFER"
     ></app-offer-filter>
+    <app-conversation-filter
+      *ngIf="postType === PostType.CONVERSATION"
+      [sidenavControl]="filterSidenav"
+      [isUserPosts]="isUserPosts"
+    ></app-conversation-filter>
+    <app-coupon-filter
+      *ngIf="postType === PostType.COUPON"
+      [sidenavControl]="filterSidenav"
+      [isUserPosts]="isUserPosts"
+    ></app-coupon-filter>
   </mat-sidenav>
   <mat-sidenav-content>
     <section class="inline-padding">
@@ -44,7 +54,11 @@
             class="toolbar border-shadow"
             color="warn"
           >
-            <div fxFlex.gt-xs="15%" fxFlex.lt-sm="100%" fxLayoutAlign="center center">
+            <div
+              fxFlex.gt-xs="15%"
+              fxFlex.lt-sm="100%"
+              fxLayoutAlign="center center"
+            >
               <button
                 class="add-new-button"
                 fxLayout="column"
@@ -57,7 +71,12 @@
                 <span class="add-new-text">Add New {{ postType }}</span>
               </button>
             </div>
-            <div fxFlex.gt-xs="60%" fxFlex.lt-sm="100%" class="top-margin" fxLayoutAlign="center center">
+            <div
+              fxFlex.gt-xs="60%"
+              fxFlex.lt-sm="100%"
+              class="top-margin"
+              fxLayoutAlign="center center"
+            >
               <mat-form-field fxFlex="95%">
                 <mat-label>Search</mat-label>
                 <input
@@ -86,7 +105,11 @@
                 <mat-icon>search</mat-icon>
               </button>
             </div>
-            <div fxFlex.gt-xs="25%" fxFlex.lt-sm="100%" fxLayoutAlign="center center">
+            <div
+              fxFlex.gt-xs="25%"
+              fxFlex.lt-sm="100%"
+              fxLayoutAlign="center center"
+            >
               <button
                 class="filter-button"
                 type="button"

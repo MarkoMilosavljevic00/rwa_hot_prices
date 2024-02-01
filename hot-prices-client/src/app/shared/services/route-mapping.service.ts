@@ -31,6 +31,17 @@ export class RouteMappingService {
     return segments[segments.length - offset];
   }
 
+  getPostTypeFromUrl(url: string){
+    const postTypes = this.getPostTypesValuesLowerCase();
+    for (const postType of postTypes) {
+      if (url.toLowerCase().includes(postType)) {
+        return PostType[postType.toUpperCase() as keyof typeof PostType];
+      }
+    }
+  
+    return undefined;
+  }
+
   mapUrlToPostType(urlString: string, plural: boolean = false, offset: number = 1): PostType {
     if (!urlString || urlString.trim() === '') {
       return PostType.OFFER;

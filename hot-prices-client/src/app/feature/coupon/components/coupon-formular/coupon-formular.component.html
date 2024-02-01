@@ -1,5 +1,3 @@
-<p-toast></p-toast>
-
 <form
   fxLayout="column"
   fxLayoutGap="40px"
@@ -14,7 +12,9 @@
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
     >
-      <mat-card-subtitle fxFlex="15%">Title: </mat-card-subtitle>
+      <mat-card-subtitle fxFlex="15%"
+        >*Title <i>(required)</i>:
+      </mat-card-subtitle>
       <span fxFlex>
         <mat-form-field fxFlex class="centered-field">
           <mat-label>Title</mat-label>
@@ -35,12 +35,13 @@
       fxLayout.lt-sm="column"
       fxLayoutAlign="start center"
     >
-      <mat-card-subtitle fxFlex="15%">Category: </mat-card-subtitle>
+      <mat-card-subtitle fxFlex="15%"
+        >*Category: <i>(required)</i></mat-card-subtitle
+      >
       <p-treeSelect
-        class="centered-field"
-        containerStyleClass="w-full"
-        formControlName="selectedCategory"
         [options]="categoryOptions"
+        class="centered-field"
+        formControlName="selectedCategory"
         placeholder="Select Category"
       ></p-treeSelect>
     </div>
@@ -53,24 +54,26 @@
       <mat-card-subtitle>Description: </mat-card-subtitle>
       <app-editor
         fxFlex="100%"
-        [maxLength]="300"
         [height]="'150px'"
-        (onContentChange)="description = $event"
+        (onContentChange)="descriptionControl?.setValue($event)"
         [content]="descriptionControl?.value"
       >
       </app-editor>
     </div>
 
     <div
+      class="margin"
       fxLayout.gt-xs="row"
       fxLayout.lt-sm="column"
       fxLayoutAlign="center center"
     >
       <mat-card-subtitle fxFlex="15%">Upload Images: </mat-card-subtitle>
       <p-fileUpload
-        name="demo[]"
-        url="https://www.primefaces.org/cdn/api/upload.php"
-        (onUpload)="onUpload($event)"
+        name="images[]"
+        [url]="UPLOAD_IMAGES_URL"
+        #fileUpload
+        (onUpload)="onUploadImages($event)"
+        (onSelect)="onSelectImages($event, fileUpload)"
         [multiple]="true"
         accept="image/*"
         [maxFileSize]="1000000"
@@ -78,9 +81,28 @@
         fxLayoutAlign="center center"
       >
         <ng-template pTemplate="content">
-          <ul *ngIf="uploadedFiles.length">
-            <li *ngFor="let file of uploadedFiles">
-              {{ file.name }} - {{ file.size }} bytes
+          <ul *ngIf="uploadedImagesControl?.value.length">
+            <li *ngFor="let image of uploadedImagesControl?.value">
+              <div class="p-fileupload-row ng-star-inserted">
+                <div>
+                  <img
+                    [src]="getImagePath(image.serverFilename)"
+                    width="50"
+                    class="ng-star-inserted"
+                  />
+                </div>
+                <div class="p-fileupload-filename">{{ image.name }}</div>
+                <div>{{ image.size }} - bytes</div>
+                <div>
+                  <button
+                    type="button"
+                    (click)="onDeleteImage(image)"
+                    class="p-element p-button-icon-only p-button p-component"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
             </li>
           </ul>
         </ng-template>
@@ -157,7 +179,7 @@
       <mat-card-subtitle fxFlex="15%"> Link: </mat-card-subtitle>
       <mat-form-field class="centered-field" fxFlex>
         <mat-label>Link</mat-label>
-        <input matInput formControlName="link" />
+        <input type="url" matInput formControlName="link" />
       </mat-form-field>
     </div>
     <div
@@ -206,7 +228,7 @@
         fxLayoutAlign="center center"
       >
         <div
-          formArrayName="discounts"
+          formArrayName="discountsFormArray"
           *ngFor="let discount of discountsFormArray.controls; index as i"
         >
           <span
@@ -217,35 +239,51 @@
           >
             <mat-form-field>
               <mat-label>Item</mat-label>
-              <input matInput formControlName="key" />
+              <input
+                (change)="onLastDiscountChanged()"
+                matInput
+                formControlName="key"
+              />
+              <mat-error *ngIf="checkIsDiscountsEmpty()"
+              >Field must not be empty</mat-error
+            >
             </mat-form-field>
             <mat-form-field fxFlex>
               <mat-label>Discount</mat-label>
               <input
+                (change)="onLastDiscountChanged()"
                 matInput
                 type="number"
                 placeholder="0"
                 formControlName="value"
               />
               <span matTextSuffix>%</span>
+              <mat-error *ngIf="checkIsDiscountsEmpty()"
+              >Field must not be empty</mat-error
+            >
             </mat-form-field>
             <button
+              type="button"
               mat-raised-button
               [disabled]="i === discountsFormArray.controls.length - 1"
               color="warn"
-              (click)="deleteDiscount(i)"
+              (click)="onDeleteDiscount(i)"
             >
               <mat-icon>delete</mat-icon>
             </button>
           </span>
         </div>
+        <mat-error *ngIf="checkDiscountsLimit()">
+          You have reached the limit of specifications
+        </mat-error>
         <button
+          type="button"
           mat-raised-button
           color="warn"
-          (click)="addDiscount()"
+          (click)="onAddDiscount()"
           [disabled]="
-            isLastTwoFieldsEmpty() || this.discountsFormArray.controls.length > 10
-          "
+          checkDiscountsLimit() || checkIsDiscountsEmpty()
+        "
         >
           Add Discount
         </button>
@@ -265,7 +303,7 @@
           matInput
           type="number"
           placeholder="0"
-          formControlName="discount"
+          formControlName="maxDiscount"
         />
         <span matTextSuffix>%</span>
       </mat-form-field>
@@ -285,7 +323,7 @@
       <p-selectButton
         class="centered-field"
         [options]="expiryDateOptions"
-        formControlName="expiryDateOptions"
+        formControlName="expiryDateOptionSelected"
         optionLabel="label"
         optionValue="value"
         (onChange)="onExpiryDateOptionChange($event.value)"
@@ -312,11 +350,13 @@
     <button
       mat-fab
       extended
+      type="submit"
       class="submit-button"
       color="warn"
+      [disabled]="!couponForm.valid"
       fxFlex.lt-sm="100%"
     >
-      SUBMIT COUPON
+      {{ (editMode ? "SAVE " : "SUBMIT ") + "OFFER" }}
     </button>
   </div>
 </form>

@@ -17,7 +17,7 @@ export class OfferItemComponent {
     if (this.offer && this.offer.imgPaths?.length > 0) {
       return IMAGES_URL + '/offers/' + this.offer.imgPaths[0];
     } else {
-      return DEFAULT.OFFER.IMAGE;
+      return DEFAULT.POST.IMAGE;
     }
   }
 

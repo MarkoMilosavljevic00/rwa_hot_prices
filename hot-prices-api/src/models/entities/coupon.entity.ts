@@ -15,6 +15,9 @@ export class Coupon extends Post {
 
   @Column({ nullable: true, type: 'jsonb' })
   discounts: Record<string, number>;
+
+  @Column({ nullable: false, default: 0})
+  maxDiscount: number;
   
   @Column({ nullable: true })
   store: string;

@@ -10,12 +10,14 @@
         <app-user-avatar
           [name]="post?.owner?.username"
           [imgSrc]="post?.owner?.profilePicture"
+          [id]="post?.owner?.id"
+          [size]="'large'"
           [nameFirst]="false"
         ></app-user-avatar>
         <div fxLayoutAlign="end start" fxFlex>
           <mat-icon class="clickable" (click)="onEditPost()">edit</mat-icon>
-          <mat-icon class="clickable">delete</mat-icon>
-          <mat-icon class="clickable" (click)="onReportPost()">report</mat-icon>
+          <mat-icon class="clickable" (click)="onDeletePost()">delete</mat-icon>
+          <!-- <mat-icon class="clickable" (click)="onReportPost()">report</mat-icon> -->
         </div>
       </mat-toolbar>
       <router-outlet></router-outlet>

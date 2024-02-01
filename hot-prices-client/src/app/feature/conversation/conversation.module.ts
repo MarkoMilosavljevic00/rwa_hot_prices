@@ -14,6 +14,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { conversationReducer } from './state/conversation.reducer';
 import { ConversationEffects } from './state/conversation.effects';
+import { ConversationFilterComponent } from './components/conversation-filter/conversation-filter.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ConversationEffects } from './state/conversation.effects';
     ConversationItemComponent,
     ConversationDetailsComponent,
     ConversationFormularComponent,
+    ConversationFilterComponent,
   ],
   imports: [
     RouterModule,
@@ -35,6 +37,7 @@ import { ConversationEffects } from './state/conversation.effects';
     ConversationListComponent,
     ConversationItemComponent,
     ConversationDetailsComponent,
+    ConversationFilterComponent,
   ],
   schemas: [NO_ERRORS_SCHEMA],
 })

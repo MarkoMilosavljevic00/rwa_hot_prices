@@ -21,11 +21,17 @@
 .temperature-button:hover .cold-number {
   opacity: 1;
   display: inline-block;
-  transition: opacity 0.3s ease-in-out, display 0s;
+  transition: opacity 0.3s ease-in-out, display 0.3s;
+}
+
+.fire-icon:hover, .snowflake-icon:hover {
+  background-color: #c6c6c6;
+  border-radius: 30px;
 }
 
 .temperature-button:hover {
   width: 180px;
+  box-shadow: 0 0 10px #FF5722;
 }
 
 .temperature-number {

@@ -16,4 +16,9 @@
     class="ql-editor post-content"
     [innerHTML]="conversation.content | noSanitize"
   ></div>
+
+  <div fxFlex fxLayoutAlign="end center">
+    <app-reaction
+    ></app-reaction>
+  </div>
 </mat-card-content>

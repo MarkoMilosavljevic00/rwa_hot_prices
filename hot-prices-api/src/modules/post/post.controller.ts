@@ -22,6 +22,9 @@ import { FormPostDto } from './dtos/form-post.dto';
 import { OwnershipGuard } from '../auth/guards/ownership.guard';
 import { ResourceType } from 'src/common/enums/resource-type.enum';
 import { PostType } from 'src/common/enums/post-type.enum';
+import { FormOfferDto } from '../offer/dtos/form-offer.dto';
+import { FormCouponDto } from '../coupon/dtos/form-coupon.dto';
+import { FormConversationDto } from '../conversation/dtos/form-conversation.dto';
 
 @Controller('post')
 export class PostController {
@@ -38,7 +41,7 @@ export class PostController {
   @Patch('/:id')
   async updatePost(
     @Param('id') id: number,
-    @Body() updatePostDto: FormPostDto,
+    @Body() updatePostDto: FormOfferDto | FormCouponDto | FormConversationDto,
   ): Promise<PostEntity> {
     return await this.postService.update(id, updatePostDto);
   }

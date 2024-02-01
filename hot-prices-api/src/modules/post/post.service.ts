@@ -86,6 +86,8 @@ export class PostService {
   async update(id: number, updatePostDto: FormPostDto): Promise<Post> {
     const { postType } = updatePostDto;
 
+    console.log(updatePostDto);
+
     let repository;
     if (postType === PostType.OFFER) {
       repository = this.offerRepository;

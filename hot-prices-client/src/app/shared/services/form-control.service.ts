@@ -50,7 +50,7 @@ export class FormControlService {
     formGroup.disable();
   }
 
-  addFormGroupToFormArray(formArray: FormArray, key?: string, value?: string) {
+  addFormGroupToFormArray(formArray: FormArray, key?: string, value?: string | number) {
     const spec = new FormGroup({
       key: new FormControl(key ?? ''),
       value: new FormControl(value ?? ''),
@@ -121,20 +121,38 @@ export class FormControlService {
     });
   }
 
-  toggleFormControl<T>(
+  // toggleFormControl<T>(
+  //   form: FormGroup,
+  //   formControl: FormControl,
+  //   condition: boolean,
+  //   defaultValue?: T,
+  //   valueWhileDisabled?: T
+  // ) {
+  //   if (condition) {
+  //     formControl.enable();
+  //     formControl.setValue(defaultValue);
+  //     formControl.setValidators(Validators.required);
+  //   } else {
+  //     formControl.disable();
+  //     if(valueWhileDisabled) formControl.setValue(valueWhileDisabled);
+  //     formControl.clearValidators();
+  //   }
+  //   formControl.updateValueAndValidity();
+  //   form.updateValueAndValidity();
+  // }
+
+  toggleFormControl(
     form: FormGroup,
     formControl: FormControl,
     condition: boolean,
-    defaultValue?: T,
-    valueWhileDisabled?: T
   ) {
     if (condition) {
       formControl.enable();
-      formControl.setValue(defaultValue);
+      // formControl.setValue(defaultValue);
       formControl.setValidators(Validators.required);
     } else {
       formControl.disable();
-      valueWhileDisabled ?? formControl.setValue(valueWhileDisabled);
+      // if(valueWhileDisabled) formControl.setValue(valueWhileDisabled);
       formControl.clearValidators();
     }
     formControl.updateValueAndValidity();

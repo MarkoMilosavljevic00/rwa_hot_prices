@@ -1,10 +1,24 @@
 <mat-card-content *ngIf="coupon" fxLayout="column" fxLayoutGap="12px">
-  <div fxLayoutAlign="end end">
-    <app-date-display
-      [date]="coupon.postedDate"
-      [isPostedDate]="true"
-    ></app-date-display>
+  <div fxFlex fxLayout="row">
+    <p-breadcrumb
+      fxFlex="80%"
+      fxFlexAlign="start start"
+      [model]="categoryMenuItems"
+      [home]="homeMenuItem"
+      [style]="{ border: 'none', width: '50%' }"
+    ></p-breadcrumb>
+    <div 
+      fxFlex="20%" 
+      fxFlexAlign="center end">
+      <app-date-display
+        [date]="formatDate(coupon.postedDate)"
+        [isPostedDate]="true"
+      ></app-date-display>
+    </div>
   </div>
+
+  <!-- <div fxLayoutAlign="center center">
+  </div> -->
 
   <div class="row-2">
     <mat-card-title class="post-title">
@@ -14,7 +28,7 @@
 
   <div class="row-image" fxLayoutAlign="center">
     <p-galleria
-      [value]="images"
+      [value]="galleryImages"
       [showIndicators]="true"
       [showThumbnails]="false"
       fxFlex="50%"
@@ -26,56 +40,36 @@
   </div>
 
   <div
-    *ngIf="!isExpired()"
     class="row-4"
     fxLayout="column"
     fxLayoutAlign="center center"
     fxLayoutGap="16px"
   >
+    <app-price
+      [discount]="coupon.maxDiscount!"
+      [multipleDiscounts]="coupon.discounts ? true : false"
+    ></app-price>
     <div
-      *ngIf="coupon.saleType === SaleType.Online"
+      *ngIf="isOnline()"
       fxFlex
       fxLayout="column"
       fxLayoutAlign="center center"
     >
       <a [href]="coupon.link" target="_blank">
-        <button mat-fab extended class="get-offer-button" color="warn">
+        <button mat-fab extended class="get-coupon-button" color="warn">
           <mat-icon>add_shopping_cart</mat-icon>
-          Get Offer
+          Get Coupon
         </button>
       </a>
-      <app-date-display
-        *ngIf="coupon.expiryDate"
-        [date]="coupon.expiryDate"
-        [isExpiringDate]="true"
-      ></app-date-display>
     </div>
-    <!-- <app-price
-      [discount]="coupon.discount!"
-      [multipleDiscounts]="coupon.discounts ? true : false"
-    ></app-price> -->
+    <app-date-display
+      *ngIf="coupon.expiryDate"
+      [date]="formatDate(coupon.expiryDate)"
+      [isExpiringDate]="true"
+    ></app-date-display>
     <div fxFlex fxLayoutAlign="center center">
-      <div class="temperature-button" fxLayoutAlign="space-between center">
-        <mat-icon class="fire-icon">whatshot</mat-icon>
-        <span class="hot-number">{{ coupon.numOfHotReactions }}</span>
-        <span class="temperature-number"
-          >{{ coupon.numOfHotReactions - coupon.numOfColdReactions }}°</span
-        >
-        <span class="cold-number">{{ coupon.numOfColdReactions }}</span>
-        <mat-icon class="snowflake-icon">ac_unit</mat-icon>
-      </div>
+      <app-reaction></app-reaction>
     </div>
-  </div>
-
-  <div
-    *ngIf="isExpired()"
-    class="row-4"
-    fxLayout="column"
-    fxLayoutAlign="center center"
-    fxLayoutGap="16px"
-    class="discount"
-  >
-    EXPIRED
   </div>
 
   <mat-divider></mat-divider>
@@ -90,6 +84,35 @@
           class="ql-editor"
           [innerHTML]="coupon.description | noSanitize"
         ></div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion *ngIf="!isDiscountsEmpty(coupon.discounts)">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Discounts </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table mat-table [dataSource]="discountsDataSource">
+          <ng-container matColumnDef="discountName">
+            <mat-header-cell *matHeaderCellDef> Product </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.key }}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="discountValue">
+            <mat-header-cell *matHeaderCellDef> Discount </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.value }}%
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row
+            *matHeaderRowDef="['discountName', 'discountValue']"
+          ></mat-header-row>
+          <mat-row
+            *matRowDef="let row; columns: ['discountName', 'discountValue']"
+          ></mat-row>
+        </table>
       </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion *ngIf="coupon.store">

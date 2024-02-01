@@ -27,13 +27,13 @@
         </div>
         <div fxLayout="column" fxLayoutAlign="end end" fxFlex fxHide.lt-sm>
           <app-date-display
-            [date]="formatDate(offer.postedDate)"
-            [isPostedDate]="true"
-          ></app-date-display>
-          <app-date-display
             *ngIf="offer && offer.expiryDate"
             [date]="formatDate(offer.expiryDate)"
             [isExpiringDate]="true"
+          ></app-date-display>
+          <app-date-display
+            [date]="formatDate(offer.postedDate)"
+            [isPostedDate]="true"
           ></app-date-display>
         </div>
       </div>

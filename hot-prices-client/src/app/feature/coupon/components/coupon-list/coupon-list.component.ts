@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Coupon } from '../../models/coupon.model';
+import { Observable, Subscription } from 'rxjs';
+import { PAGE } from 'src/app/common/constants';
+import { Pagination } from 'src/app/common/interfaces/pagination.interface';
+import { FilterCouponDto } from '../../models/dtos/filter-coupon.dto';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+import { changeCouponPaginationFilter, loadCoupons } from '../../state/coupon.action';
+import { selectCouponsList, selectFilterCoupon, selectLengthOfCoupon } from '../../state/coupon.selector';
 
 @Component({
   selector: 'app-coupon-list',
@@ -7,24 +15,37 @@ import { Coupon } from '../../models/coupon.model';
   styleUrls: ['./coupon-list.component.css']
 })
 export class CouponListComponent  implements OnInit {
-  coupons: Coupon[];
-  onePageCoupons: Coupon[] = [];
+  coupon$: Observable<Coupon[]>;
+  length$: Observable<number>;
+  filter$: Observable<FilterCouponDto>;
 
-  page = 0;
-  size = 5;
+  pagination: Pagination = {
+    pageIndex: PAGE.INITIAL_INDEX,
+    pageSize: PAGE.SIZE,
+  };
+
+  filterSubscription: Subscription;
+
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.getData({ pageIndex: this.page, pageSize: this.size });
+    this.store.dispatch(
+      changeCouponPaginationFilter({ pagination: this.pagination })
+    );
+    this.filterSubscription = this.store
+      .select(selectFilterCoupon)
+      .subscribe((filter) => {
+        this.store.dispatch(loadCoupons({ filterCouponDto: filter ? filter : { }}));
+      });
+    this.coupon$ = this.store.select(selectCouponsList);
+    this.length$ = this.store.select(selectLengthOfCoupon);
   }
 
-  getData(obj: any) {
-    let index = 0,
-      startingIndex = obj.pageIndex * obj.pageSize,
-      endingIndex = startingIndex + obj.pageSize;
+  getData(pagination: Pagination) {
+    this.store.dispatch(changeCouponPaginationFilter({ pagination }));
+  }
 
-    this.onePageCoupons = this.coupons.filter(() => {
-      index++;
-      return index > startingIndex && index <= endingIndex ? true : false;
-    });
+  ngOnDestroy() {
+    this.filterSubscription.unsubscribe();
   }
 }

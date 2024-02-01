@@ -14,115 +14,73 @@ export const initialState: ConversationState = adapter.getInitialState({
 
 export const conversationReducer = createReducer(
   initialState,
+  on(Actions.createConversationSuccess, Actions.updateConversationSuccess, (state, { conversation }) => {
+    return {
+      ...state,
+      detailedConversation: conversation,
+    };
+  }),
+  on(Actions.deleteConversationSuccess, (state) => {
+    return {
+      ...state,
+      detailedConversation: undefined,
+    };
+  }),
   on(Actions.loadConversationsSuccess, (state, { conversations, length }) => {
-    return adapter.setAll(conversations, state);
-  })
-  // on(Actions.changeFilter, (state, { filterOffer: filter }) => {
-  //   return {
-  //     ...state,
-  //     filter: {
-  //       ...state.filter,
-  //       ...filter,
-  //     },
-  //   };
-  // }),
-  // on(Actions.changeSearchFilter, (state, { search }) => {
-  //   return {
-  //     ...state,
-  //     filter: {
-  //       ...state.filter,
-  //       title: search,
-  //     },
-  //   };
-  // }),
-  // on(Actions.changePaginationFilter, (state, { pagination }) => {
-  //   return {
-  //     ...state,
-  //     filter: {
-  //       ...state.filter,
-  //       ...pagination,
-  //     },
-  //   };
-  // }),
-  // on(Actions.clearFilter, (state) => {
-  //   return {
-  //     ...state,
-  //     filter: undefined,
-  //   };
-  // }),
-  // on(Actions.loadTitlesSuccess, (state, { titles }) => {
-  //   return {
-  //     ...state,
-  //     titles,
-  //   };
-  // }),
-  // // on(Actions.loadAvailableValuesSuccess, (state, { availableValues }) => {
-  // //   return {
-  // //     ...state,
-  // //     initialValues: {
-  // //       ...state.initialValues,
-  // //       ...availableValues,
-  // //     },
-  // //   };
-  // // }),
-  // on(Actions.loadOffersSuccess, (state, { offers, length }) => {
-  //   return adapter.setAll(offers, {
-  //     ...state,
-  //     length,
-  //   });
-  // }),
-  // on(Actions.loadDetailedOfferSuccess, (state, { offer }) => {
-  //   return {
-  //     ...state,
-  //     detailedConversation: offer,
-  //   };
-  // }),
-  // // on(Actions.loadAllCommentsFromOfferSuccess, (state, { comments }) => {
-  // //   return {
-  // //     ...state,
-  // //     detailedOffer: {
-  // //       ...state.detailedOffer!,
-  // //       comments,
-  // //     }
-  // //   }
-  // // }),
-  // on(Actions.clearDetailedOffer, (state) => {
-  //   return {
-  //     ...state,
-  //     detailedConversation: undefined,
-  //   };
-  // }),
-  // on(Actions.loadEditingOfferSuccess, (state, { offer }) => {
-  //   return {
-  //     ...state,
-  //     editingConversation: offer,
-  //   };
-  // }),
-  // on(Actions.clearEditingOffer, (state) => {
-  //   return {
-  //     ...state,
-  //     editingConversation: undefined,
-  //   };
-  // }),
-  // on(Actions.submittedOfferSuccess, (state, { offer }) => {
-  //   // return adapter.addOne(offer, state);
-  //   return {
-  //     ...state,
-  //     detailedConversation: offer,
-  //   };
-  // })
-  // // on(Actions.rateSong, (state, { songId, rating }) =>
-  // //   adapter.updateOne(
-  // //     {
-  // //       id: songId,
-  // //       changes: {
-  // //         rating,
-  // //       },
-  // //     },
-  // //     state
-  // //   )
-  // // )
-  // // on(Actions.addSong, (state, { song}) => {
-  // //   return adapter.addOne(song, state);
-  // // })
+    return adapter.setAll(conversations, {
+      ...state,
+      length,
+    });
+  }),
+  on(Actions.loadDetailedConversationSuccess, (state, { conversation }) => {
+    return {
+      ...state,
+      detailedConversation: conversation,
+    };
+  }),
+  on(Actions.loadEditingConversationSuccess, (state, { conversation }) => {
+    return {
+      ...state,
+      editingConversation: conversation,
+    };
+  }),
+  on(Actions.changeConversationFilter, (state, { filterConversation }) => {
+    return {
+      ...state,
+      filter: {
+        ...state.filter,
+        ...filterConversation,
+      },
+    };
+  }),
+  on(Actions.changeConversationSearchFilter, (state, { search }) => {
+    return {
+      ...state,
+      filter: {
+        ...state.filter,
+        title: search,
+      },
+    };
+  }),
+  on(Actions.changeConversationPaginationFilter, (state, { pagination }) => {
+    return {
+      ...state,
+      filter: {
+        ...state.filter,
+        ...pagination,
+      },
+    };
+  }),
+  on(Actions.clearConversationFilter, (state) => {
+    return {
+      ...state,
+      filter: undefined,
+    };
+  }),
+  on(Actions.loadConversationTitlesSuccess, (state, { titles }) => {
+    return {
+      ...state,
+      titles,
+    };
+  }),
 );

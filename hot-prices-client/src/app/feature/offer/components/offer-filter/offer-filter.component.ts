@@ -68,15 +68,6 @@ export class OfferFilterComponent implements OnInit {
     if (this.isUserPosts) {
       this.setUserFilter();
     }
-    // this.store.select(selectFilterOffer).subscribe((filterOffer) => {
-    //   if (filterOffer.selectedCategory)
-    //     this.selectedTreeNode = this.categoryService.convertCategoryToTreeNode(
-    //       filterOffer.selectedCategory
-    //     );
-    //   this.filterOffer = {
-    //     ...filterOffer,
-    //   };
-    // });
   }
 
 
@@ -88,18 +79,6 @@ export class OfferFilterComponent implements OnInit {
         this.store.dispatch(changeFilter({ filterOffer: { ownerId: userId } }));
       });
   }
-
-  // patchValues(filterOffer: FilterOfferDto) {
-  //   if(filterOffer.categoryId){
-  //     console.log(filterOffer.categoryId);
-  //     this.selectedCategory = this.categoriesOptions.find(category => category.data?.id === filterOffer.categoryId);
-  //   }
-  //   if(filterOffer.ownerId){
-  //     this.selectedUser = this.users.find(user => user.id === filterOffer.ownerId);
-  //   }
-  //   this.isPricingEnabled = filterOffer.minPrice != undefined || filterOffer.maxPrice != undefined;
-  //   this.isDiscountEnabled = filterOffer.minDiscount != undefined || filterOffer.maxDiscount != undefined;
-  // }
 
   initValues() {
     this.filterOffer = new FilterOfferDto();
@@ -122,20 +101,6 @@ export class OfferFilterComponent implements OnInit {
     this.offerService
       .getOfferDistinctProperty(KEYS.OFFER.LOCATION)
       .subscribe((locations) => (this.locationsOptions = locations));
-    // this.store
-    //   .select(selectInitialValues)
-    //   .subscribe(
-    //     (initialValues) => (this.availableValues = { ...initialValues })
-    //   );
-    // this.store.select(selectInitialValues).subscribe((initialValues) => {
-    //   let categories: TreeNode<Category>[] | Category[] = [];
-    //   if (initialValues.categories) {
-    //     categories = initialValues.categories.map((category) =>
-    //       this.categoryService.convertCategoryToTreeNode(category as Category)
-    //     );
-    //   }
-    //   this.availableValues = { ...initialValues, categories };
-    // });
   }
 
   onCategoryChanged(selectedTreeNode: TreeNode<Category>) {
@@ -153,11 +118,6 @@ export class OfferFilterComponent implements OnInit {
     this.filteredUsersSuggestions = this.users.filter((owner) =>
       owner.username.toLowerCase().includes(query.toLowerCase())
     );
-    // if (this.availableValues.users) {
-    //   this.filteredUsersSuggestions = this.availableValues.users.filter(
-    //     (owner) => owner.username.toLowerCase().includes(query.toLowerCase())
-    //   );
-    // }
   }
 
   onOwnerChanged(user: User) {

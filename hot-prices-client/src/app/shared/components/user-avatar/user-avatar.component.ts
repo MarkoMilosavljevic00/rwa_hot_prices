@@ -13,6 +13,7 @@ export class UserAvatarComponent {
   @Input() _imgSrc?: string;
   @Input() imageType?: ImageType;
   @Input() nameFirst?: boolean;
+  @Input() size?: 'xlarge' | 'large' | 'normal' = 'large';
 
   @Input()
   set imgSrc(value: string | undefined) {

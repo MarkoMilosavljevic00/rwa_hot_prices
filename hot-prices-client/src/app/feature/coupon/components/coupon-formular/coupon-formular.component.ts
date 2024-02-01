@@ -1,8 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService, TreeNode } from 'primeng/api';
-import { FileUploadEvent } from 'primeng/fileupload';
-import { YES_NO_OPTIONS } from 'src/app/common/constants';
+import {
+  FileSelectEvent,
+  FileUpload,
+  FileUploadEvent,
+} from 'primeng/fileupload';
+import {
+  IMAGES_URL,
+  LIMITS,
+  TIME,
+  UPLOAD_IMAGES_URL,
+  YES_NO_OPTIONS,
+} from 'src/app/common/constants';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { Option } from 'src/app/common/interfaces/option.interface';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
@@ -10,8 +20,27 @@ import { DiscountCalculatorService } from 'src/app/shared/services/discount-calc
 import { FormControlService } from 'src/app/shared/services/form-control.service';
 import { Coupon } from '../../models/coupon.model';
 import { ActivatedRoute } from '@angular/router';
-import { COUPONS } from '../../services/coupons';
 import { CouponDto } from '../../models/coupon.dto';
+import { ImageType } from 'src/app/common/enums/image-type.enum';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+import { selectCategoriesList } from 'src/app/feature/post/state/category/category.selector';
+import { selectIdFromRouteParams } from 'src/app/state/app.selectors';
+import { isNotUndefined } from 'src/app/common/type-guards';
+import { Subscription, filter, skip, switchMap } from 'rxjs';
+import { UploadedImage } from 'src/app/common/interfaces/uploaded-image.interface';
+import { FileService } from 'src/app/shared/services/file.service';
+import {
+  createCoupon,
+  loadEditingCoupon,
+  loadEditingCouponFailure,
+  updateCoupon,
+} from '../../state/coupon.action';
+import { selectEditingCoupon } from '../../state/coupon.selector';
+import { loadCategories } from 'src/app/feature/post/state/category/category.action';
+import { updateConversation } from 'src/app/feature/conversation/state/conversation.action';
+import { FormCouponDto } from '../../models/dtos/form-coupon.dto';
+import { PostType } from 'src/app/common/enums/post-type.enum';
 
 @Component({
   selector: 'app-coupon-formular',
@@ -19,13 +48,16 @@ import { CouponDto } from '../../models/coupon.dto';
   styleUrls: ['./coupon-formular.component.css'],
 })
 export class CouponFormularComponent implements OnInit {
+  couponSubscription: Subscription;
+
   coupon?: Coupon;
   couponForm: FormGroup;
+  editMode: boolean;
 
   description: string;
   minExpiryDate: Date;
 
-  uploadedFiles: File[];
+  // uploadedFiles: File[];
   categoryOptions: TreeNode[];
   saleTypeOptions: SaleType[];
   multipleDiscountOptions: Option[];
@@ -33,46 +65,71 @@ export class CouponFormularComponent implements OnInit {
   codeOptions: Option[];
 
   SaleType = SaleType;
+  readonly UPLOAD_IMAGES_URL = UPLOAD_IMAGES_URL + ImageType.POST_IMAGE;
+
+  constructor(
+    private messageService: MessageService,
+    private categoryService: CategoryService,
+    private formControlService: FormControlService,
+    private fileService: FileService,
+    private store: Store<AppState>,
+    private route: ActivatedRoute
+  ) {}
 
   get discountsFormArray(): FormArray {
-    return this.couponForm.get('discounts') as FormArray;
+    return this.couponForm.get('discountsFormArray') as FormArray;
   }
 
-  get discountControl() {
-    return this.couponForm.get('discount');
+  get addedDiscountsControl() {
+    return this.couponForm.get('addedDiscounts');
+  }
+
+  get lastDiscount() {
+    return this.discountsFormArray.at(
+      this.discountsFormArray.length - 1
+    ) as FormGroup;
   }
 
   get multipleDiscountsControl() {
     return this.couponForm.get('multipleDiscountOptionSelected');
   }
 
+  get maxDiscountControl() {
+    return this.couponForm.get('maxDiscount');
+  }
+
+  get uploadedImagesControl() {
+    return this.couponForm.get('uploadedImages');
+  }
+
+  get saleTypeControl() {
+    return this.couponForm.get('saleType');
+  }
+
+  get codeControl() {
+    return this.couponForm.get('code');
+  }
+
+  get linkControl() {
+    return this.couponForm.get('link');
+  }
+
+  get expiryDateOptionSelectedControl() {
+    return this.couponForm.get('expiryDateOptionSelected');
+  }
+
   get expiryDateControl() {
     return this.couponForm.get('expiryDate');
   }
 
-  get descriptionControl(){
+  get descriptionControl() {
     return this.couponForm.get('description');
   }
 
-  get linkControl(){
-    return this.couponForm.get('link');
-  }
-
-  get codeControl(){
-    return this.couponForm.get('code');
-  }
-
-  constructor(
-    private messageService: MessageService,
-    private categoryService: CategoryService,
-    public formControlService: FormControlService,
-    private route: ActivatedRoute
-  ) {}
-
   ngOnInit(): void {
     this.initFormGroup();
-    this.initInnerElementsValues();
-    this.patchValues();
+    this.initValues();
+    this.loadCoupon();
   }
 
   private initFormGroup() {
@@ -82,163 +139,342 @@ export class CouponFormularComponent implements OnInit {
         validators: [Validators.required],
       }),
       description: new FormControl(),
-      selectedCategory: new FormControl(),
-      saleType: new FormControl(SaleType.Online),
-      store: new FormControl(''),
-      link: new FormControl(''),
-      codeOptionSelected: new FormControl(true, { nonNullable: false }),
-      code: new FormControl(''),
-      location: new FormControl(''),
+      selectedCategory: new FormControl('', {
+        validators: [Validators.required],
+      }),
+      uploadedImages: new FormControl([]),
+      store: new FormControl(),
+      saleType: new FormControl(SaleType.Offline),
+      link: new FormControl({ value: '', disabled: true }),
+      codeOptionSelected: new FormControl(false, { nonNullable: false }),
+      code: new FormControl({ value: '', disabled: true }),
+      location: new FormControl(),
       multipleDiscountOptionSelected: new FormControl(false, {
         nonNullable: false,
       }),
-      discounts: new FormArray([]),
-      discount: new FormControl(0),
-      expiryDateOptions: new FormControl(true, { nonNullable: false }),
-      expiryDate: new FormControl(new Date()),
+      discountsFormArray: new FormArray([]),
+      addedDiscounts: new FormControl({}),
+      maxDiscount: new FormControl(0),
+      expiryDateOptionSelected: new FormControl(false, { nonNullable: false }),
+      expiryDate: new FormControl({ value: null, disabled: true }),
     });
   }
 
-  private initInnerElementsValues() {
-    this.uploadedFiles = [];
-    // this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
+  private initValues() {
+    this.editMode = false;
+    this.minExpiryDate = new Date(Date.now());
+    this.store.dispatch(loadCategories());
+    this.store.select(selectCategoriesList).subscribe((categories) => {
+      this.categoryOptions = categories.map((category) =>
+        this.categoryService.convertCategoryToTreeNode(category)
+      );
+    });
     this.saleTypeOptions = Object.values(SaleType);
     this.codeOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.multipleDiscountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.expiryDateOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
-    this.minExpiryDate = new Date();
   }
 
-  patchValues() {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.coupon = COUPONS.find((coupon) => coupon.id.toString() === id);
-        this.couponForm.patchValue({
-          title: this.coupon?.title,
-          selectedCategory: this.categoryService.convertCategoryToTreeNode(
-            this.coupon!.category
-          ),
-          description: this.coupon?.description,
-          store: this.coupon?.store,
-          link: this.coupon?.link,
-          code: this.coupon?.code,
-          location: this.coupon?.location,
-          saleType: this.coupon?.saleType,
-          multipleDiscountOptionSelected: this.coupon?.discounts !== undefined,
-          // discount: this.coupon?.discount,
-          expiryDateOptions: this.coupon?.expiryDate !== undefined,
-          expiryDate: this.coupon?.expiryDate,
-        });
-        this.patchDiscounts(this.coupon?.discounts);
-      }
-    });
+  loadCoupon() {
+    this.couponSubscription = this.store
+      .select(selectIdFromRouteParams)
+      .pipe(
+        filter(isNotUndefined),
+        switchMap((couponId) => {
+          this.store.dispatch(loadEditingCoupon({ id: +couponId }));
+          return this.store.select(selectEditingCoupon);
+        }),
+        skip(1)
+      )
+      .subscribe((coupon) => {
+        if (coupon) {
+          // if (coupon.kind !== PostType.COUPON) {
+          //   this.store.dispatch(
+          //     loadEditingCouponFailure({
+          //       error: { error: { message: 'Wrong path' } },
+          //     })
+          //   );
+          // }
+          this.editMode = true;
+          this.coupon = { ...coupon };
+          console.log(this.coupon);
+          this.patchFormWithLoadedCoupon(coupon);
+          // this.patchSelectedOptions(coupon);
+          this.patchDiscounts(coupon.discounts);
+        }
+      });
   }
+
+  patchFormWithLoadedCoupon(coupon: Coupon) {
+    this.couponForm.patchValue({
+      title: coupon.title,
+      selectedCategory: coupon.category
+        ? this.categoryService.convertCategoryToTreeNode(coupon.category)
+        : null,
+      description: coupon.description,
+      uploadedImages: coupon.imgPaths
+        ? coupon.imgPaths.map((imgPath) => ({
+            name: imgPath,
+            size: 0,
+            serverFilename: imgPath,
+          }))
+        : [],
+      saleType: coupon.saleType,
+      link: coupon.link,
+      store: coupon.store,
+      location: coupon.location,
+      multipleDiscountOptionSelected:
+        coupon.discounts && Object.keys(coupon.discounts).length > 0
+          ? true
+          : false,
+      maxDiscount: coupon.maxDiscount,
+      codeOptionSelected: coupon.code ? true : false,
+      code: coupon.code,
+      expiryDateOptionSelected: coupon.expiryDate ? true : false,
+      expiryDate: coupon.expiryDate ? new Date(coupon.expiryDate) : null,
+    });
+
+    this.formControlService.toggleFormControl(
+      this.couponForm,
+      this.linkControl as FormControl,
+      coupon.saleType === SaleType.Online
+    );
+
+    this.formControlService.toggleFormControl(
+      this.couponForm,
+      this.codeControl as FormControl,
+      coupon.code ? true : false
+    );
+
+    this.formControlService.toggleFormControl(
+      this.couponForm,
+      this.expiryDateControl as FormControl,
+      coupon.expiryDate ? true : false
+    );
+  }
+
+  // patchSelectedOptions(coupon: Coupon) {
+  //   this.onSaleTypeOptionChange(coupon.saleType);
+  //   this.onCodeOptionChange(coupon.code ? true : false);
+  //   this.onExpiryDateOptionChange(coupon.expiryDate ? true : false);
+  // }
 
   patchDiscounts(discounts?: Record<string, number>) {
-    if (discounts) {
-      this.multipleDiscountsControl?.setValue(true);
-      for (const key in discounts) {
-        if (discounts.hasOwnProperty(key)) {
-          this.addDiscount(key, discounts[key]);
-        }
-      }
+    // if (discounts) {
+    //   this.multipleDiscountsControl?.setValue(true);
+    //   for (const key in discounts) {
+    //     if (discounts.hasOwnProperty(key)) {
+    //       this.onAddDiscount(key, discounts[key]);
+    //     }
+    //   }
+    // }
+    if (!discounts || Object.keys(discounts).length === 0) {
+      this.multipleDiscountsControl?.setValue(false);
+      return;
     }
+    this.multipleDiscountsControl?.setValue(true);
+    for (const key in discounts) {
+      this.formControlService.addFormGroupToFormArray(
+        this.discountsFormArray,
+        key,
+        discounts[key]
+      );
+      this.formControlService.addRecordFromFormGroup(
+        this.lastDiscount,
+        this.addedDiscountsControl! as FormControl
+      );
+    }
+    this.formControlService.addFormGroupToFormArray(this.discountsFormArray);
   }
 
-  onUpload(event: FileUploadEvent) {
-    for (let file of event.files) {
-      this.uploadedFiles.push(file);
-    }
+  getImagePath(serverFilename: string) {
+    return `${IMAGES_URL}/${ImageType.POST_IMAGE}/${serverFilename}`;
+  }
+
+  onUploadImages(event: any) {
+    // for (let file of event.files) {
+    //   this.uploadedFiles.push(file);
+    // }
+    // this.messageService.add({
+    //   severity: 'info',
+    //   summary: 'File Uploaded',
+    //   detail: '',
+    // });
+    const serverResponse = event.originalEvent.body;
+    const uploadedImages = this.uploadedImagesControl?.value;
+    event.files.forEach((file: File, index: number) => {
+      uploadedImages.push({
+        name: file.name,
+        size: file.size,
+        serverFilename: serverResponse[index],
+      });
+    });
+    this.uploadedImagesControl?.setValue(uploadedImages);
     this.messageService.add({
-      severity: 'info',
-      summary: 'File Uploaded',
+      severity: 'success',
+      summary: serverResponse.length + ' file(s) uploaded successfully',
       detail: '',
     });
   }
 
-  onSubmit() {
-    let { discount, discountsRecord } = this.getDiscount();
-
-    const coupon: CouponDto = {
-      title: this.couponForm.value.title,
-      category: this.categoryService.convertTreeNodeToCategory(
-        this.couponForm.value.selectedCategory
-      ),
-      description: this.couponForm.value.description,
-      saleType: this.couponForm.value.saleType,
-      store: this.couponForm.value.store,
-      link: this.couponForm.value.link,
-      code: this.couponForm.value.code,
-      location: this.couponForm.value.location,
-      discount: discount,
-      discounts: discountsRecord ?? undefined,
-      expiryDate: this.couponForm.value.expiryDate,
-    };
-
-    console.log(coupon);
-  }
-
-  private getDiscount() {
-    let discount: number;
-    let discountsRecord: Record<string, number> | null;
-    if (this.multipleDiscountsControl?.value) {
-      discountsRecord =
-        this.formControlService.convertFormArrayToRecord<number>(
-          this.discountsFormArray,
-          null
-        ) || {};
-      discount = Math.max(...Object.values(discountsRecord));
-    } else {
-      discount = this.discountControl?.value;
-      discountsRecord = null;
-    }
-    return { discount, discountsRecord };
-  }
-
-  addDiscount(item?: string, itemDiscount?: number) {
+  onSelectImages(event: FileSelectEvent, fileUpload: FileUpload) {
     if (
-      this.discountsFormArray.valid &&
-      this.discountsFormArray.controls.length < 10
+      event.currentFiles.length + this.uploadedImagesControl?.value.length >
+      LIMITS.COUPON.IMAGES
     ) {
-      const discount = new FormGroup({
-        key: new FormControl(item ?? ''),
-        value: new FormControl(itemDiscount ?? ''),
+      fileUpload.clear();
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Upload Error',
+        detail: `You can only upload up to ${LIMITS.COUPON.IMAGES} files.`,
       });
-
-      if (this.discountsFormArray.controls.length > 0) {
-        this.discountsFormArray.controls[
-          this.discountsFormArray.controls.length - 1
-        ].disable();
-      }
-      this.discountsFormArray.push(discount);
     }
   }
 
-  deleteDiscount(index: number) {
+  onDeleteImage(file: UploadedImage) {
+    this.fileService.deleteImage('coupons', file.serverFilename).subscribe(
+      (response) => {
+        let uploadedImagesArray = this.uploadedImagesControl?.value;
+        uploadedImagesArray = uploadedImagesArray.filter(
+          (uploadedFile: UploadedImage) => uploadedFile.name !== file.name
+        );
+        this.uploadedImagesControl?.setValue(uploadedImagesArray);
+        this.messageService.add(response);
+      },
+      (error) => {
+        this.messageService.add(error);
+      }
+    );
+  }
+
+  checkDiscountsLimit() {
+    return this.formControlService.checkFormArrayLimit(
+      this.discountsFormArray,
+      LIMITS.OFFER.SPECIFICATIONS
+    );
+  }
+
+  checkIsFirstDiscount() {
+    return this.formControlService.checkIsFirstElementInFormArray(
+      this.discountsFormArray
+    );
+  }
+
+  checkIsDiscountsEmpty() {
+    if (this.checkIsFirstDiscount()) {
+      return false;
+    }
+    return this.formControlService.checkIsFormGroupEmpty(this.lastDiscount);
+  }
+
+  checkDiscountsValidity() {
+    return this.formControlService.checkKeyValueFormGroupValidity(
+      this.discountsFormArray,
+      this.lastDiscount,
+      this.addedDiscountsControl?.value,
+      LIMITS.OFFER.SPECIFICATIONS
+    );
+  }
+
+  onLastDiscountChanged(): void {
+    this.formControlService.toggleValidatorToKeyValueFormGroup(
+      this.lastDiscount,
+      [Validators.required]
+    );
+  }
+
+  onAddDiscount(key?: string, value?: string) {
+    if (
+      this.formControlService.checkIsFirstElementInFormArray(
+        this.discountsFormArray
+      )
+    ) {
+      this.formControlService.addFormGroupToFormArray(
+        this.discountsFormArray,
+        key,
+        value
+      );
+    } else {
+      let { isValid, message } = this.checkDiscountsValidity();
+      if (isValid) {
+        this.formControlService.addRecordFromFormGroup(
+          this.lastDiscount,
+          this.addedDiscountsControl! as FormControl
+        );
+        this.formControlService.addFormGroupToFormArray(
+          this.discountsFormArray,
+          key,
+          value
+        );
+      } else {
+        this.messageService.add(message!);
+        return;
+      }
+    }
+  }
+
+  onDeleteDiscount(index: number) {
+    const keyToRemove = this.discountsFormArray.at(index).get('key')?.value;
     this.discountsFormArray.removeAt(index);
+    if (!keyToRemove) return;
+    const currentDiscounts = this.addedDiscountsControl?.value || {};
+    delete currentDiscounts[keyToRemove];
+    this.addedDiscountsControl?.setValue(currentDiscounts);
+  }
+
+  getDiscount() {
+    if (
+      this.multipleDiscountsControl?.value &&
+      this.addedDiscountsControl?.value &&
+      Object.keys(this.addedDiscountsControl?.value).length > 0
+    ) {
+      const discountsRecord: Record<string, number> =
+        this.addedDiscountsControl?.value;
+      const discount = Math.max(...Object.values(discountsRecord));
+      return { discount, discountsRecord };
+    } else
+      return {
+        discount: this.maxDiscountControl?.value,
+        discountsRecord: null,
+      };
+    // let discount: number;
+    // let discountsRecord: Record<string, number> | null;
+    // if (this.multipleDiscountsControl?.value) {
+    //   discountsRecord =
+    //     this.formControlService.convertFormArrayToRecord<number>(
+    //       this.discountsFormArray,
+    //       null
+    //     ) || {};
+    //   discount = Math.max(...Object.values(discountsRecord));
+    // } else {
+    //   discount = this.addedDiscountsControl?.value;
+    //   discountsRecord = null;
+    // }
+    // return { discount, discountsRecord };
   }
 
   onExpiryDateOptionChange(isExpiryDateActivated: boolean) {
-    this.formControlService.toggleFormControl<Date>(
+    this.formControlService.toggleFormControl(
       this.couponForm,
       this.expiryDateControl as FormControl,
-      isExpiryDateActivated,
-      new Date()
+      isExpiryDateActivated
+      // this.expiryDateControl?.value
+      //   ? this.expiryDateControl?.value
+      //   : new Date(Date.now() + TIME.MILISECONDS.ONE_DAY),
+      // this.expiryDateControl?.value
     );
   }
 
   onCodeOptionChange(codeExists: boolean) {
-    this.formControlService.toggleFormControl<boolean>(
+    this.formControlService.toggleFormControl(
       this.couponForm,
       this.codeControl as FormControl,
-      codeExists,
-      false
+      codeExists
     );
   }
 
   onSaleTypeOptionChange(saleType: SaleType) {
-    this.formControlService.toggleFormControl<SaleType>(
+    this.formControlService.toggleFormControl(
       this.couponForm,
       this.linkControl as FormControl,
       saleType === SaleType.Online
@@ -250,20 +486,57 @@ export class CouponFormularComponent implements OnInit {
     const currentDate = new Date();
     if (expiryDate < currentDate) {
       console.log('Date is in the past');
-      const newDate = new Date();
-      newDate.setDate(currentDate.getDate() + 7);
+      const newDate = new Date(new Date(Date.now() + TIME.MILISECONDS.ONE_DAY));
       this.expiryDateControl?.setValue(newDate);
     }
   }
 
-  isLastTwoFieldsEmpty() {
-    return (
-      this.discountsFormArray.controls[
-        this.discountsFormArray.controls.length - 1
-      ]?.value.key === '' ||
-      this.discountsFormArray.controls[
-        this.discountsFormArray.controls.length - 1
-      ]?.value.value === ''
-    );
+  onSubmit() {
+    let { discount, discountsRecord } = this.getDiscount();
+
+    // const formCouponDto: FormCouponDto = {
+    //   title: this.couponForm.value.title,
+    //   category: this.categoryService.convertTreeNodeToCategory(
+    //     this.couponForm.value.selectedCategory
+    //   ),
+    //   description: this.couponForm.value.description,
+    //   saleType: this.couponForm.value.saleType,
+    //   store: this.couponForm.value.store,
+    //   link: this.couponForm.value.link,
+    //   code: this.couponForm.value.code,
+    //   location: this.couponForm.value.location,
+    //   discount: discount,
+    //   discounts: discountsRecord ?? undefined,
+    //   expiryDate: this.couponForm.value.expiryDate,
+    // };
+    const formCouponDto: FormCouponDto = {
+      postType: PostType.COUPON,
+      imgPaths: this.uploadedImagesControl?.value.map(
+        (uploadedImage: UploadedImage) => uploadedImage.serverFilename
+      ),
+      title: this.couponForm.value.title,
+      categoryId: this.couponForm.value.selectedCategory.data.id,
+      description: this.couponForm.value.description,
+      saleType: this.couponForm.value.saleType,
+      link: this.couponForm.value.link,
+      store: this.couponForm.value.store,
+      location: this.couponForm.value.location,
+      maxDiscount: discount,
+      discounts: discountsRecord ?? {},
+      code: this.couponForm.value.code,
+      expiryDate: this.couponForm.value.expiryDate,
+    };
+
+    console.log(formCouponDto);
+
+    if (this.editMode) {
+      this.store.dispatch(updateCoupon({ id: this.coupon!.id, formCouponDto }));
+    } else {
+      this.store.dispatch(createCoupon({ formCouponDto }));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.couponSubscription.unsubscribe();
   }
 }

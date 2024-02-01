@@ -8,6 +8,7 @@ export const YES_NO_OPTIONS = {
 export const KEYS = {
   USER: 'user',
   TOKEN: 'access_token',
+  TITLE: 'title',
   OFFER: {
     STORE: 'store',
     LOCATION: 'location',
@@ -29,7 +30,7 @@ export const STYLE = {
 
 
 export const DEFAULT = {
-  OFFER:{
+  POST:{
     IMAGE: '../../../assets/default-product.png',
   },
   EDITORS_NUM_OF_CHARS: 1000,
@@ -57,11 +58,16 @@ export const UPLOAD_IMAGES_URL = environment.api + '/file/uploadImages/'
 
 export const LIMITS = {
   OFFER:{
-    IMAGES: 10,
+    IMAGES: 7,
     SPECIFICATIONS: 3,
     DESCRIPTION_CHARS: 1000,
     MIN_PRICE: 0,
     MAX_PRICE: 1000000,
+  },
+  COUPON: {
+    IMAGES: 3,
+    SPECIFICATIONS: 3,
+    DESCRIPTION_CHARS: 1000,
   },
   USER: {
     USERNAME_MIN_LENGTH: 3,

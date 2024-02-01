@@ -119,8 +119,8 @@ export class OfferDetailsComponent implements OnInit {
     } else {
       this.galleryImages = [
         {
-          itemImageSrc: DEFAULT.OFFER.IMAGE,
-          thumbnailImageSrc: DEFAULT.OFFER.IMAGE,
+          itemImageSrc: DEFAULT.POST.IMAGE,
+          thumbnailImageSrc: DEFAULT.POST.IMAGE,
         },
       ];
     }

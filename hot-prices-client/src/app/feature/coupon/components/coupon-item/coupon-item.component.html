@@ -19,9 +19,7 @@
         <div fxLayout="column" fxLayoutAlign="end">
           <app-user-avatar
             [name]="coupon.owner.username"
-            [imgSrc]="
-              'https://material.angular.io/assets/img/examples/shiba1.jpg'
-            "
+            [imgSrc]="coupon.owner.profilePicture"
             [nameFirst]="true"
           ></app-user-avatar>
         </div>
@@ -43,8 +41,8 @@
       >
         <img
           [routerLink]="['/posts/details/coupon', coupon.id]"
-          [src]="coupon.imgPaths[0]"
-          class="offer-image"
+          [src]="setFirstImage()"
+          class="coupon-image"
         />
       </a>
       <div
@@ -60,18 +58,21 @@
         >
           <a fxLayoutAlign="center center">{{ coupon.title }}</a>
         </mat-card-title>
+        <mat-chip>
+          {{ coupon.category ? coupon.category.name : "" }}
+        </mat-chip>
         <mat-card-subtitle
           fxLayout="row"
           fxLayoutGap="5%"
           [routerLink]="['/coupon', coupon.id]"
         >
         </mat-card-subtitle>
-        <!-- <app-price
-          [discount]="coupon.discount!"
+        <app-price
+          [discount]="coupon.maxDiscount"
           [multipleDiscounts]="coupon.discounts ? true : false"
           [align]="'start'"
-        ></app-price> -->
-        <mat-card-subtitle
+        ></app-price>
+        <mat-card-actions
           fxFlex="100%"
           fxLayout="column"
           fxLayoutAlign="flex-end"
@@ -86,7 +87,7 @@
               Details
             </button>
           </div>
-        </mat-card-subtitle>
+        </mat-card-actions>
       </div>
     </div>
   </mat-card-content>

@@ -32,7 +32,7 @@ mat-card-title {
   font-weight: bold;
 }
 
-.offer-image {
+.coupon-image {
   width: 150px;
   height: 150px;
   object-fit: cover;
@@ -52,6 +52,6 @@ mat-card-title {
   text-wrap: balance;
 }
 
-/* .offer-details {
+/* .coupon-details {
   margin-left: 10px;
 } */

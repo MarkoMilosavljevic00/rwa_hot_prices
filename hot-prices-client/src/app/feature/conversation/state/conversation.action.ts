@@ -4,21 +4,60 @@ import { FilterOffer } from 'src/app/feature/offer/models/offer.filter';
 import { FormConversationDto } from '../models/dtos/form-conversation.dto';
 import { Conversation } from '../models/conversation.model';
 import { FilterConversationDto } from '../models/dtos/filter-conversation.dto';
+import { FilterConversation } from '../models/conversation.filter';
+
+
+// Create Conversation 
 
 export const createConversation = createAction(
   '[Conversation] Create Conversation',
   props<{ formConversationDto: FormConversationDto }>()
 );
 
+export const createConversationSuccess = createAction(
+  '[Conversation] Create Conversation success',
+  props<{ conversation: Conversation }>()
+);
+
+export const createConversationFailure = createAction(
+  '[Conversation] Create Conversation failure',
+  props<{ error: any }>()
+);
+
+// Update Conversation
+
 export const updateConversation = createAction(
   '[Conversation] Update Conversation',
   props<{ id: number; formConversationDto: FormConversationDto }>()
 );
 
-export const submittedConversationSuccess = createAction(
-  '[Conversation] Submitted Conversation success',
+export const updateConversationSuccess = createAction(
+  '[Conversation] Update Conversation success',
   props<{ conversation: Conversation }>()
 );
+
+export const updateConversationFailure = createAction(
+  '[Conversation] Update Conversation failure',
+  props<{ error: any }>()
+);
+
+// Delete Conversation
+
+export const deleteConversation = createAction(
+  '[Conversation] Delete Conversation',
+  props<{ id: number }>()
+);
+
+export const deleteConversationSuccess = createAction(
+  '[Conversation] Delete Conversation success'
+);
+
+export const deleteConversationFailure = createAction(
+  '[Conversation] Delete Conversation failure',
+  props<{ error: any }>()
+);
+
+// Load Conversations
 
 export const loadConversations = createAction(
   '[Conversation] Load Conversations',
@@ -35,65 +74,77 @@ export const loadConversationsFailure = createAction(
   props<{ error: any }>()
 );
 
+// Load detailed Conversation
+
 export const loadDetailedConversation = createAction(
   '[Conversation] Load detailed Conversation',
-  props<{ offerId: number }>()
+  props<{ id: number }>()
 );
 
 export const loadDetailedConversationSuccess = createAction(
   '[Conversation] Load detailed Conversation success',
-  props<{ offer: Conversation }>()
+  props<{ conversation: Conversation }>()
 );
 
 export const loadDetailedConversationFailure = createAction(
-  '[Conversation] Load detailed Conversation failure'
+  '[Conversation] Load detailed Conversation failure',
+  props<{ error: any }>()
 );
 
 export const clearDetailedConversation = createAction(
   '[Conversation] Clear detailed Conversation'
 );
 
-// export const clearFilter = createAction(
-//   '[Offer] Clear filter'
-// );
+// Load editing Conversation
 
-// export const changeFilter = createAction(
-//   '[Offer] Change filter',
-//   props<{ filterOffer: FilterOffer }>()
-// );
+export const loadEditingConversation = createAction(
+  '[Conversation] Load editing Conversation',
+  props<{ id: number }>()
+);
 
-// export const changePaginationFilter = createAction(
-//   '[Offer] Change pagination filter',
-//   props<{ pagination: Pagination }>()
-// );
+export const loadEditingConversationSuccess = createAction(
+  '[Conversation] Load editing Conversation success',
+  props<{ conversation: Conversation }>()
+);
 
-// export const changeSearchFilter = createAction(
-//   '[Offer] Change search filter',
-//   props<{ search: string }>()
-// );
+export const loadEditingConversationFailure = createAction(
+  '[Conversation] Load editing Conversation failure',
+  props<{ error: any }>()
+);
 
-// export const loadTitles = createAction(
-//   '[Offer] Load titles',
-//   props<{ filterOffer: FilterOffer }>()
-// );
+export const clearEditingConversation = createAction(
+  '[Conversation] Clear editing Conversation'
+);
 
-// export const loadTitlesSuccess = createAction(
-//   '[Offer] Load titles success',
-//   props<{ titles: string[] }>()
-// );
+// Change Filter
 
-// export const loadEditingOffer = createAction(
-//   '[Offer] Load editing offer',
-//   props<{ offerId: number }>()
-// );
+export const changeConversationFilter = createAction(
+  '[Conversation] Change Conversation filter',
+  props<{ filterConversation: FilterConversation }>()
+);
 
-// export const loadEditingOfferSuccess = createAction(
-//   '[Offer] Load editing offer success',
-//   props<{ offer: Offer }>()
-// );
+export const changeConversationPaginationFilter = createAction(
+  '[Conversation] Change Conversation pagination filter',
+  props<{ pagination: Pagination }>()
+);
 
-// export const loadEditingOfferFailure = createAction(
-//   '[Offer] Load editing offer failure'
-// );
+export const changeConversationSearchFilter = createAction(
+  '[Conversation] Change Conversation search filter',
+  props<{ search: string }>()
+);
 
-// export const clearEditingOffer = createAction('[Offer] Clear editing offer');
+export const clearConversationFilter = createAction(
+  '[Conversation] Clear Conversation filter'
+);
+
+// Load titles
+
+export const loadConversationTitles = createAction(
+  '[Conversation] Load Conversation titles',
+  props<{ filterConversation: FilterConversation }>()
+);
+
+export const loadConversationTitlesSuccess = createAction(
+  '[Conversation] Load Conversation titles success',
+  props<{ titles: string[] }>()
+);

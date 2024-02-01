@@ -2,10 +2,26 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TreeNode } from 'primeng/api';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
-import { CONVERSATIONS } from '../../services/conversations.model';
 import { Coupon } from 'src/app/feature/coupon/models/coupon.model';
 import { Conversation } from '../../models/conversation.model';
 import { ActivatedRoute } from '@angular/router';
+import { loadCategories } from 'src/app/feature/post/state/category/category.action';
+import { selectCategoriesList } from 'src/app/feature/post/state/category/category.selector';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/state/app.state';
+import { Subscription, filter, skip, switchMap } from 'rxjs';
+import {
+  clearEditingConversation,
+  createConversation,
+  loadEditingConversation,
+  updateConversation,
+} from '../../state/conversation.action';
+import { selectEditingConversation } from '../../state/conversation.selector';
+import { selectIdFromRouteParams } from 'src/app/state/app.selectors';
+import { isNotUndefined } from 'src/app/common/type-guards';
+import { FormConversationDto } from '../../models/dtos/form-conversation.dto';
+import { PostType } from 'src/app/common/enums/post-type.enum';
+import { Category } from 'src/app/feature/post/models/category.model';
 
 @Component({
   selector: 'app-conversation-formular',
@@ -15,47 +31,30 @@ import { ActivatedRoute } from '@angular/router';
 export class ConversationFormularComponent {
   conversation?: Conversation;
   conversationForm: FormGroup;
-  content: string;
+  editMode: boolean = false;
+
+  conversationSubscription: Subscription;
+
   categoryOptions: TreeNode[];
+  selectedCategory?: TreeNode;
 
   get contentControl() {
     return this.conversationForm.get('content');
   }
 
   constructor(
+    private store: Store<AppState>,
     private categoryService: CategoryService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initFormGroup();
-    this.initInnerElementsValues();
-    this.patchValues();
+    this.initValues();
+    this.loadConversation();
   }
 
-  patchValues() {
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.conversation = CONVERSATIONS.find(
-          (conversation) => conversation.id.toString() === id
-        );
-        this.conversationForm.patchValue({
-          title: this.conversation?.title,
-          selectedCategory: this.categoryService.convertCategoryToTreeNode(
-            this.conversation!.category
-          ),
-          content: this.conversation?.content,
-        });
-      }
-    });
-  }
-
-  private initInnerElementsValues() {
-    // this.categoryOptions = this.categoryService.getAllCategoriesAsTreeNodes();
-  }
-
-  private initFormGroup() {
+  initFormGroup() {
     this.conversationForm = new FormGroup({
       title: new FormControl('', {
         nonNullable: true,
@@ -65,8 +64,46 @@ export class ConversationFormularComponent {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      contentPlainText: new FormControl(''),
       selectedCategory: new FormControl(),
+    });
+  }
+
+  private initValues() {
+    this.store.dispatch(loadCategories());
+    this.store.select(selectCategoriesList).subscribe((categories) => {
+      this.categoryOptions = categories.map((category) =>
+        this.categoryService.convertCategoryToTreeNode(category)
+      );
+    });
+  }
+
+  loadConversation() {
+    this.conversationSubscription = this.store
+      .select(selectIdFromRouteParams)
+      .pipe(
+        filter(isNotUndefined),
+        switchMap((conversationId) => {
+          this.store.dispatch(loadEditingConversation({ id: +conversationId }));
+          return this.store.select(selectEditingConversation);
+        }),
+        skip(1)
+      )
+      .subscribe((conversation) => {
+        if (conversation) {
+          this.editMode = true;
+          this.conversation = { ...conversation };
+          this.patchFormWithLoadedConversation();
+        }
+      });
+  }
+
+  patchFormWithLoadedConversation() {
+    this.conversationForm.patchValue({
+      title: this.conversation?.title,
+      selectedCategory: this.categoryService.convertCategoryToTreeNode(
+        this.conversation!.category
+      ),
+      content: this.conversation?.content,
     });
   }
 
@@ -75,6 +112,26 @@ export class ConversationFormularComponent {
   }
 
   onSubmit() {
-    console.log(this.conversationForm.value);
+    const formConversationDto: FormConversationDto = {
+      ...this.conversationForm.value,
+      postType: PostType.CONVERSATION,
+      categoryId: this.conversationForm.value.selectedCategory.data.id,
+      selectedCategory: undefined,
+    };
+
+    console.log(formConversationDto);
+
+    if (this.editMode) {
+      this.store.dispatch(
+        updateConversation({ id: this.conversation!.id, formConversationDto })
+      );
+    } else {
+      this.store.dispatch(createConversation({ formConversationDto }));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.conversationSubscription.unsubscribe();
+    this.store.dispatch(clearEditingConversation());
   }
 }

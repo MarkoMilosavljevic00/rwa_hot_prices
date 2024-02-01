@@ -93,7 +93,6 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   minExpiryDate: Date;
 
   categoryOptions: TreeNode<Category>[];
-  categoryOption$: Observable<TreeNode<Category>[] | undefined>;
   saleTypeOptions: SaleType[];
   discountOptions: Option[];
   expiryDateOptions: Option[];
@@ -164,7 +163,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initFormGroup();
     this.initValues();
-    this.loadOfferToForm();
+    this.loadOffer();
   }
 
   ngOnDestroy(): void {
@@ -206,22 +205,22 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     });
   }
 
-  private initValues() {
+  initValues() {
+    this.offerId = NOT_FOUND.OFFER_ID;
+    this.editMode = false;
     this.store.dispatch(loadCategories());
     this.store.select(selectCategoriesList).subscribe((categories) => {
       this.categoryOptions = categories.map((category) =>
         this.categoryService.convertCategoryToTreeNode(category)
       );
     });
-    this.offerId = NOT_FOUND.OFFER_ID;
-    this.editMode = false;
     this.saleTypeOptions = Object.values(SaleType);
     this.discountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.expiryDateOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.minExpiryDate = new Date();
   }
 
-  private loadOfferToForm() {
+  loadOffer() {
     this.offerSubscription = this.store
       .select(selectIdFromRouteParams)
       .pipe(
@@ -260,13 +259,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     // });
   }
 
-  private patchSelectedOptions() {
-    this.onSaleTypeOptionChange(this.saleTypeControl?.value);
-    this.onDiscountOptionChange(this.discountOptionSelectedControl?.value);
-    this.onExpiryDateOptionChange(this.expiryDateOptionSelectedControl?.value);
-  }
-
-  private patchFormWithLoadedOffer(offer: Offer) {
+  patchFormWithLoadedOffer(offer: Offer) {
     this.offerForm.patchValue({
       title: offer.title,
       selectedCategory: offer.category
@@ -293,8 +286,10 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     });
   }
 
-  getImagePath(serverFilename: string) {
-    return IMAGES_URL + '/offers/' + serverFilename;
+  patchSelectedOptions() {
+    this.onSaleTypeOptionChange(this.saleTypeControl?.value);
+    this.onDiscountOptionChange(this.discountOptionSelectedControl?.value);
+    this.onExpiryDateOptionChange(this.expiryDateOptionSelectedControl?.value);
   }
 
   patchSpecifications(specifications?: Record<string, string>) {
@@ -315,6 +310,10 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     this.formControlService.addFormGroupToFormArray(
       this.specificationsFormArray
     );
+  }
+
+  getImagePath(serverFilename: string) {
+    return `${IMAGES_URL}/${ImageType.POST_IMAGE}/${serverFilename}`;
   }
 
   onSubmit() {
@@ -487,43 +486,37 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   }
 
   onDiscountOptionChange(isDiscountActivated: boolean) {
-    this.formControlService.toggleFormControl<number>(
+    // this.formControlService.toggleFormControl<number>(
+    this.formControlService.toggleFormControl(
       this.offerForm,
       this.oldPriceControl as FormControl,
       isDiscountActivated,
-      this.oldPriceControl?.value
-        ? this.oldPriceControl?.value
-        : this.priceControl?.value,
-      this.oldPriceControl?.value
     );
-    this.formControlService.toggleFormControl<number>(
+    // this.formControlService.toggleFormControl<number>(
+    this.formControlService.toggleFormControl(
       this.offerForm,
       this.discountControl as FormControl,
       isDiscountActivated,
-      this.discountControl?.value ? this.discountControl?.value : 0,
-      this.discountControl?.value
     );
   }
 
   onExpiryDateOptionChange(isExpiryDateActivated: boolean) {
-    this.formControlService.toggleFormControl<Date>(
+    // this.formControlService.toggleFormControl<Date>(
+    this.formControlService.toggleFormControl(
       this.offerForm,
       this.expiryDateControl as FormControl,
       isExpiryDateActivated,
-      this.expiryDateControl?.value
-        ? this.expiryDateControl?.value
-        : new Date(Date.now() + TIME.MILISECONDS.ONE_DAY),
-      this.expiryDateControl?.value
     );
   }
 
   onSaleTypeOptionChange(saleType: SaleType) {
-    this.formControlService.toggleFormControl<SaleType>(
+    // this.formControlService.toggleFormControl<SaleType>(
+    this.formControlService.toggleFormControl(
       this.offerForm,
       this.linkControl as FormControl,
       saleType === SaleType.Online,
-      this.linkControl?.value ? this.linkControl?.value : '',
-      this.linkControl?.value
+      // this.linkControl?.value ? this.linkControl?.value : '',
+      // this.linkControl?.value
     );
   }
 

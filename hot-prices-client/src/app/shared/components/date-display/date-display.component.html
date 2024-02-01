@@ -1,9 +1,9 @@
-<div class="date" fxLayout="column" fxLayoutAlign="center center">
-  <div fxLayoutAlign="center center" fxLayoutGap="2px">
+<!-- <div class="date" fxLayout="column" fxLayoutAlign="center center"> -->
+  <div class="date" fxLayoutAlign="end center" fxLayoutGap="2px">
     <mat-icon *ngIf="isPostedDate || isDateFormat">schedule</mat-icon>
     <mat-icon *ngIf="isExpiringDate"> hourglass_bottom </mat-icon>
     <span *ngIf="isPostedDate">{{formatPostedAgo()}}</span>
     <span *ngIf="isExpiringDate">{{formatExpiresAgo()}}</span>
     <span *ngIf="isDateFormat"> {{textBeforeDate}} {{ date | date:'mediumDate' }}</span>
   </div>
-</div>
+<!-- </div> -->
