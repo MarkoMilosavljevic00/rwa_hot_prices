@@ -18,7 +18,7 @@ import { CommentService } from '../../comment/services/comment.service';
 import { ConversationService } from '../services/conversation.service';
 import { FilterConversationDto } from '../models/dtos/filter-conversation.dto';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { MessageSeverity } from 'src/app/common/enums/message-severity.enum';
+import { NotificationSeverity } from 'src/app/common/enums/message.enum';
 
 @Injectable()
 export class ConversationEffects {
@@ -86,7 +86,7 @@ export class ConversationEffects {
             '/posts/details/conversation/' + conversation.id,
           ]);
           this.notificationService.showMessage(
-            MessageSeverity.SUCCESS,
+            NotificationSeverity.SUCCESS,
             'Success',
             'Conversation saved successfully'
           );
@@ -105,7 +105,7 @@ export class ConversationEffects {
         ),
         tap(({ error }) => {
           this.notificationService.showMessage(
-            MessageSeverity.ERROR,
+            NotificationSeverity.ERROR,
             'Error',
             error.error.message
           );
@@ -135,7 +135,7 @@ export class ConversationEffects {
         tap(() => {
           this.router.navigate(['/posts/conversations']);
           this.notificationService.showMessage(
-            MessageSeverity.SUCCESS,
+            NotificationSeverity.SUCCESS,
             'Success',
             'Conversation deleted successfully'
           );
@@ -152,9 +152,8 @@ export class ConversationEffects {
         return this.conversationService
           .getConversationsByFilter(filterConversationDto)
           .pipe(
-            tap(({ posts }) => console.log(posts)),
+            tap(({ posts }) => console.log('CONVERSATIONS Loading...')),
             map(({ posts, length }) => {
-              console.log(posts);
               return ConversationActions.loadConversationsSuccess({
                 conversations: posts,
                 length,
@@ -171,16 +170,15 @@ export class ConversationEffects {
   loadDetailedConversation$ = createEffect(() =>
     this.action$.pipe(
       ofType(ConversationActions.loadDetailedConversation),
-      switchMap(({ id: offerId }) =>
-        this.conversationService.getConversationById(offerId).pipe(
-          map(
-            (offer) =>
-              ConversationActions.loadDetailedConversationSuccess({
-                conversation: offer,
-              }),
-            catchError((error) =>
-              of(ConversationActions.loadDetailedConversationFailure({ error }))
-            )
+      switchMap(({ id }) =>
+        this.conversationService.getConversationById(id).pipe(
+          map((conversation) =>
+            ConversationActions.loadDetailedConversationSuccess({
+              conversation: conversation,
+            })
+          ),
+          catchError((error) =>
+            of(ConversationActions.loadDetailedConversationFailure({ error }))
           )
         )
       )
@@ -203,28 +201,47 @@ export class ConversationEffects {
     )
   );
 
-  changeConversationFilter$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(ConversationActions.changeConversationFilter),
-      switchMap(({ filterConversation }) => {
-        const { selectedCategory, selectedUser, ...filterConversationDto } =
-          filterConversation;
-        return this.conversationService
-          .getConversationsByFilter(filterConversationDto)
-          .pipe(
-            map(({ posts, length }) =>
-              ConversationActions.loadConversationsSuccess({
-                conversations: posts,
-                length,
-              })
-            ),
-            catchError((error) =>
-              of(ConversationActions.loadConversationsFailure({ error }))
-            )
+  loadConversationFailure$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(
+          ConversationActions.loadDetailedConversationFailure,
+          ConversationActions.loadEditingConversationFailure
+        ),
+        tap(({ error }) => {
+          this.router.navigate(['/posts/conversations']);
+          this.notificationService.showMessage(
+            NotificationSeverity.ERROR,
+            'Error',
+            error.error.message
           );
-      })
-    )
+        })
+      ),
+    { dispatch: false }
   );
+
+  // changeConversationFilter$ = createEffect(() =>
+  //   this.action$.pipe(
+  //     ofType(ConversationActions.changeConversationFilter),
+  //     switchMap(({ filterConversation }) => {
+  //       const { selectedCategory, selectedUser, ...filterConversationDto } =
+  //         filterConversation;
+  //       return this.conversationService
+  //         .getConversationsByFilter(filterConversationDto)
+  //         .pipe(
+  //           map(({ posts, length }) =>
+  //             ConversationActions.loadConversationsSuccess({
+  //               conversations: posts,
+  //               length,
+  //             })
+  //           ),
+  //           catchError((error) =>
+  //             of(ConversationActions.loadConversationsFailure({ error }))
+  //           )
+  //         );
+  //     })
+  //   )
+  // );
 
   loadAvailableTitles$ = createEffect(() =>
     this.action$.pipe(

@@ -17,27 +17,218 @@ import { MessageService } from 'primeng/api';
 import { PAGE } from 'src/app/common/constants';
 import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 import { CommentService } from '../../comment/services/comment.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import {
+  NotificationSeverity,
+  NotificationSummary,
+} from 'src/app/common/enums/message.enum';
 
 @Injectable()
 export class OfferEffects {
+  createOffer$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.createOffer),
+      switchMap(({ formOfferDto }) =>
+        this.offerService.createOffer(formOfferDto).pipe(
+          concatMap((offer) => {
+            return [
+              OfferActions.createOfferSuccess({ offer }),
+              // OfferActions.submittedOfferSuccess({ offer }),
+              // OfferActions.loadOffers({
+              //   filterOfferDto: {
+              //     pageIndex: PAGE.INITIAL_INDEX,
+              //     pageSize: PAGE.SIZE,
+              //   },
+              // }),
+            ];
+          }),
+          catchError((error) => of(OfferActions.createOfferFailure({ error })))
+        )
+      )
+    )
+  );
+
+  updateffer$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.updateOffer),
+      switchMap(({ id: offerId, formOfferDto }) =>
+        this.offerService.updateOffer(offerId, formOfferDto).pipe(
+          concatMap((offer) => {
+            return [
+              OfferActions.updateOfferSuccess({ offer }),
+              // OfferActions.submittedOfferSuccess({ offer }),
+              // OfferActions.loadOffers({
+              //   filterOfferDto: {
+              //     pageIndex: PAGE.INITIAL_INDEX,
+              //     pageSize: PAGE.SIZE,
+              //   },
+              // }),
+            ];
+          }),
+          catchError((error) => of(OfferActions.updateOfferFailure({ error })))
+        )
+      )
+    )
+  );
+
+  submittedOfferSucces$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(
+          OfferActions.createOfferSuccess,
+          OfferActions.updateOfferSuccess
+        ),
+        tap(({ offer }) => {
+          this.router.navigate(['/posts/details/offer/' + offer.id]);
+          this.notificationService.showMessage(
+            NotificationSeverity.SUCCESS,
+            NotificationSummary.SUCCESS,
+            'Offer saved successfully'
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  submittedOfferFailure$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(
+          OfferActions.createOfferFailure,
+          OfferActions.updateOfferFailure,
+          OfferActions.deleteOfferFailure
+        ),
+        tap(({ error }) => {
+          this.notificationService.showMessage(
+            NotificationSeverity.ERROR,
+            NotificationSummary.ERROR,
+            error.error.message
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  deleteOffer$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.deleteOffer),
+      switchMap(({ id }) =>
+        this.offerService.deleteOffer(id).pipe(
+          map(() => OfferActions.deleteOfferSuccess()),
+          catchError((error) => of(OfferActions.deleteOfferFailure({ error })))
+        )
+      )
+    )
+  );
+
+  deleteOfferSuccess$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(OfferActions.deleteOfferSuccess),
+        tap(() => {
+          this.router.navigate(['/posts/offers']);
+          this.notificationService.showMessage(
+            NotificationSeverity.SUCCESS,
+            NotificationSummary.SUCCESS,
+            'Offer deleted successfully'
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
   loadOffers$ = createEffect(() =>
     this.action$.pipe(
       ofType(OfferActions.loadOffers),
-      switchMap(({ filterOfferDto: filterOffer }) => {
-        const filterOfferDto: FilterOfferDto = filterOffer;
+      switchMap(({ filterOfferDto }) => {
         return this.offerService.getOffersByFilter(filterOfferDto).pipe(
-          map(({ offers, length }) =>
-            OfferActions.loadOffersSuccess({ offers, length })
+          tap((posts) => console.log('OFFERS Loading...', posts)),
+          map(({ posts, length }) =>
+            OfferActions.loadOffersSuccess({ offers: posts, length })
           ),
-          catchError(() => of())
+          catchError((error) => of(OfferActions.loadOffersFailure({ error })))
         );
       })
     )
   );
 
+  loadDetailedOffer$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.loadDetailedOffer),
+      switchMap(({ id: offerId }) =>
+        this.offerService.getOfferById(offerId).pipe(
+          map((offer) => {
+            return OfferActions.loadDetailedOfferSuccess({ offer });
+          }),
+          catchError((error) =>
+            of(OfferActions.loadDetailedOfferFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  loadEditingOffer$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.loadEditingOffer),
+      switchMap(({ id }) =>
+        this.offerService.getOfferById(id).pipe(
+          map((offer) => OfferActions.loadEditingOfferSuccess({ offer })),
+          catchError((error) =>
+            of(OfferActions.loadEditingOfferFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  loadOfferFailure$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(
+          OfferActions.loadDetailedOfferFailure,
+          OfferActions.loadEditingOfferFailure
+        ),
+        tap(({ error }) => {
+          this.router.navigate(['/posts/offers']);
+          this.notificationService.showMessage(
+            NotificationSeverity.ERROR,
+            'Error',
+            error.error.message
+          );
+        })
+      ),
+    { dispatch: false }
+  );
+
+  // changeOfferFilter$ = createEffect(() =>
+  //   this.action$.pipe(
+  //     ofType(OfferActions.changeOfferFilter),
+  //     switchMap(({ filterOffer }) => {
+  //       const {
+  //         selectedCategory,
+  //         selectedUser,
+  //         isDiscountEnabled,
+  //         isPricingEnabled,
+  //         ...filterOfferDto
+  //       } = filterOffer;
+  //       return this.offerService.getOffersByFilter(filterOfferDto).pipe(
+  //         tap((posts) => console.log('OFFERS FROM FILTER Loading...', posts)),
+  //         map(({ posts, length }) =>
+  //           OfferActions.loadOffersSuccess({
+  //             offers: posts,
+  //             length,
+  //           })
+  //         ),
+  //         catchError((error) => of(OfferActions.loadOffersFailure({ error })))
+  //       );
+  //     })
+  //   )
+  // );
+
   loadAvailableTitles$ = createEffect(() =>
     this.action$.pipe(
-      ofType(OfferActions.changeFilter, OfferActions.loadTitles),
+      ofType(OfferActions.changeOfferFilter, OfferActions.loadOfferTitles),
       switchMap(({ filterOffer: filter }) => {
         const {
           isDiscountEnabled,
@@ -50,25 +241,10 @@ export class OfferEffects {
         return this.offerService
           .getOfferDistinctPropertyByFilter('title', filterOfferDto)
           .pipe(
-            map((titles) => OfferActions.loadTitlesSuccess({ titles })),
+            map((titles) => OfferActions.loadOfferTitlesSuccess({ titles })),
             catchError(() => of())
           );
       })
-    )
-  );
-
-  loadDetailedOffer$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(OfferActions.loadDetailedOffer),
-      switchMap(({ offerId }) =>
-        this.offerService.getOfferById(offerId).pipe(
-          map((offer) => {
-            console.log(offer);
-            return OfferActions.loadDetailedOfferSuccess({ offer })
-          }),
-          catchError(() => of(OfferActions.loadDetailedOfferFailure()))
-        )
-      )
     )
   );
 
@@ -86,83 +262,11 @@ export class OfferEffects {
   //   )
   // );
 
-  loadEditingOffer$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(OfferActions.loadEditingOffer),
-      switchMap(({ offerId }) =>
-        this.offerService.getOfferById(offerId).pipe(
-          map((offer) => OfferActions.loadEditingOfferSuccess({ offer })),
-          catchError(() => of())
-        )
-      )
-    )
-  );
-
-  postOffer$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(OfferActions.postOffer),
-      switchMap(({ formOfferDto }) =>
-        this.offerService.postOffer(formOfferDto).pipe(
-          concatMap((offer) => {
-            return [
-              OfferActions.submittedOfferSuccess({ offer }),
-              OfferActions.loadOffers({
-                filterOfferDto: {
-                  pageIndex: PAGE.INITIAL_INDEX,
-                  pageSize: PAGE.SIZE,
-                },
-              }),
-            ];
-          }),
-          catchError(() => of())
-        )
-      )
-    )
-  );
-
-  updateffer$ = createEffect(() =>
-    this.action$.pipe(
-      ofType(OfferActions.updateOffer),
-      switchMap(({ offerId, formOfferDto }) =>
-        this.offerService.updateOffer(offerId, formOfferDto).pipe(
-          concatMap((offer) => {
-            return [
-              OfferActions.submittedOfferSuccess({ offer }),
-              OfferActions.loadOffers({
-                filterOfferDto: {
-                  pageIndex: PAGE.INITIAL_INDEX,
-                  pageSize: PAGE.SIZE,
-                },
-              }),
-            ];
-          }),
-          catchError(() => of())
-        )
-      )
-    )
-  );
-
-  navigateToOffer$ = createEffect(
-    () =>
-      this.action$.pipe(
-        ofType(OfferActions.submittedOfferSuccess),
-        tap(({ offer }) => {
-          this.router.navigate(['/posts/details/offer/' + offer.id]);
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successly Submitted Offer',
-            detail: 'You have successfully submitted your offer.',
-          });
-        })
-      ),
-    { dispatch: false }
-  );
-
   constructor(
     private action$: Actions,
     private offerService: OfferService,
+    private notificationService: NotificationService,
     private commentService: CommentService,
-    private messageService: MessageService,
     private router: Router
   ) {}
 }

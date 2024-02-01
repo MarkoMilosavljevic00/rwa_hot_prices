@@ -5,12 +5,12 @@ import { Store, select } from '@ngrx/store';
 import { map, Observable, of, skip, startWith, Subscription, switchMap } from 'rxjs';
 import { KEYS } from 'src/app/common/constants';
 import { PostType } from 'src/app/common/enums/post-type.enum';
-import { loadConversationTitles } from 'src/app/feature/conversation/state/conversation.action';
+import { changeConversationSearchFilter, loadConversationTitles } from 'src/app/feature/conversation/state/conversation.action';
 import { selectConversationsTitles } from 'src/app/feature/conversation/state/conversation.selector';
-import { loadCouponTitles } from 'src/app/feature/coupon/state/coupon.action';
+import { changeCouponSearchFilter, loadCouponTitles } from 'src/app/feature/coupon/state/coupon.action';
 import { selectCouponsTitles } from 'src/app/feature/coupon/state/coupon.selector';
 import { OfferService } from 'src/app/feature/offer/services/offer.service';
-import { changeSearchFilter, clearFilter, loadTitles } from 'src/app/feature/offer/state/offer.action';
+import { changeOfferSearchFilter, clearOfferFilter, loadOfferTitles } from 'src/app/feature/offer/state/offer.action';
 import { selectOffersTitles } from 'src/app/feature/offer/state/offer.selector';
 import { RouteMappingService } from 'src/app/shared/services/route-mapping.service';
 import { selectUrl } from 'src/app/state/app.selectors';
@@ -65,7 +65,7 @@ export class PostsComponent implements OnInit, OnDestroy {
           this.isUserPosts = this.routeMappingService.isUserPosts(url);
           this.postType = this.routeMappingService.mapUrlToPostType(url, true);
           if (this.postType === PostType.OFFER){
-            this.store.dispatch(loadTitles({ filterOffer: {} }));
+            this.store.dispatch(loadOfferTitles({ filterOffer: {} }));
             return this.store.select(selectOffersTitles);
             // return this.offerService.getOfferDistinctProperty(KEYS.OFFER.TITLE);
           } else if(this.postType === PostType.CONVERSATION) {
@@ -89,7 +89,13 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   onSearch(search: string) {
-    this.store.dispatch(changeSearchFilter({ search }));
+    if(this.postType === PostType.OFFER){
+      this.store.dispatch(changeOfferSearchFilter({ search }));
+    }else if(this.postType === PostType.CONVERSATION){
+      this.store.dispatch(changeConversationSearchFilter({ search }));
+    }else if(this.postType === PostType.COUPON){
+      this.store.dispatch(changeCouponSearchFilter({ search }));
+    }
   }
 
   private _filter(value: string): string[] {
@@ -108,7 +114,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(clearFilter());
+    this.store.dispatch(clearOfferFilter());
     this.subscription.unsubscribe();
   }
 }

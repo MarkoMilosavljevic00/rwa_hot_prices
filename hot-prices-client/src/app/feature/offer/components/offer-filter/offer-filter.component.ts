@@ -16,7 +16,7 @@ import { SaleType } from 'src/app/common/enums/sale-type.enum';
 import { OfferService } from '../../services/offer.service';
 import { SortBy, SortType } from 'src/app/common/enums/sort.enum';
 import { UserService } from 'src/app/feature/user/service/user.service';
-import { changeFilter, clearFilter } from '../../state/offer.action';
+import { changeOfferFilter, clearOfferFilter } from '../../state/offer.action';
 import { FilterOffer } from 'src/app/feature/offer/models/offer.filter';
 import { selectCurrentReaction } from 'src/app/feature/reaction/state/reaction.selector';
 import { selectCurrentRoute, selectUrl } from 'src/app/state/app.selectors';
@@ -76,7 +76,7 @@ export class OfferFilterComponent implements OnInit {
       .select(selectCurrentUserId)
       .pipe(take(1))
       .subscribe((userId) => {
-        this.store.dispatch(changeFilter({ filterOffer: { ownerId: userId } }));
+        this.store.dispatch(changeOfferFilter({ filterOffer: { ownerId: userId } }));
       });
   }
 
@@ -154,7 +154,7 @@ export class OfferFilterComponent implements OnInit {
   applyFilter() {
     this.sidenavControl.toggle();
     this.store.dispatch(
-      changeFilter({
+      changeOfferFilter({
         filterOffer: {
           ...this.filterOffer,
           title: undefined,

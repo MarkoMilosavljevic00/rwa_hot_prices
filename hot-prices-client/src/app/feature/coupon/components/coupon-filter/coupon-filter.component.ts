@@ -13,7 +13,7 @@ import { CategoryService } from 'src/app/feature/post/services/category.service'
 import { CouponService } from '../../services/coupon.service';
 import { UserService } from 'src/app/feature/user/service/user.service';
 import { selectCurrentUserId } from 'src/app/feature/user/state/user.selector';
-import { changeFilter } from 'src/app/feature/offer/state/offer.action';
+import { changeOfferFilter } from 'src/app/feature/offer/state/offer.action';
 import { take } from 'rxjs';
 import { changeCouponFilter } from '../../state/coupon.action';
 import { FilterCouponDto } from '../../models/dtos/filter-coupon.dto';

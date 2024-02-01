@@ -14,7 +14,7 @@ export const initialState: OfferState = adapter.getInitialState({
 
 export const offerReducer = createReducer(
   initialState,
-  on(Actions.changeFilter, (state, { filterOffer: filter }) => {
+  on(Actions.changeOfferFilter, (state, { filterOffer: filter }) => {
     return {
       ...state,
       filter: {
@@ -23,7 +23,7 @@ export const offerReducer = createReducer(
       },
     };
   }),
-  on(Actions.changeSearchFilter, (state, { search }) => {
+  on(Actions.changeOfferSearchFilter, (state, { search }) => {
     return {
       ...state,
       filter: {
@@ -32,7 +32,7 @@ export const offerReducer = createReducer(
       },
     };
   }),
-  on(Actions.changePaginationFilter, (state, { pagination }) => {
+  on(Actions.changeOfferPaginationFilter, (state, { pagination }) => {
     return {
       ...state,
       filter: {
@@ -41,13 +41,13 @@ export const offerReducer = createReducer(
       },
     };
   }),
-  on(Actions.clearFilter, (state) => {
+  on(Actions.clearOfferFilter, (state) => {
     return {
       ...state,
       filter: undefined,
     };
   }),
-  on(Actions.loadTitlesSuccess, (state, { titles }) => {
+  on(Actions.loadOfferTitlesSuccess, (state, { titles }) => {
     return {
       ...state,
       titles,

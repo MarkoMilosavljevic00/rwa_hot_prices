@@ -149,14 +149,27 @@ export class PostService {
     return await this.postRepository.remove(post);
   }
 
-  async getById(id: number): Promise<Post> {
-    const post = await this.postRepository.findOne({
+  async getById(id: number, postType: PostType): Promise<Post> {
+    let repository: Repository<Post>;
+    if (postType === PostType.OFFER) {
+      repository = this.offerRepository;
+    }
+    else if (postType === PostType.CONVERSATION) {
+      repository = this.conversationRepository;
+    }
+    else if (postType === PostType.COUPON) {
+      repository = this.couponRepository;
+    }
+    else
+      throw new BadRequestException('Invalid Post Type');
+
+    const post = await repository.findOne({
       where: { id },
       relations: ['category', 'owner'],
     });
 
     if (!post) {
-      throw new NotFoundException(`Post with ID ${id} not found`);
+      throw new NotFoundException(`Post with ID ${id} and Type ${postType} not found`);
     }
 
     if (post.restricted === true) {

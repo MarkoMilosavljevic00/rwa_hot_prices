@@ -34,7 +34,6 @@ export class FormControlService {
     }
     keyControl.updateValueAndValidity();
     valueControl.updateValueAndValidity();
-    // form.updateValueAndValidity();
   }
 
   addRecordFromFormGroup(formGroup: FormGroup, recordControl: FormControl) {
@@ -148,11 +147,9 @@ export class FormControlService {
   ) {
     if (condition) {
       formControl.enable();
-      // formControl.setValue(defaultValue);
       formControl.setValidators(Validators.required);
     } else {
       formControl.disable();
-      // if(valueWhileDisabled) formControl.setValue(valueWhileDisabled);
       formControl.clearValidators();
     }
     formControl.updateValueAndValidity();

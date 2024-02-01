@@ -64,7 +64,7 @@ export class OfferDetailsComponent implements OnInit {
         filter(isNotUndefined),
         switchMap((offerId) => {
           if (offerId) {
-            this.store.dispatch(loadDetailedOffer({ offerId: +offerId }));
+            this.store.dispatch(loadDetailedOffer({ id: +offerId }));
           }
           return this.store.select(selectDetailedOffer);
         }),

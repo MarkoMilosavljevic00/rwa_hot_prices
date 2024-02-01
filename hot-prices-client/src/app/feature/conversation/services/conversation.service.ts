@@ -25,7 +25,7 @@ export class ConversationService {
   }
 
   getConversationById(id: number) {
-    return this.http.get<Conversation>(`${environment.api}/post/${id}`);
+    return this.http.get<Conversation>(`${environment.api}/post/${PostType.CONVERSATION}/${id}`);
   }
 
   getConversationsByFilter(filterConversationDto: FilterConversationDto) {

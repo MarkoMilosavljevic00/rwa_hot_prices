@@ -13,8 +13,22 @@ import { PostType } from 'src/app/common/enums/post-type.enum';
 export class OfferService {
   constructor(private readonly http: HttpClient) {}
 
+  createOffer(offer: FormOfferDto) {
+    return this.http.post<Offer>(`${environment.api}/post`, offer);
+  }
+
+  updateOffer(id: number, offer: FormOfferDto) {
+    return this.http.patch<Offer>(`${environment.api}/post/${id}`, offer);
+  }
+
+  deleteOffer(id: number) {
+    return this.http.delete<Offer>(`${environment.api}/post/${id}`);
+  }
+
   getOfferById(id: number) {
-    return this.http.get<Offer>(`${environment.api}/offer/${id}`);
+    return this.http.get<Offer>(
+      `${environment.api}/post/${PostType.OFFER}/${id}`
+    );
   }
 
   getOffersByFilter(filterOfferDto: FilterOfferDto) {
@@ -27,21 +41,27 @@ export class OfferService {
       }
     });
 
-    params = params.set('postType', PostType.OFFER)
+    params = params.set('postType', PostType.OFFER);
 
-    return this.http.get<{ offers: Offer[]; length: number }>(
-      `${environment.api}/offer/get-offers-by-filter`,
+    return this.http.get<{ posts: Offer[]; length: number }>(
+      `${environment.api}/post/get-posts-by-filter`,
       { params }
     );
   }
 
   getOfferDistinctProperty(key: string) {
+    let params = new HttpParams().set('postType', PostType.OFFER);
+
     return this.http.get<string[]>(
-      `${environment.api}/offer/distinct-property/${key}`
+      `${environment.api}/post/distinct-property-filter/${key}`,
+      { params }
     );
   }
 
-  getOfferDistinctPropertyByFilter(key: string, filterOfferDto: FilterOfferDto) {
+  getOfferDistinctPropertyByFilter(
+    key: string,
+    filterOfferDto: FilterOfferDto
+  ) {
     let params = new HttpParams();
 
     Object.keys(filterOfferDto).forEach((key: string) => {
@@ -51,19 +71,11 @@ export class OfferService {
       }
     });
 
-    params = params.set('postType', PostType.OFFER)
+    params = params.set('postType', PostType.OFFER);
 
     return this.http.get<string[]>(
-      `${environment.api}/offer/distinct-property-filter/${key}`,
+      `${environment.api}/post/distinct-property-filter/${key}`,
       { params }
     );
-  }
-
-  postOffer(offer: FormOfferDto) {
-    return this.http.post<Offer>(`${environment.api}/offer`, offer);
-  }
-
-  updateOffer(id: number, offer: FormOfferDto) {
-    return this.http.patch<Offer>(`${environment.api}/offer/${id}`, offer);
   }
 }

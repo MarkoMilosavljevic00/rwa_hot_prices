@@ -3,9 +3,62 @@ import { Offer } from '../models/offer.model';
 import { FormOfferDto } from '../models/dtos/form-offer.dto';
 import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 import { Pagination } from 'src/app/common/interfaces/pagination.interface';
-import { InitialValues } from 'src/app/common/interfaces/initial-values.interface';
 import { FilterOffer } from 'src/app/feature/offer/models/offer.filter';
-import { Comment } from '../../comment/models/comment.model';
+
+// Create Coupon
+
+export const createOffer = createAction(
+  '[Offer] Create Offer',
+  props<{ formOfferDto: FormOfferDto }>()
+);
+
+export const createOfferSuccess = createAction(
+  '[Offer] Create Offer success',
+  props<{ offer: Offer }>()
+);
+
+export const createOfferFailure = createAction(
+  '[Offer] Create Offer failure',
+  props<{ error: any }>()
+);
+
+// Update Coupon
+
+export const updateOffer = createAction(
+  '[Offer] Update offer',
+  props<{ id: number; formOfferDto: FormOfferDto }>()
+);
+
+export const updateOfferSuccess = createAction(
+  '[Offer] Update offer success',
+  props<{ offer: Offer }>()
+);
+
+export const updateOfferFailure = createAction(
+  '[Offer] Update offer failure',
+  props<{ error: any }>()
+);
+
+export const submittedOfferSuccess = createAction(
+  '[Offer] Submitted Offer success',
+  props<{ offer: Offer }>()
+);
+
+// Delete Coupon
+
+export const deleteOffer = createAction(
+  '[Offer] Delete offer',
+  props<{ id: number }>()
+);
+
+export const deleteOfferSuccess = createAction('[Offer] Delete offer success');
+
+export const deleteOfferFailure = createAction(
+  '[Offer] Delete offer failure',
+  props<{ error: any }>()
+);
+
+// Load Coupons
 
 export const loadOffers = createAction(
   '[Offer] Load offers',
@@ -17,38 +70,16 @@ export const loadOffersSuccess = createAction(
   props<{ offers: Offer[]; length: number }>()
 );
 
-export const clearFilter = createAction(
-  '[Offer] Clear filter'
+export const loadOffersFailure = createAction(
+  '[Offer] Load offers failure',
+  props<{ error: any }>()
 );
 
-export const changeFilter = createAction(
-  '[Offer] Change filter',
-  props<{ filterOffer: FilterOffer }>()
-);
-
-export const changePaginationFilter = createAction(
-  '[Offer] Change pagination filter',
-  props<{ pagination: Pagination }>()
-);
-
-export const changeSearchFilter = createAction(
-  '[Offer] Change search filter',
-  props<{ search: string }>()
-);
-
-export const loadTitles = createAction(
-  '[Offer] Load titles',
-  props<{ filterOffer: FilterOffer }>()
-);
-
-export const loadTitlesSuccess = createAction(
-  '[Offer] Load titles success',
-  props<{ titles: string[] }>()
-);
+// Load detailed Offer
 
 export const loadDetailedOffer = createAction(
   '[Offer] Load detailed offer',
-  props<{ offerId: number }>()
+  props<{ id: number }>()
 );
 
 export const loadDetailedOfferSuccess = createAction(
@@ -57,12 +88,17 @@ export const loadDetailedOfferSuccess = createAction(
 );
 
 export const loadDetailedOfferFailure = createAction(
-  '[Offer] Load detailed offer failure'
+  '[Offer] Load detailed offer failure',
+  props<{ error: any }>()
 );
+
+export const clearDetailedOffer = createAction('[Offer] Clear detailed offer');
+
+// Load editing Offer
 
 export const loadEditingOffer = createAction(
   '[Offer] Load editing offer',
-  props<{ offerId: number }>()
+  props<{ id: number }>()
 );
 
 export const loadEditingOfferSuccess = createAction(
@@ -71,36 +107,39 @@ export const loadEditingOfferSuccess = createAction(
 );
 
 export const loadEditingOfferFailure = createAction(
-  '[Offer] Load editing offer failure'
+  '[Offer] Load editing offer failure',
+  props<{ error: any }>()
 );
 
 export const clearEditingOffer = createAction('[Offer] Clear editing offer');
 
-export const clearDetailedOffer = createAction('[Offer] Clear detailed offer');
+// Change filter
 
-export const postOffer = createAction(
-  '[Offer] Post offer',
-  props<{ formOfferDto: FormOfferDto }>()
+export const changeOfferFilter = createAction(
+  '[Offer] Change Offer filter',
+  props<{ filterOffer: FilterOffer }>()
 );
 
-export const updateOffer = createAction(
-  '[Offer] Update offer',
-  props<{ offerId: number; formOfferDto: FormOfferDto }>()
+export const changeOfferPaginationFilter = createAction(
+  '[Offer] Change Offer pagination filter',
+  props<{ pagination: Pagination }>()
 );
 
-export const submittedOfferSuccess = createAction(
-  '[Offer] Submitted offer success',
-  props<{ offer: Offer }>()
+export const changeOfferSearchFilter = createAction(
+  '[Offer] Change Offer search filter',
+  props<{ search: string }>()
 );
 
+export const clearOfferFilter = createAction('[Offer] Clear filter');
 
+// Load titles
 
-// export const updateOfferSuccess = createAction(
-//   '[Offer] Update offer',
-//   props<{ offer: Offer }>()
-// );
+export const loadOfferTitles = createAction(
+  '[Offer] Load Offer titles',
+  props<{ filterOffer: FilterOffer }>()
+);
 
-// export const rateSong = createAction(
-//   'Rate a song',
-//   props<{ songId: number; rating: SongRating }>()
-// );
+export const loadOfferTitlesSuccess = createAction(
+  '[Offer] Load Offer titles success',
+  props<{ titles: string[] }>()
+);

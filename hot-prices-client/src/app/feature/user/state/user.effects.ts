@@ -4,7 +4,7 @@ import { catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import * as UserActions from './user.action';
 import * as AuthActions from '../../auth/state/auth.action';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { MessageSeverity } from 'src/app/common/enums/message-severity.enum';
+import { NotificationSeverity } from 'src/app/common/enums/message.enum';
 import { Router } from '@angular/router';
 import { UserService } from '../service/user.service';
 
@@ -85,7 +85,7 @@ export class UserEffects {
         ofType(UserActions.updateUserSuccess),
         tap(() =>
           this.notificationService.showMessage(
-            MessageSeverity.SUCCESS,
+            NotificationSeverity.SUCCESS,
             'Success',
             'User updated successfully'
           )
@@ -114,7 +114,7 @@ export class UserEffects {
           if(error.status === 404)
             this.router.navigateByUrl('/not-found');
           this.notificationService.showMessage(
-            MessageSeverity.ERROR,
+            NotificationSeverity.ERROR,
             'Error',
             error.error.message
           );

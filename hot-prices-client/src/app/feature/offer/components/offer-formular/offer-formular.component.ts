@@ -1,20 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-  NgForm,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import { Message, MessageService } from 'primeng/api';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { TreeNode } from 'primeng/api';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
-import { SelectButtonChangeEvent } from 'primeng/selectbutton';
 import { DiscountCalculatorService } from 'src/app/shared/services/discount-calculator.service';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Option } from 'src/app/common/interfaces/option.interface';
 import {
   DEFAULT,
@@ -26,30 +16,11 @@ import {
   YES_NO_OPTIONS,
 } from 'src/app/common/constants';
 import { FormControlService } from 'src/app/shared/services/form-control.service';
-import {
-  FileSelectEvent,
-  FileUpload,
-  FileUploadEvent,
-  UploadEvent,
-} from 'primeng/fileupload';
+import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 import { ActivatedRoute, ParamMap, Params } from '@angular/router';
 import { Offer } from '../../models/offer.model';
-import { HttpClient } from '@angular/common/http';
 import { FormOfferDto } from '../../models/dtos/form-offer.dto';
-import { OfferService } from '../../services/offer.service';
-import {
-  Observable,
-  OperatorFunction,
-  Subscription,
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  skip,
-  switchMap,
-  throwError,
-} from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { Subscription, filter, skip, switchMap } from 'rxjs';
 import { FileService } from 'src/app/shared/services/file.service';
 import { UploadedImage } from 'src/app/common/interfaces/uploaded-image.interface';
 import { Validity } from 'src/app/common/interfaces/validity.interface';
@@ -58,21 +29,14 @@ import { Store } from '@ngrx/store';
 import {
   loadEditingOffer,
   clearEditingOffer,
-  postOffer,
+  createOffer,
   updateOffer,
 } from '../../state/offer.action';
 import { selectEditingOffer } from '../../state/offer.selector';
 import { Category } from 'src/app/feature/post/models/category.model';
-import {
-  selectCategoriesList,
-  selectCategoriesList1,
-} from 'src/app/feature/post/state/category/category.selector';
+import { selectCategoriesList } from 'src/app/feature/post/state/category/category.selector';
 import { loadCategories } from 'src/app/feature/post/state/category/category.action';
-import {
-  selectCurrentRoute,
-  selectIdFromRouteParams,
-  selectRouteParams,
-} from 'src/app/state/app.selectors';
+import { selectIdFromRouteParams } from 'src/app/state/app.selectors';
 import { isNotUndefined } from 'src/app/common/type-guards';
 import { ImageType } from 'src/app/common/enums/image-type.enum';
 
@@ -82,14 +46,13 @@ import { ImageType } from 'src/app/common/enums/image-type.enum';
   styleUrls: ['./offer-formular.component.css'],
 })
 export class OfferFormularComponent implements OnInit, OnDestroy {
-  // offer?: Offer;
-  offerId: number;
-  offerForm: FormGroup;
-  editMode: boolean;
-
   offerSubscription: Subscription;
 
-  description: string;
+  editMode: boolean = false;
+
+  offer?: Offer;
+  offerForm: FormGroup;
+
   minExpiryDate: Date;
 
   categoryOptions: TreeNode<Category>[];
@@ -181,9 +144,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
       selectedCategory: new FormControl('', {
         validators: [Validators.required],
       }),
-      uploadedImages: new FormControl([], {
-        // validators: [Validators.required],
-      }),
+      uploadedImages: new FormControl([], {}),
       saleType: new FormControl(SaleType.Offline),
       store: new FormControl(''),
       link: new FormControl({ value: '', disabled: true }),
@@ -206,8 +167,8 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   }
 
   initValues() {
-    this.offerId = NOT_FOUND.OFFER_ID;
     this.editMode = false;
+    this.minExpiryDate = new Date(Date.now());
     this.store.dispatch(loadCategories());
     this.store.select(selectCategoriesList).subscribe((categories) => {
       this.categoryOptions = categories.map((category) =>
@@ -217,7 +178,6 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     this.saleTypeOptions = Object.values(SaleType);
     this.discountOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
     this.expiryDateOptions = [YES_NO_OPTIONS.YES, YES_NO_OPTIONS.NO];
-    this.minExpiryDate = new Date();
   }
 
   loadOffer() {
@@ -226,37 +186,18 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
       .pipe(
         filter(isNotUndefined),
         switchMap((offerId) => {
-          this.store.dispatch(loadEditingOffer({ offerId: +offerId }));
+          this.store.dispatch(loadEditingOffer({ id: +offerId }));
           return this.store.select(selectEditingOffer);
-        }),
-        skip(1)
+        })
       )
+      .pipe(filter(isNotUndefined))
       .subscribe((offer) => {
-        if (offer) {
-          this.editMode = true;
-          this.offerId = offer.id;
-          this.patchFormWithLoadedOffer(offer);
-          this.patchSelectedOptions();
-          this.patchSpecifications(offer.specifications);
-        }
+        this.editMode = true;
+        this.offer = {...offer};
+        this.patchFormWithLoadedOffer(offer);
+        this.patchSelectedOptions();
+        this.patchSpecifications(offer.specifications);
       });
-
-    // if (!offerId) this.store.dispatch(clearEditingOffer());
-    // else {
-    // }
-    // this.offerSubscription = this.store.select(selectEditingOffer)
-    // .pipe(distinctUntilChanged(),skip(1))
-    // .subscribe((offer) => {
-    //   console.log('uso u editingOffer Subscribe')
-    //   console.log(offer)
-    //   if (offer) {
-    //     this.editMode = true;
-    //     this.offerId = offer.id;
-    //     this.patchFormWithLoadedOffer(offer);
-    //     this.patchSelectedOptions();
-    //     this.patchSpecifications(offer.specifications);
-    //   }
-    // });
   }
 
   patchFormWithLoadedOffer(offer: Offer) {
@@ -320,7 +261,6 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     const offer: FormOfferDto = {
       title: this.offerForm.value.title,
       categoryId: this.offerForm.value.selectedCategory.data.id,
-      // ownerId: DEFAULT.USER.ID,
       description: this.offerForm.value.description,
       saleType: this.offerForm.value.saleType,
       link:
@@ -347,14 +287,14 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
       ),
     };
 
-    console.log(offer);
+    console.log('Submitting Offer... ', offer);
 
     if (this.editMode) {
       this.store.dispatch(
-        updateOffer({ offerId: this.offerId, formOfferDto: offer })
+        updateOffer({ id: this.offer!.id, formOfferDto: offer })
       );
     } else {
-      this.store.dispatch(postOffer({ formOfferDto: offer }));
+      this.store.dispatch(createOffer({ formOfferDto: offer }));
     }
   }
 
@@ -486,37 +426,31 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
   }
 
   onDiscountOptionChange(isDiscountActivated: boolean) {
-    // this.formControlService.toggleFormControl<number>(
     this.formControlService.toggleFormControl(
       this.offerForm,
       this.oldPriceControl as FormControl,
-      isDiscountActivated,
+      isDiscountActivated
     );
-    // this.formControlService.toggleFormControl<number>(
     this.formControlService.toggleFormControl(
       this.offerForm,
       this.discountControl as FormControl,
-      isDiscountActivated,
+      isDiscountActivated
     );
   }
 
   onExpiryDateOptionChange(isExpiryDateActivated: boolean) {
-    // this.formControlService.toggleFormControl<Date>(
     this.formControlService.toggleFormControl(
       this.offerForm,
       this.expiryDateControl as FormControl,
-      isExpiryDateActivated,
+      isExpiryDateActivated
     );
   }
 
   onSaleTypeOptionChange(saleType: SaleType) {
-    // this.formControlService.toggleFormControl<SaleType>(
     this.formControlService.toggleFormControl(
       this.offerForm,
       this.linkControl as FormControl,
-      saleType === SaleType.Online,
-      // this.linkControl?.value ? this.linkControl?.value : '',
-      // this.linkControl?.value
+      saleType === SaleType.Online
     );
   }
 
@@ -581,9 +515,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     const expiryDate = new Date((event.target as HTMLInputElement).value);
     const currentDate = new Date();
     if (expiryDate < currentDate) {
-      console.log('Date is in the past');
       const newDate = new Date(new Date(Date.now() + TIME.MILISECONDS.ONE_DAY));
-      // newDate.setDate(currentDate.getDate() + 7);
       this.expiryDateControl?.setValue(newDate);
     }
   }

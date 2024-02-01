@@ -4,7 +4,7 @@ import { catchError, concatMap, map, mergeMap, of, switchMap, tap } from 'rxjs';
 import * as AuthActions from './auth.action';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { MessageSeverity } from 'src/app/common/enums/message-severity.enum';
+import { NotificationSeverity } from 'src/app/common/enums/message.enum';
 import { Router } from '@angular/router';
 import { KEYS } from 'src/app/common/constants';
 
@@ -32,7 +32,7 @@ export class AuthEffects {
           localStorage.setItem(KEYS.TOKEN, accessToken);
           this.router.navigate(['/posts/offers']);
           this.notificationService.showMessage(
-            MessageSeverity.SUCCESS,
+            NotificationSeverity.SUCCESS,
             'Success',
             `Congrulations ${user.username}! You have successfully signed up`
           );
@@ -68,7 +68,7 @@ export class AuthEffects {
           localStorage.setItem(KEYS.TOKEN, accessToken);
           this.router.navigate(['/posts/offers']);
           this.notificationService.showMessage(
-            MessageSeverity.SUCCESS,
+            NotificationSeverity.SUCCESS,
             'Success',
             'Logged in successfully'
           );
@@ -122,7 +122,7 @@ export class AuthEffects {
         ofType(AuthActions.loginFailure),
         tap(({ error }) =>
           this.notificationService.showMessage(
-            MessageSeverity.ERROR,
+            NotificationSeverity.ERROR,
             'Error',
             error.error.message
           )

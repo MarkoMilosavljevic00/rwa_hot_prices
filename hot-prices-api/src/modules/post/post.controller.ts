@@ -86,10 +86,11 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/:id')
+  @Get('/:postType/:id')
   async getOfferById(
     @Param('id', ParseIntPipe) id: number,
+    @Param('postType') postType: PostType,
   ): Promise<PostEntity> {
-    return await this.postService.getById(id);
+    return await this.postService.getById(id, postType);
   }
 }

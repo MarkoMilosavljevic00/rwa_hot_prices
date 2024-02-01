@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { MessageService } from "primeng/api";
-import { MessageSeverity } from "src/app/common/enums/message-severity.enum";
+import { NotificationSeverity } from "src/app/common/enums/message.enum";
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,7 @@ import { MessageSeverity } from "src/app/common/enums/message-severity.enum";
 export class NotificationService {
   constructor(private messageService: MessageService) {}
 
-  showMessage(severity: MessageSeverity, summary: string, detail: string) {
+  showMessage(severity: NotificationSeverity, summary: string, detail: string) {
     this.messageService.add({
       severity,
       summary,

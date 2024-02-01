@@ -28,7 +28,7 @@ export class CouponService {
   }
 
   getCouponById(id: number) {
-    return this.http.get<Coupon>(`${environment.api}/post/${id}`);
+    return this.http.get<Coupon>(`${environment.api}/post/${PostType.COUPON}/${id}`);
   }
 
   getCouponsByFilter(filterCouponDto: FilterCouponDto) {
