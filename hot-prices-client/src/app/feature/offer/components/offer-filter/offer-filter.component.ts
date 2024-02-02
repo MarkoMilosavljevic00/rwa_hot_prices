@@ -24,6 +24,7 @@ import {
   selectCurrentUser,
   selectCurrentUserId,
 } from 'src/app/feature/user/state/user.selector';
+import { Role } from 'src/app/common/enums/role.enum';
 
 @Component({
   selector: 'app-offer-filter',
@@ -35,10 +36,7 @@ export class OfferFilterComponent implements OnInit {
   @Input() isUserPosts: boolean;
   filterOffer: FilterOffer;
 
-  // availableValues: InitialValues;
-  // categoriesOption$: Observable<TreeNode<Category>[]>;
-  // storesOption$: Observable<string[]>;
-  // locationsOption$: Observable<string[]>;
+  user: User;
 
   categoriesOptions: TreeNode<Category>[];
   users: User[];
@@ -49,10 +47,7 @@ export class OfferFilterComponent implements OnInit {
   sortByOptions: SortBy[];
   sortTypesOptions: SortType[];
 
-  // isPricingEnabled = false;
   selectedTreeNode: TreeNode<Category>;
-  // isDiscountEnabled = false;
-  // selectedUser?: User;
 
   DROPDOWN_STYLE = STYLE.FULL_WIDTH;
 
@@ -65,18 +60,19 @@ export class OfferFilterComponent implements OnInit {
 
   ngOnInit(): void {
     this.initValues();
-    if (this.isUserPosts) {
-      this.setUserFilter();
-    }
+    this.setUserFilter();
   }
-
 
   setUserFilter() {
     this.store
-      .select(selectCurrentUserId)
+      .select(selectCurrentUser)
       .pipe(take(1))
-      .subscribe((userId) => {
-        this.store.dispatch(changeOfferFilter({ filterOffer: { ownerId: userId } }));
+      .subscribe((user) => {
+        this.user = user!;
+        if (this.isUserPosts)
+          this.store.dispatch(
+            changeOfferFilter({ filterOffer: { ownerId: user!.id } })
+          );
       });
   }
 
@@ -151,8 +147,17 @@ export class OfferFilterComponent implements OnInit {
     this.filterOffer.expired = showExpired;
   }
 
+  onShowRestrictedChanged(showRestricted: boolean) {
+    this.filterOffer.restricted = showRestricted;
+  }
+
+  isAdmin(): boolean {
+    return this.user.role === Role.Admin;
+  }
+
   applyFilter() {
     this.sidenavControl.toggle();
+    console.log(this.filterOffer);
     this.store.dispatch(
       changeOfferFilter({
         filterOffer: {

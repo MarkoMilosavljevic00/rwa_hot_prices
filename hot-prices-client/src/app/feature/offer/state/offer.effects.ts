@@ -71,6 +71,18 @@ export class OfferEffects {
     )
   );
 
+  restrictOffer$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.restrictOffer),
+      switchMap(({ id }) =>
+        this.offerService.restrictOffer(id).pipe(
+          map((offer) => OfferActions.updateOfferSuccess({ offer })),
+          catchError((error) => of(OfferActions.updateOfferFailure({ error })))
+        )
+      )
+    )
+  );
+
   submittedOfferSucces$ = createEffect(
     () =>
       this.action$.pipe(
@@ -152,11 +164,43 @@ export class OfferEffects {
     )
   );
 
+  loadOffersAdmin$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.loadOffersAdmin),
+      switchMap(({ filterOfferDto }) => {
+        return this.offerService.getOffersByFilterAdmin(filterOfferDto).pipe(
+          tap((posts) => console.log('OFFERS ADMIN Loading...', posts)),
+          map(({ posts, length }) =>
+            OfferActions.loadOffersSuccess({ offers: posts, length })
+          ),
+          catchError((error) => of(OfferActions.loadOffersFailure({ error })))
+        );
+      })
+    )
+  );
+
+
   loadDetailedOffer$ = createEffect(() =>
     this.action$.pipe(
       ofType(OfferActions.loadDetailedOffer),
       switchMap(({ id: offerId }) =>
         this.offerService.getOfferById(offerId).pipe(
+          map((offer) => {
+            return OfferActions.loadDetailedOfferSuccess({ offer });
+          }),
+          catchError((error) =>
+            of(OfferActions.loadDetailedOfferFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  loadDetailedOfferAdmin$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(OfferActions.loadDetailedOfferAdmin),
+      switchMap(({ id: offerId }) =>
+        this.offerService.getOfferByIdAdmin(offerId).pipe(
           map((offer) => {
             return OfferActions.loadDetailedOfferSuccess({ offer });
           }),

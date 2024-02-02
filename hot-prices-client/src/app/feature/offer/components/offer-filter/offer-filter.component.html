@@ -173,6 +173,20 @@
     </div>
   </div>
 
+  <div *ngIf="isAdmin()" class="field">
+    <div fxFlex>
+      <label fxFlex>Show Restricted:</label>
+      <mat-slide-toggle
+        [ngModel]="filterOffer.restricted"
+        (ngModelChange)="onShowRestrictedChanged($event)"
+        fxFlex
+        fxLayoutAlign="end end"
+        color="warn"
+      >
+      </mat-slide-toggle>
+    </div>
+  </div>
+
   <button mat-raised-button color="warn" (click)="applyFilter()">
     Apply Filter
   </button>

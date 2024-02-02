@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsBooleanString,
   IsEnum,
   IsNumberString,
@@ -40,4 +41,7 @@ export class FilterPostDto {
   @IsOptional()
   @IsNumberString()
   pageIndex?: number;
+
+  @IsOptional()
+  restricted?: boolean;
 }

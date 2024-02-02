@@ -1,3 +1,4 @@
+
 <div
   class="gray-bg"
   fxLayout="column"
@@ -15,9 +16,9 @@
           [nameFirst]="false"
         ></app-user-avatar>
         <div fxLayoutAlign="end start" fxFlex>
-          <mat-icon class="clickable" (click)="onEditPost()">edit</mat-icon>
-          <mat-icon class="clickable" (click)="onDeletePost()">delete</mat-icon>
-          <!-- <mat-icon class="clickable" (click)="onReportPost()">report</mat-icon> -->
+          <mat-icon *ngIf="isOwner" class="clickable" (click)="onEditPost()">edit</mat-icon>
+          <mat-icon *ngIf="isOwner" class="clickable" (click)="onDeletePost()">delete</mat-icon>
+          <mat-icon *ngIf="isAdmin" class="clickable" (click)="onRestrictPost()">report</mat-icon>
         </div>
       </mat-toolbar>
       <router-outlet></router-outlet>

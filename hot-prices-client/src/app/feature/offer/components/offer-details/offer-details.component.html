@@ -1,17 +1,21 @@
 <mat-card-content *ngIf="offer" fxLayout="column" fxLayoutGap="12px">
-  <div fxLayoutAlign="end end">
-    <app-date-display
-      [date]="formatDate(offer.postedDate)"
-      [isPostedDate]="true"
-    ></app-date-display>
+  <div fxFlex fxLayout="row">
+    <p-breadcrumb
+      fxFlex="80%"
+      fxFlexAlign="start start"
+      [model]="categoryMenuItems"
+      [home]="homeMenuItem"
+      [style]="{ border: 'none', width: '50%' }"
+    ></p-breadcrumb>
+    <div 
+      fxFlex="20%" 
+      fxFlexAlign="center end">
+      <app-date-display
+        [date]="formatDate(offer.postedDate)"
+        [isPostedDate]="true"
+      ></app-date-display>
+    </div>
   </div>
-
-  <p-breadcrumb
-    class="max-w-full"
-    [model]="categoryMenuItems"
-    [home]="homeMenuItem"
-    [style]="{'border': 'none'}"
-  ></p-breadcrumb>
 
   <div class="row-2">
     <mat-card-title class="post-title">

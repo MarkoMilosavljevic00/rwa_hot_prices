@@ -31,6 +31,12 @@ export class OfferService {
     );
   }
 
+  getOfferByIdAdmin(id: number) {
+    return this.http.get<Offer>(
+      `${environment.api}/post/admin/${PostType.OFFER}/${id}`
+    );
+  }
+
   getOffersByFilter(filterOfferDto: FilterOfferDto) {
     let params = new HttpParams();
 
@@ -45,6 +51,24 @@ export class OfferService {
 
     return this.http.get<{ posts: Offer[]; length: number }>(
       `${environment.api}/post/get-posts-by-filter`,
+      { params }
+    );
+  }
+
+  getOffersByFilterAdmin(filterOfferDto: FilterOfferDto) {
+    let params = new HttpParams();
+
+    Object.keys(filterOfferDto).forEach((key: string) => {
+      const value = filterOfferDto[key as keyof FilterOfferDto];
+      if (value != undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    params = params.set('postType', PostType.OFFER);
+
+    return this.http.get<{ posts: Offer[]; length: number }>(
+      `${environment.api}/post/admin/get-posts-by-filter`,
       { params }
     );
   }
@@ -76,6 +100,13 @@ export class OfferService {
     return this.http.get<string[]>(
       `${environment.api}/post/distinct-property-filter/${key}`,
       { params }
+    );
+  }
+
+  restrictOffer(id: number) {
+    return this.http.patch<Offer>(
+      `${environment.api}/post/restrict/${id}`,
+      {}
     );
   }
 }

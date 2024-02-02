@@ -39,6 +39,7 @@ import { loadCategories } from 'src/app/feature/post/state/category/category.act
 import { selectIdFromRouteParams } from 'src/app/state/app.selectors';
 import { isNotUndefined } from 'src/app/common/type-guards';
 import { ImageType } from 'src/app/common/enums/image-type.enum';
+import { PostType } from 'src/app/common/enums/post-type.enum';
 
 @Component({
   selector: 'app-offer-formular',
@@ -195,7 +196,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
         this.editMode = true;
         this.offer = {...offer};
         this.patchFormWithLoadedOffer(offer);
-        this.patchSelectedOptions();
+        // this.patchSelectedOptions();
         this.patchSpecifications(offer.specifications);
       });
   }
@@ -225,6 +226,30 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
       expiryDateOptionSelected: offer.expiryDate !== undefined,
       expiryDate: offer.expiryDate ? new Date(offer.expiryDate) : null,
     });
+
+    this.formControlService.toggleFormControl(
+      this.offerForm,
+      this.linkControl as FormControl,
+      offer.saleType === SaleType.Online
+    );
+
+    this.formControlService.toggleFormControl(
+      this.offerForm,
+      this.discountControl as FormControl,
+      (offer.discount || offer.oldPrice) !== undefined
+    );
+
+    this.formControlService.toggleFormControl(
+      this.offerForm,
+      this.oldPriceControl as FormControl,
+      (offer.discount || offer.oldPrice) !== undefined
+    );
+
+    this.formControlService.toggleFormControl(
+      this.offerForm,
+      this.expiryDateControl as FormControl,
+      offer.expiryDate ? true : false
+    );
   }
 
   patchSelectedOptions() {
@@ -259,6 +284,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     const offer: FormOfferDto = {
+      postType: PostType.OFFER,
       title: this.offerForm.value.title,
       categoryId: this.offerForm.value.selectedCategory.data.id,
       description: this.offerForm.value.description,
@@ -286,6 +312,8 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
         (image: UploadedImage) => image.serverFilename
       ),
     };
+
+    console.log('images', this.uploadedImagesControl?.value);
 
     console.log('Submitting Offer... ', offer);
 

@@ -17,4 +17,5 @@ export class FilterOfferDto {
   sortType?: SortType;
   pageSize?: number;
   pageIndex?: number;
+  restricted?: boolean
 }

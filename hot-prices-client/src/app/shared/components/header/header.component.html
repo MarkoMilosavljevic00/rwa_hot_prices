@@ -8,7 +8,7 @@
     />
   </a>
 
-  <ng-container *ngIf="user; else notLoggedIn">
+  <ng-container *ngIf="user">
     <div fxHide.xs fxFlex fxLayout fxLayoutAlign="flex-end">
       <ul fxLayout class="navigation-items">
         <li>
@@ -17,12 +17,12 @@
             Posts
           </button>
         </li>
-        <li *ngIf="isAdmin()">
+        <!-- <li *ngIf="isAdmin()">
           <button mat-button routerLink="/admin">
             <mat-icon>admin_panel_settings</mat-icon>
             Admin
           </button>
-        </li>
+        </li> -->
         <li>
           <button mat-button routerLink="/user/profile">
             <mat-icon>account_circle</mat-icon>
@@ -38,7 +38,7 @@
       </ul>
     </div>
   </ng-container>
-  <ng-template #notLoggedIn>
+  <!-- <ng-template #notLoggedIn>
     <div fxHide.xs fxFlex fxLayout fxLayoutAlign="flex-end">
       <ul fxLayout class="navigation-items">
         <li>
@@ -55,7 +55,7 @@
         </li>
       </ul>
     </div>
-  </ng-template>
+  </ng-template> -->
 
   <div fxHide.gt-xs fxFlex fxLayoutAlign="flex-end">
     <button mat-icon-button [matMenuTriggerFor]="menu">
@@ -68,10 +68,10 @@
           <span>Posts</span>
         </button>
         <mat-divider> </mat-divider>
-        <button *ngIf="isAdmin()" mat-menu-item routerLink="/admin">
+        <!-- <button *ngIf="isAdmin()" mat-menu-item routerLink="/admin">
           <mat-icon>admin_panel_settings</mat-icon>
           <span>Admin</span>
-        </button>
+        </button> -->
         <mat-divider> </mat-divider>
         <button mat-menu-item routerLink="/user/profile">
           <mat-icon>account_circle</mat-icon>
@@ -82,7 +82,7 @@
           <span>Logout</span>
         </button>
       </ng-container>
-      <ng-template #notLoggedIn>
+      <!-- <ng-template #notLoggedIn>
         <button mat-menu-item routerLink="/login">
           <mat-icon>login</mat-icon>
           <span>Login</span>
@@ -91,7 +91,13 @@
           <mat-icon>how_to_reg</mat-icon>
           <span>Sign Up</span>
         </button>
-      </ng-template>
+      </ng-template> -->
     </mat-menu>
   </div>
 </mat-toolbar>
+<div class="header-padding"></div>
+<!-- <div class="banner">
+  <div class="banner-text">
+    Great Prices, All in One Place
+  </div>
+</div> -->

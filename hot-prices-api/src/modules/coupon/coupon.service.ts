@@ -55,7 +55,7 @@ export class CouponService {
     }
 
     if (expired === undefined || expired === false) {
-      query.andWhere('post.expiryDate > CURRENT_TIMESTAMP');
+      query.andWhere('(post.expiryDate IS NULL OR post.expiryDate > CURRENT_TIMESTAMP)');
     }
 
     return query;

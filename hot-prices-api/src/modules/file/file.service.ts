@@ -30,7 +30,9 @@ export class FileService implements MulterOptionsFactory {
   }
 
   getFilenamesFromUploadedFiles(files: File[]): string[] {
-    return files.map((file) => file.filename);
+    const filenames = files.map((file) => file.filename);
+    console.log(filenames);
+    return filenames;
   }
 
   getImageLocation(imageType: ImageType, imageName: string) {

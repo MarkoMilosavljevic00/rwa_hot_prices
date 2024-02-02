@@ -25,6 +25,7 @@ import { PostType } from 'src/common/enums/post-type.enum';
 import { FormOfferDto } from '../offer/dtos/form-offer.dto';
 import { FormCouponDto } from '../coupon/dtos/form-coupon.dto';
 import { FormConversationDto } from '../conversation/dtos/form-conversation.dto';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('post')
 export class PostController {
@@ -34,6 +35,13 @@ export class PostController {
   @Post()
   async createPost(@Body() formPostDto: FormPostDto, @Req() req) {
     return await this.postService.create(req.user.id, formPostDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @Patch('restrict/:id')
+  async toggleRestrict(@Param('id') id: number): Promise<PostEntity> {
+    return await this.postService.toggleRestrict(id);
   }
 
   @UseGuards(AuthGuard('jwt'), OwnershipGuard(ResourceType.POST))
@@ -67,14 +75,14 @@ export class PostController {
     return await this.postService.getByFilter(filterPostDto);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
-  // @Get('/distinct-property/:postType/:key')
-  // async getOffersDistinctProperty(
-  //   @Param('postType') postType: PostType,
-  //   @Param('key') key: string,
-  // ): Promise<string[]> {
-  //   return await this.postService.getDistinctProperty(key, { postType });
-  // }
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @Get('/admin/get-posts-by-filter')
+  async getPostsByFilterForAdmin(
+    @Query()
+    filterPostDto: FilterPostDto,
+  ): Promise<{ posts: PostEntity[]; length: number }> {
+    return await this.postService.getByFilterAdmin(filterPostDto);
+  }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/distinct-property-filter/:key')
@@ -83,6 +91,15 @@ export class PostController {
     @Query() filterPostDto: FilterPostDto,
   ): Promise<string[]> {
     return await this.postService.getDistinctProperty(key, filterPostDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @Get('admin/:postType/:id')
+  async getOfferByIdAdmin(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('postType') postType: PostType,
+  ): Promise<PostEntity> {
+    return await this.postService.getByIdAdmin(id, postType);
   }
 
   @UseGuards(AuthGuard('jwt'))

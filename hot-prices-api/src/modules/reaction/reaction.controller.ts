@@ -5,15 +5,19 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ReactionService } from './reaction.service';
 import { Reaction } from 'src/models/entities/reaction.entity';
 import { ReactionDto } from './dtos/reaction.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reaction')
 export class ReactionController {
   constructor(private readonly reactionService: ReactionService) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':userId/:postId')
   getReactionByPostAndUserId(
     @Param('userId', ParseIntPipe) userId: number,
@@ -27,8 +31,9 @@ export class ReactionController {
     return this.reactionService.getReactionAndNumbers(userId, postId);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch()
-  async createOrUpdateReaction(@Body() reactionDto: ReactionDto) {
-    return this.reactionService.createOrUpdateReaction(reactionDto);
+  async createOrUpdateReaction(@Body() reactionDto: ReactionDto, @Req() req) {
+    return this.reactionService.createOrUpdateReaction(req.user.id, reactionDto);
   }
 }

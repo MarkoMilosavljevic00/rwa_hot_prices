@@ -11,13 +11,20 @@ import { InputDialogComponent } from 'src/app/shared/components/input-dialog/inp
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/app.state';
 import { selectDetailedOffer } from 'src/app/feature/offer/state/offer.selector';
-import { Observable, Subscription, of, switchMap } from 'rxjs';
-import { loadDetailedOffer } from 'src/app/feature/offer/state/offer.action';
+import { Observable, Subscription, combineLatest, of, switchMap } from 'rxjs';
+import {
+  deleteOffer,
+  loadDetailedOffer,
+  restrictOffer,
+} from 'src/app/feature/offer/state/offer.action';
 import { selectUrl } from 'src/app/state/app.selectors';
 import { selectDetailedConversation } from 'src/app/feature/conversation/state/conversation.selector';
 import { deleteConversation } from 'src/app/feature/conversation/state/conversation.action';
 import { selectDetailedCoupon } from 'src/app/feature/coupon/state/coupon.selector';
 import { deleteCoupon } from 'src/app/feature/coupon/state/coupon.action';
+import { User } from 'src/app/feature/user/models/user.model';
+import { selectCurrentUser } from 'src/app/feature/user/state/user.selector';
+import { Role } from 'src/app/common/enums/role.enum';
 
 @Component({
   selector: 'app-post-detail',
@@ -25,8 +32,12 @@ import { deleteCoupon } from 'src/app/feature/coupon/state/coupon.action';
   styleUrls: ['./post-detail.component.css'],
 })
 export class PostDetailComponent implements OnInit {
+  user?: User;
   post?: Post;
   postSubscription: Subscription;
+
+  isAdmin: boolean = false;
+  isOwner: boolean = false;
 
   postType?: PostType;
 
@@ -38,9 +49,10 @@ export class PostDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.postSubscription = this.store
-      .select(selectUrl)
-      .pipe(
+    this.postSubscription = combineLatest([
+      this.store.select(selectUrl),
+      this.store.select(selectCurrentUser),
+      this.store.select(selectUrl).pipe(
         switchMap((url) => {
           this.postType = this.routeMappingService.getPostTypeFromUrl(url);
           if (this.postType === PostType.OFFER) {
@@ -49,12 +61,17 @@ export class PostDetailComponent implements OnInit {
             return this.store.select(selectDetailedConversation);
           } else if (this.postType === PostType.COUPON) {
             return this.store.select(selectDetailedCoupon);
-          } else return of();
+          } else return of(null);
         })
       )
-      .subscribe((post) => {
-        this.post = post;
-      });
+    ]).subscribe(([url, user, post]) => {
+      this.user = user;
+      this.post = post!;
+      this.isAdmin = user?.role === Role.Admin;
+      if (post) {
+        this.isOwner = user?.id === post.owner.id;
+      }
+    });
   }
 
   onEditPost() {
@@ -64,17 +81,18 @@ export class PostDetailComponent implements OnInit {
   }
 
   onDeletePost() {
-    if(this.postType === PostType.OFFER){
-      // this.store.dispatch(deleteOffer({ offerId: this.post?.id! }));
-    }
-    else if(this.postType === PostType.CONVERSATION){
+    if (this.postType === PostType.OFFER) {
+      this.store.dispatch(deleteOffer({ id: this.post?.id! }));
+    } else if (this.postType === PostType.CONVERSATION) {
       this.store.dispatch(deleteConversation({ id: this.post?.id! }));
-    }
-    else if(this.postType === PostType.COUPON){
+    } else if (this.postType === PostType.COUPON) {
       this.store.dispatch(deleteCoupon({ id: this.post?.id! }));
     }
   }
 
-  onReportPost() {
+  onRestrictPost() {
+    if (this.postType === PostType.OFFER) {
+      this.store.dispatch(restrictOffer({ id: this.post?.id! }));
+    }
   }
 }

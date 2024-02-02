@@ -188,13 +188,6 @@ export class CouponFormularComponent implements OnInit {
       )
       .subscribe((coupon) => {
         if (coupon) {
-          // if (coupon.kind !== PostType.COUPON) {
-          //   this.store.dispatch(
-          //     loadEditingCouponFailure({
-          //       error: { error: { message: 'Wrong path' } },
-          //     })
-          //   );
-          // }
           this.editMode = true;
           this.coupon = { ...coupon };
           console.log(this.coupon);

@@ -31,30 +31,6 @@ export class CategoryService {
     return this.categoryRepository.save(newCategory);
   }
 
-  // async update(
-  //   id: number,
-  //   updateCategoryDto: CreateCategoryDto,
-  // ): Promise<Category> {
-  //   const category = await this.categoryRepository.findOne({ where: { id } });
-
-  //   if (updateCategoryDto.parentId) {
-  //     const parentCategory = await this.categoryRepository.findOne({
-  //       where: { id: updateCategoryDto.parentId },
-  //     });
-  //     category.parent = parentCategory;
-  //   }
-
-  //   this.categoryRepository.merge(category, updateCategoryDto);
-  //   return this.categoryRepository.save(category);
-  // }
-
-  // async getById(id: number): Promise<Category> {
-  //   return this.categoryRepository.findOne({
-  //     where: { id },
-  //     relations: ['children', 'parent', 'posts'],
-  //   });
-  // }
-
   async get(getCategoryDto: GetCategoryDto): Promise<Category[]> {
     let { id, descendants, ancestors } = getCategoryDto;
     if (id) {

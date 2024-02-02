@@ -5,7 +5,7 @@ import { FilterOfferDto } from '../models/dtos/filter-offer.dto';
 import { Pagination } from 'src/app/common/interfaces/pagination.interface';
 import { FilterOffer } from 'src/app/feature/offer/models/offer.filter';
 
-// Create Coupon
+// Create Offer
 
 export const createOffer = createAction(
   '[Offer] Create Offer',
@@ -22,11 +22,16 @@ export const createOfferFailure = createAction(
   props<{ error: any }>()
 );
 
-// Update Coupon
+// Update Offer
 
 export const updateOffer = createAction(
   '[Offer] Update offer',
   props<{ id: number; formOfferDto: FormOfferDto }>()
+);
+
+export const restrictOffer = createAction(
+  '[Offer] Restrict offer',
+  props<{ id: number }>()
 );
 
 export const updateOfferSuccess = createAction(
@@ -44,7 +49,7 @@ export const submittedOfferSuccess = createAction(
   props<{ offer: Offer }>()
 );
 
-// Delete Coupon
+// Delete Offer
 
 export const deleteOffer = createAction(
   '[Offer] Delete offer',
@@ -58,10 +63,15 @@ export const deleteOfferFailure = createAction(
   props<{ error: any }>()
 );
 
-// Load Coupons
+// Load Offers
 
 export const loadOffers = createAction(
   '[Offer] Load offers',
+  props<{ filterOfferDto: FilterOfferDto }>()
+);
+
+export const loadOffersAdmin = createAction(
+  '[Offer] Load offers Admin',
   props<{ filterOfferDto: FilterOfferDto }>()
 );
 
@@ -78,7 +88,12 @@ export const loadOffersFailure = createAction(
 // Load detailed Offer
 
 export const loadDetailedOffer = createAction(
-  '[Offer] Load detailed offer',
+  '[Offer] Load detailed Offer',
+  props<{ id: number }>()
+);
+
+export const loadDetailedOfferAdmin = createAction(
+  '[Offer] Load detailed Offer admin ',
   props<{ id: number }>()
 );
 

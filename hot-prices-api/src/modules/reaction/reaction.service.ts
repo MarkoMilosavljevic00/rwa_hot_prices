@@ -43,13 +43,13 @@ export class ReactionService {
     return { reaction, ...reactionsNumbers };
   }
 
-  async createOrUpdateReaction(reactionDto: ReactionDto): Promise<{
+  async createOrUpdateReaction(userId: number, reactionDto: ReactionDto): Promise<{
     reaction: Reaction;
     numOfHotReactions: number;
     numOfColdReactions: number;
     numOfDegrees: number;
   }> {
-    const { userId, postId, type } = reactionDto;
+    const { postId, type } = reactionDto;
     let isReactionExists: boolean = false;
     let reactionNumbers: {
       numOfHotReactions: number;

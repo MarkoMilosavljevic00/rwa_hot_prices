@@ -20,13 +20,24 @@ import {
   clearDetailedOffer,
   clearEditingOffer,
   loadDetailedOffer,
+  loadDetailedOfferAdmin,
 } from '../../state/offer.action';
-import { Observable, Subscription, filter, map, skip, switchMap } from 'rxjs';
+import {
+  Observable,
+  Subscription,
+  combineLatest,
+  filter,
+  map,
+  skip,
+  switchMap,
+} from 'rxjs';
 import { selectDetailedOffer } from '../../state/offer.selector';
 import { isNotUndefined } from 'src/app/common/type-guards';
 import { MenuItem } from 'primeng/api';
 import { Category } from 'src/app/feature/post/models/category.model';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
+import { User } from 'src/app/feature/user/models/user.model';
+import { selectCurrentUser } from 'src/app/feature/user/state/user.selector';
 
 export interface ImageInfo {
   itemImageSrc: string;
@@ -39,6 +50,7 @@ export interface ImageInfo {
   styleUrls: ['./offer-details.component.css'],
 })
 export class OfferDetailsComponent implements OnInit {
+  user?: User;
   offer?: Offer;
   offerSubscription: Subscription;
 
@@ -58,13 +70,18 @@ export class OfferDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.offerSubscription = this.store
-      .select(selectIdFromRouteParams)
+    this.offerSubscription = combineLatest([
+      this.store.select(selectIdFromRouteParams),
+      this.store.select(selectCurrentUser),
+    ])
       .pipe(
         filter(isNotUndefined),
-        switchMap((offerId) => {
-          if (offerId) {
-            this.store.dispatch(loadDetailedOffer({ id: +offerId }));
+        switchMap(([offerId, user]) => {
+          if (offerId && user) {
+            if(user.role === 'Admin')
+              this.store.dispatch(loadDetailedOfferAdmin({ id: +offerId }));
+            else
+              this.store.dispatch(loadDetailedOffer({ id: +offerId }));
           }
           return this.store.select(selectDetailedOffer);
         }),
@@ -81,14 +98,14 @@ export class OfferDetailsComponent implements OnInit {
       });
   }
 
-  convertCategoryToMenuItems(category: Category) {
-    this.categoryMenuItems =
-      this.categoryService.convertCategoryToMenuItems(category);
-  }
-
   ngOnDestroy(): void {
     this.offerSubscription.unsubscribe();
     this.store.dispatch(clearDetailedOffer());
+  }
+
+  convertCategoryToMenuItems(category: Category) {
+    this.categoryMenuItems =
+      this.categoryService.convertCategoryToMenuItems(category);
   }
 
   setSpecsDataSource(specifications: Record<string, string> | undefined) {

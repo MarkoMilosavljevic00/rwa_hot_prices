@@ -38,8 +38,8 @@ export class CommentService {
     return await query.getMany();
   }
 
-  async postComment(postCommentDto: PostCommentDto) {
-    const { postId, userId } = postCommentDto;
+  async postComment(ownerId: number, postCommentDto: PostCommentDto) {
+    const { postId } = postCommentDto;
 
     const post = await this.postService.getPostById(postId);
     if (!post) {
@@ -48,10 +48,10 @@ export class CommentService {
       );
     }
 
-    const user = await this.usersService.getUserById(userId);
+    const user = await this.usersService.getUserById(ownerId);
     if (!user) {
       throw new InternalServerErrorException(
-        `Failed to create the comment: User with id ${userId} does not exist`,
+        `Failed to create the comment: User with id ${ownerId} does not exist`,
       );
     }
 

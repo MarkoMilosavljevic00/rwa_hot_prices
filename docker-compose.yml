@@ -9,15 +9,15 @@ services:
       POSTGRES_USER: postgres
   api:
     build:
-      context: .
+      context: ./hot-prices-api
       dockerfile: api.Dockerfile
     ports:
-      - "4000:3000"
-    # depends_on:
-    #   - postgres
+      - "3000:3000"
+    depends_on:
+      - postgres
   client:
     build:
-      context: .
+      context: ./hot-prices-client
       dockerfile: client.Dockerfile
     ports:
     - "80:80"

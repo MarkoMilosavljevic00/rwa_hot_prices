@@ -149,19 +149,32 @@ export class PostService {
     return await this.postRepository.remove(post);
   }
 
+  async toggleRestrict(id: number): Promise<Post> {
+    const post = await this.postRepository.findOne({ where: { id } });
+
+    if (!post) {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+
+    post.restricted = !post.restricted;
+    try {
+      await this.postRepository.save(post);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update the Post');
+    }
+
+    return post;
+  }
+
   async getById(id: number, postType: PostType): Promise<Post> {
     let repository: Repository<Post>;
     if (postType === PostType.OFFER) {
       repository = this.offerRepository;
-    }
-    else if (postType === PostType.CONVERSATION) {
+    } else if (postType === PostType.CONVERSATION) {
       repository = this.conversationRepository;
-    }
-    else if (postType === PostType.COUPON) {
+    } else if (postType === PostType.COUPON) {
       repository = this.couponRepository;
-    }
-    else
-      throw new BadRequestException('Invalid Post Type');
+    } else throw new BadRequestException('Invalid Post Type');
 
     const post = await repository.findOne({
       where: { id },
@@ -169,11 +182,42 @@ export class PostService {
     });
 
     if (!post) {
-      throw new NotFoundException(`Post with ID ${id} and Type ${postType} not found`);
+      throw new NotFoundException(
+        `Post with ID ${id} and Type ${postType} not found`,
+      );
     }
 
     if (post.restricted === true) {
       throw new BadRequestException(`Post with ID ${id} is restricted`);
+    }
+
+    if (post.category)
+      post.category = await this.categoryRepository.findAncestorsTree(
+        post.category,
+      );
+
+    return post;
+  }
+
+  async getByIdAdmin(id: number, postType: PostType): Promise<Post> {
+    let repository: Repository<Post>;
+    if (postType === PostType.OFFER) {
+      repository = this.offerRepository;
+    } else if (postType === PostType.CONVERSATION) {
+      repository = this.conversationRepository;
+    } else if (postType === PostType.COUPON) {
+      repository = this.couponRepository;
+    } else throw new BadRequestException('Invalid Post Type');
+
+    const post = await repository.findOne({
+      where: { id },
+      relations: ['category', 'owner'],
+    });
+
+    if (!post) {
+      throw new NotFoundException(
+        `Post with ID ${id} and Type ${postType} not found`,
+      );
     }
 
     if (post.category)
@@ -231,8 +275,58 @@ export class PostService {
     return { posts, length };
   }
 
-  
-  async getDistinctProperty(key: string, filterPostDto: FilterPostDto): Promise<string[]> {
+  async getByFilterAdmin(filterPostDto: FilterPostDto) {
+    let repository: Repository<Post>;
+    let service: OfferService | ConversationService | CouponService;
+    const { postType } = filterPostDto;
+    if (postType === PostType.OFFER) {
+      repository = this.offerRepository;
+      service = this.offerService;
+    } else if (postType === PostType.CONVERSATION) {
+      repository = this.conversationRepository;
+      service = this.conversationService;
+    } else if (postType === PostType.COUPON) {
+      repository = this.couponRepository;
+      service = this.couponService;
+    } else {
+      throw new BadRequestException('Invalid post type');
+    }
+
+    const {restricted} = filterPostDto;
+
+    let query = repository.createQueryBuilder('post');
+    query.leftJoinAndSelect('post.category', 'category');
+    query.leftJoinAndSelect('post.owner', 'owner');
+    if (restricted) {
+      query.andWhere('post.restricted = :restricted', { restricted });
+    }else
+      query.where('post.restricted = false');
+
+    query = await service.getQueryFromFilter1(query, filterPostDto);
+
+    // console.log(query.getSql());
+
+    const length = await query.getCount();
+
+    query = this.getPagedQuery(
+      query,
+      filterPostDto.pageSize,
+      filterPostDto.pageIndex,
+    );
+    query = this.getSortQuery(
+      query,
+      filterPostDto.sortBy,
+      filterPostDto.sortType,
+    );
+
+    const posts = await query.getMany();
+    return { posts, length };
+  }
+
+  async getDistinctProperty(
+    key: string,
+    filterPostDto: FilterPostDto,
+  ): Promise<string[]> {
     let repository: Repository<Post>;
     let service: OfferService | ConversationService | CouponService;
     const { postType } = filterPostDto;
@@ -253,12 +347,15 @@ export class PostService {
     query.leftJoinAndSelect('post.category', 'category');
     query.leftJoinAndSelect('post.owner', 'owner');
     query.where('post.restricted = false');
-    
+
     if (filterPostDto) {
       query = await service.getQueryFromFilter1(query, filterPostDto);
     } else {
-      query = this.offerRepository.createQueryBuilder('post')
-      .andWhere('(post.expiryDate IS NULL OR post.expiryDate > CURRENT_TIMESTAMP)');
+      query = this.offerRepository
+        .createQueryBuilder('post')
+        .andWhere(
+          '(post.expiryDate IS NULL OR post.expiryDate > CURRENT_TIMESTAMP)',
+        );
     }
     query = query
       .select(`post.${key}`, key)
@@ -268,7 +365,7 @@ export class PostService {
 
     let offers = await query.getRawMany();
 
-    console.log(offers);
+    // console.log(offers);
 
     return offers.map((offer) => {
       return offer[key];

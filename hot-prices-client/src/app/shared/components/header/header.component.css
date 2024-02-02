@@ -6,9 +6,11 @@ mat-sidenav {
   width: 200px;
 }
 
-mat-toolbar{
-  padding-inline:0%;
-  margin:0px
+mat-toolbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure the header is above other elements */
 }
 
 @media screen and (min-width: 1024px) {
@@ -26,4 +28,30 @@ mat-toolbar{
 .nav-caption {
   display: inline-block;
   padding-left: 6px;
+}
+
+/* .banner {
+  height: 250px;
+  padding-top: 50px;
+  background-color: var(--warn-color);
+  background-image: url('../../../../assets/banner3.png');
+  background-position: center left;
+  background-repeat: no-repeat;
+  background-size: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 2em;
+}
+
+.banner-text {
+  text-align: center;
+  color: #f44336;
+  font-size: 2em;
+} */
+
+.header-padding {
+  padding-top: 64px;
 }
