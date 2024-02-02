@@ -12,12 +12,12 @@ import { AppState } from 'src/app/state/app.state';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { CouponService } from '../../services/coupon.service';
 import { UserService } from 'src/app/feature/user/service/user.service';
-import { selectCurrentUserId } from 'src/app/feature/user/state/user.selector';
-import { changeOfferFilter } from 'src/app/feature/offer/state/offer.action';
-import { take } from 'rxjs';
-import { changeCouponFilter } from '../../state/coupon.action';
+import { selectCurrentUser, selectCurrentUserId } from 'src/app/feature/user/state/user.selector';
+import { Subscription, take } from 'rxjs';
 import { FilterCouponDto } from '../../models/dtos/filter-coupon.dto';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { selectFilterCoupon } from '../../state/coupon.selector';
+import { changeCouponFilter } from '../../state/coupon.action';
 
 @Component({
   selector: 'app-coupon-filter',
@@ -28,6 +28,11 @@ export class CouponFilterComponent {
   @Input() sidenavControl: MatSidenav;
   @Input() isUserPosts: boolean;
   filterCoupon: FilterCoupon;
+
+  user: User;
+
+  filterSubscription: Subscription;
+  userSubscription: Subscription;
 
   categoriesOptions: TreeNode<Category>[];
   users: User[];
@@ -51,25 +56,44 @@ export class CouponFilterComponent {
 
   ngOnInit(): void {
     this.initValues();
-    if (this.isUserPosts) {
-      this.setUserFilter();
-    }
+    this.setUserFilter();
+
+    this.filterSubscription = this.store
+      .select(selectFilterCoupon)
+      .subscribe((filterCoupon) => {
+        if (filterCoupon?.selectedCategory)
+          this.selectedTreeNode =
+            this.categoryService.convertCategoryToTreeNode(
+              filterCoupon.selectedCategory
+            );
+        this.filterCoupon = {
+          ...filterCoupon,
+        };
+      });
   }
 
-
   setUserFilter() {
-    this.store
-      .select(selectCurrentUserId)
+    this.userSubscription = this.store
+      .select(selectCurrentUser)
       .pipe(take(1))
-      .subscribe((userId) => {
-        this.store.dispatch(changeCouponFilter({ filterCoupon: { ownerId: userId } }));
+      .subscribe((user) => {
+        this.user = user!;
+        if (this.isUserPosts)
+          this.store.dispatch(
+            changeCouponFilter({ filterCoupon: { ownerId: user!.id } })
+          );
       });
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe();
+    this.filterSubscription?.unsubscribe();
   }
 
   initValues() {
     this.filterCoupon = new FilterCouponDto();
     this.saleTypesOptions = Object.values(SaleType);
-    this.sortByOptions = Object.values(SortBy);
+    this.sortByOptions = Object.values(SortBy).filter((sort) => sort !== SortBy.PRICE);
     this.sortTypesOptions = Object.values(SortType);
 
     if (!this.isUserPosts) {

@@ -128,7 +128,6 @@ export class UserService {
 
   async updateProfilePicture(id: number, updateUserDto: UpdateUserDto) {
     const { profilePicture } = updateUserDto;
-    console.log(profilePicture);
 
     if (!profilePicture) {
       throw new BadRequestException('Profile picture is required');

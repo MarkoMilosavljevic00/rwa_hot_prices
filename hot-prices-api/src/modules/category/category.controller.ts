@@ -25,20 +25,20 @@ import { AdminGuard } from '../auth/guards/admin.guard';
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
-  // @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'), AdminGuard)
   @Post()
   post(@Body() createCategoryDto: CreateCategoryDto) {
-    console.log(createCategoryDto);
+    // console.log(createCategoryDto);
     return this.categoryService.create(createCategoryDto);
   }
 
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Get('get')
   get(@Body() getCategoryDto: GetCategoryDto): Promise<Category[]> {
     return this.categoryService.get(getCategoryDto);
   }
 
-  // @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   getAll(): Promise<Category[]> {
     return this.categoryService.getAll();
@@ -53,7 +53,7 @@ export class CategoryController {
     return this.categoryService.delete(id, childHandlingMethod);
   }
 
-  @UseGuards(AuthGuard('jwt'), AdminGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Get('/test/:id')
   getTest(@Param('id', ParseIntPipe) id: number): Promise<Category[]> {
     return this.categoryService.getTest(id);

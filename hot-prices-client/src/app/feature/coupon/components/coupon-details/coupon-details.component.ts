@@ -119,6 +119,6 @@ export class CouponDetailsComponent implements OnInit {
   }
 
   isOnline(): boolean {
-    return this.coupon?.saleType === SaleType.Online;
+    return this.coupon?.saleType === SaleType.ONLINE;
   }
 }

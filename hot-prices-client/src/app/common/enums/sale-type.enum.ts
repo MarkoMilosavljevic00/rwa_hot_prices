@@ -1,4 +1,4 @@
 export enum SaleType {
-  Online = 'Online',
-  Offline = 'Offline',
+  ONLINE = 'Online',
+  OFFLINE = 'Offline',
 }

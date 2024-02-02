@@ -1,6 +1,6 @@
 export enum PostStatus {
-  Available = 'Available',
-  Expired = 'Expired',
-  Blocked = 'Blocked',
-  Deleted = 'Deleted'
+  AVAILABLE = 'Available',
+  EXPIRED = 'Expired',
+  BLOCKED = 'Blocked',
+  DELETED = 'Deleted'
 }

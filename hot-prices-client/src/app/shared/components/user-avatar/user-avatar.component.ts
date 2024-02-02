@@ -9,7 +9,7 @@ import { ImageType } from 'src/app/common/enums/image-type.enum';
 })
 export class UserAvatarComponent {
   @Input() name?: string;
-  @Input() id?: number;
+  @Input() id: number;
   @Input() _imgSrc?: string;
   @Input() imageType?: ImageType;
   @Input() nameFirst?: boolean;

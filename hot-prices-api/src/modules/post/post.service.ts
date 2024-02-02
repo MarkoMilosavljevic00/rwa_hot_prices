@@ -86,7 +86,7 @@ export class PostService {
   async update(id: number, updatePostDto: FormPostDto): Promise<Post> {
     const { postType } = updatePostDto;
 
-    console.log(updatePostDto);
+    // console.log(updatePostDto);
 
     let repository;
     if (postType === PostType.OFFER) {
@@ -443,7 +443,7 @@ export class PostService {
       throw new NotFoundException('Post not found');
     }
 
-    if (reactionType === ReactionType.Hot) {
+    if (reactionType === ReactionType.HOT) {
       post.numOfHotReactions += 1;
       if (isReactionExists) {
         post.numOfColdReactions -= 1;
@@ -451,7 +451,7 @@ export class PostService {
       } else {
         post.numOfDegrees += 1;
       }
-    } else if (reactionType === ReactionType.Cold) {
+    } else if (reactionType === ReactionType.COLD) {
       post.numOfColdReactions += 1;
       if (isReactionExists) {
         post.numOfHotReactions -= 1;
@@ -474,10 +474,10 @@ export class PostService {
   async unreactToPost(id: number, type: ReactionType) {
     const reactionNumbers = await this.getReactionsNumbers(id);
 
-    if (type === ReactionType.Hot) {
+    if (type === ReactionType.HOT) {
       reactionNumbers.numOfHotReactions -= 1;
       reactionNumbers.numOfDegrees -= 1;
-    } else if (type === ReactionType.Cold) {
+    } else if (type === ReactionType.COLD) {
       reactionNumbers.numOfColdReactions -= 1;
       reactionNumbers.numOfDegrees += 1;
     }

@@ -12,6 +12,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { CouponEffects } from './state/coupon.effects';
 import { couponReducer } from './state/coupon.reducer';
 import { CouponFilterComponent } from './components/coupon-filter/coupon-filter.component';
+import { ReactionModule } from '../reaction/reaction.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { CouponFilterComponent } from './components/coupon-filter/coupon-filter.
   imports: [
     RouterModule,
     SharedModule,
+    ReactionModule,
     StoreModule.forFeature('coupons', couponReducer),
     EffectsModule.forFeature([CouponEffects]),
     StoreRouterConnectingModule,

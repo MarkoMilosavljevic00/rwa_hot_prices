@@ -4,7 +4,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Category } from 'src/app/feature/post/models/category.model';
 import { TreeNode } from 'primeng/api';
-import { Observable, of, take } from 'rxjs';
+import { Observable, Subscription, of, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/app.state';
 import { selectCategoriesList } from 'src/app/feature/post/state/category/category.selector';
@@ -25,6 +25,7 @@ import {
   selectCurrentUserId,
 } from 'src/app/feature/user/state/user.selector';
 import { Role } from 'src/app/common/enums/role.enum';
+import { selectFilterOffer } from '../../state/offer.selector';
 
 @Component({
   selector: 'app-offer-filter',
@@ -34,6 +35,10 @@ import { Role } from 'src/app/common/enums/role.enum';
 export class OfferFilterComponent implements OnInit {
   @Input() sidenavControl: MatSidenav;
   @Input() isUserPosts: boolean;
+
+  filterSubscription: Subscription;
+  userSubscription: Subscription;
+
   filterOffer: FilterOffer;
 
   user: User;
@@ -61,10 +66,23 @@ export class OfferFilterComponent implements OnInit {
   ngOnInit(): void {
     this.initValues();
     this.setUserFilter();
+
+    this.filterSubscription = this.store
+      .select(selectFilterOffer)
+      .subscribe((filterOffer) => {
+        if (filterOffer?.selectedCategory)
+          this.selectedTreeNode =
+            this.categoryService.convertCategoryToTreeNode(
+              filterOffer.selectedCategory
+            );
+        this.filterOffer = {
+          ...filterOffer,
+        };
+      });
   }
 
   setUserFilter() {
-    this.store
+    this.userSubscription = this.store
       .select(selectCurrentUser)
       .pipe(take(1))
       .subscribe((user) => {
@@ -74,6 +92,11 @@ export class OfferFilterComponent implements OnInit {
             changeOfferFilter({ filterOffer: { ownerId: user!.id } })
           );
       });
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe();
+    this.filterSubscription?.unsubscribe();
   }
 
   initValues() {
@@ -152,7 +175,7 @@ export class OfferFilterComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    return this.user.role === Role.Admin;
+    return this.user.role === Role.ADMIN;
   }
 
   applyFilter() {

@@ -1,4 +1,5 @@
 <mat-card
+[routerLink]="['/posts/details/coupon', coupon.id]"
   fxLayout="row"
   fxLayoutAlign.gt-xs="start center"
   fxLayoutAlign.lt-sm="center center"
@@ -19,6 +20,7 @@
         <div fxLayout="column" fxLayoutAlign="end">
           <app-user-avatar
             [name]="coupon.owner.username"
+            [id]="coupon.owner.id"
             [imgSrc]="coupon.owner.profilePicture"
             [nameFirst]="true"
           ></app-user-avatar>

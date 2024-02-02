@@ -38,6 +38,7 @@ import { Category } from 'src/app/feature/post/models/category.model';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { User } from 'src/app/feature/user/models/user.model';
 import { selectCurrentUser } from 'src/app/feature/user/state/user.selector';
+import { Role } from 'src/app/common/enums/role.enum';
 
 export interface ImageInfo {
   itemImageSrc: string;
@@ -78,7 +79,7 @@ export class OfferDetailsComponent implements OnInit {
         filter(isNotUndefined),
         switchMap(([offerId, user]) => {
           if (offerId && user) {
-            if(user.role === 'Admin')
+            if(user.role === Role.ADMIN)
               this.store.dispatch(loadDetailedOfferAdmin({ id: +offerId }));
             else
               this.store.dispatch(loadDetailedOffer({ id: +offerId }));
@@ -148,6 +149,6 @@ export class OfferDetailsComponent implements OnInit {
   }
 
   isOnline(): boolean {
-    return this.offer?.saleType === SaleType.Online;
+    return this.offer?.saleType === SaleType.ONLINE;
   }
 }

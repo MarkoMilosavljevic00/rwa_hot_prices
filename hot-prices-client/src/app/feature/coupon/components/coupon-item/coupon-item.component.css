@@ -1,6 +1,7 @@
 mat-card {
   border: 1px solid #ccc;
   padding-inline: 10px;
+  cursor: pointer;
 }
 
 mat-card-title {

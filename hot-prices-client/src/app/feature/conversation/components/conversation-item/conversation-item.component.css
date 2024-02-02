@@ -2,6 +2,7 @@ mat-card {
   border: 1px solid #ccc;
   padding-inline: 10px;
   white-space: normal;
+  cursor: pointer;
 }
 
 mat-card-title {

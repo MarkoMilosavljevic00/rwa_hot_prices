@@ -31,7 +31,6 @@ export class FileService implements MulterOptionsFactory {
 
   getFilenamesFromUploadedFiles(files: File[]): string[] {
     const filenames = files.map((file) => file.filename);
-    console.log(filenames);
     return filenames;
   }
 

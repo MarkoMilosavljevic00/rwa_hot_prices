@@ -9,9 +9,9 @@
     <mat-card fxLayout="column" fxFlex="100%">
       <mat-toolbar color="warn" class="row-1 border-shadow">
         <app-user-avatar
-          [name]="post?.owner?.username"
+          [name]="post?.owner?.username!"
           [imgSrc]="post?.owner?.profilePicture"
-          [id]="post?.owner?.id"
+          [id]="post?.owner?.id!"
           [size]="'large'"
           [nameFirst]="false"
         ></app-user-avatar>

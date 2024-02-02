@@ -146,7 +146,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
         validators: [Validators.required],
       }),
       uploadedImages: new FormControl([], {}),
-      saleType: new FormControl(SaleType.Offline),
+      saleType: new FormControl(SaleType.OFFLINE),
       store: new FormControl(''),
       link: new FormControl({ value: '', disabled: true }),
       location: new FormControl(''),
@@ -230,7 +230,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     this.formControlService.toggleFormControl(
       this.offerForm,
       this.linkControl as FormControl,
-      offer.saleType === SaleType.Online
+      offer.saleType === SaleType.ONLINE
     );
 
     this.formControlService.toggleFormControl(
@@ -290,7 +290,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
       description: this.offerForm.value.description,
       saleType: this.offerForm.value.saleType,
       link:
-        this.offerForm.value.saleType === SaleType.Online
+        this.offerForm.value.saleType === SaleType.ONLINE
           ? this.offerForm.value.link
           : null,
       store: this.offerForm.value.store,
@@ -478,7 +478,7 @@ export class OfferFormularComponent implements OnInit, OnDestroy {
     this.formControlService.toggleFormControl(
       this.offerForm,
       this.linkControl as FormControl,
-      saleType === SaleType.Online
+      saleType === SaleType.ONLINE
     );
   }
 

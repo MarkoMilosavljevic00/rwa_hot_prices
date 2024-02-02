@@ -144,7 +144,7 @@ export class CouponFormularComponent implements OnInit {
       }),
       uploadedImages: new FormControl([]),
       store: new FormControl(),
-      saleType: new FormControl(SaleType.Offline),
+      saleType: new FormControl(SaleType.OFFLINE),
       link: new FormControl({ value: '', disabled: true }),
       codeOptionSelected: new FormControl(false, { nonNullable: false }),
       code: new FormControl({ value: '', disabled: true }),
@@ -230,7 +230,7 @@ export class CouponFormularComponent implements OnInit {
     this.formControlService.toggleFormControl(
       this.couponForm,
       this.linkControl as FormControl,
-      coupon.saleType === SaleType.Online
+      coupon.saleType === SaleType.ONLINE
     );
 
     this.formControlService.toggleFormControl(
@@ -285,14 +285,6 @@ export class CouponFormularComponent implements OnInit {
   }
 
   onUploadImages(event: any) {
-    // for (let file of event.files) {
-    //   this.uploadedFiles.push(file);
-    // }
-    // this.messageService.add({
-    //   severity: 'info',
-    //   summary: 'File Uploaded',
-    //   detail: '',
-    // });
     const serverResponse = event.originalEvent.body;
     const uploadedImages = this.uploadedImagesControl?.value;
     event.files.forEach((file: File, index: number) => {
@@ -470,7 +462,7 @@ export class CouponFormularComponent implements OnInit {
     this.formControlService.toggleFormControl(
       this.couponForm,
       this.linkControl as FormControl,
-      saleType === SaleType.Online
+      saleType === SaleType.ONLINE
     );
   }
 
@@ -486,22 +478,6 @@ export class CouponFormularComponent implements OnInit {
 
   onSubmit() {
     let { discount, discountsRecord } = this.getDiscount();
-
-    // const formCouponDto: FormCouponDto = {
-    //   title: this.couponForm.value.title,
-    //   category: this.categoryService.convertTreeNodeToCategory(
-    //     this.couponForm.value.selectedCategory
-    //   ),
-    //   description: this.couponForm.value.description,
-    //   saleType: this.couponForm.value.saleType,
-    //   store: this.couponForm.value.store,
-    //   link: this.couponForm.value.link,
-    //   code: this.couponForm.value.code,
-    //   location: this.couponForm.value.location,
-    //   discount: discount,
-    //   discounts: discountsRecord ?? undefined,
-    //   expiryDate: this.couponForm.value.expiryDate,
-    // };
     const formCouponDto: FormCouponDto = {
       postType: PostType.COUPON,
       imgPaths: this.uploadedImagesControl?.value.map(

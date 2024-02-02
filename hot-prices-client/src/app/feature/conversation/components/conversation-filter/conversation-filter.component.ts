@@ -12,11 +12,12 @@ import { AppState } from 'src/app/state/app.state';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { OfferService } from 'src/app/feature/offer/services/offer.service';
 import { UserService } from 'src/app/feature/user/service/user.service';
-import { selectCurrentUserId } from 'src/app/feature/user/state/user.selector';
-import { take } from 'rxjs';
+import { selectCurrentUser, selectCurrentUserId } from 'src/app/feature/user/state/user.selector';
+import { Subscription, take } from 'rxjs';
 import { changeConversationFilter } from '../../state/conversation.action';
 import { FilterConversationDto } from '../../models/dtos/filter-conversation.dto';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { selectFilterConversation } from '../../state/conversation.selector';
 
 @Component({
   selector: 'app-conversation-filter',
@@ -26,7 +27,12 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 export class ConversationFilterComponent {
   @Input() sidenavControl: MatSidenav;
   @Input() isUserPosts: boolean;
-  filterOffer: FilterConversation;
+  filterConversation: FilterConversation;
+
+  user: User;
+
+  filterSubscription: Subscription;
+  userSubscription: Subscription;
 
   categoriesOptions: TreeNode<Category>[];
   users: User[];
@@ -47,22 +53,42 @@ export class ConversationFilterComponent {
 
   ngOnInit(): void {
     this.initValues();
-    if (this.isUserPosts) {
-      this.setUserFilter();
-    }
-  }
+    this.setUserFilter();
 
-  setUserFilter() {
-    this.store
-      .select(selectCurrentUserId)
-      .pipe(take(1))
-      .subscribe((userId) => {
-        this.store.dispatch(changeConversationFilter({ filterConversation: { ownerId: userId } }));
+    this.filterSubscription = this.store
+      .select(selectFilterConversation)
+      .subscribe((filterConversation) => {
+        if (filterConversation?.selectedCategory)
+          this.selectedTreeNode =
+            this.categoryService.convertCategoryToTreeNode(
+              filterConversation.selectedCategory
+            );
+        this.filterConversation = {
+          ...filterConversation,
+        };
       });
   }
 
+  setUserFilter() {
+    this.userSubscription = this.store
+      .select(selectCurrentUser)
+      .pipe(take(1))
+      .subscribe((user) => {
+        this.user = user!;
+        if (this.isUserPosts)
+          this.store.dispatch(
+            changeConversationFilter({ filterConversation: { ownerId: user!.id } })
+          );
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe();
+    this.filterSubscription?.unsubscribe();
+  }
+
   initValues() {
-    this.filterOffer = new FilterConversationDto();
+    this.filterConversation = new FilterConversationDto();
     this.sortByOptions = Object.values(SortBy);
     this.sortTypesOptions = Object.values(SortType);
 
@@ -78,12 +104,12 @@ export class ConversationFilterComponent {
   }
 
   onCategoryChanged(selectedTreeNode: TreeNode<Category>) {
-    this.filterOffer.categoryId = selectedTreeNode
+    this.filterConversation.categoryId = selectedTreeNode
       ? selectedTreeNode.data?.id
       : undefined;
     if (selectedTreeNode)
-      this.filterOffer.selectedCategory = selectedTreeNode.data;
-    else this.filterOffer.selectedCategory = undefined;
+      this.filterConversation.selectedCategory = selectedTreeNode.data;
+    else this.filterConversation.selectedCategory = undefined;
     this.selectedTreeNode = selectedTreeNode;
   }
 
@@ -95,8 +121,8 @@ export class ConversationFilterComponent {
   }
 
   onOwnerChanged(user: User) {
-    this.filterOffer.ownerId = user ? user.id : undefined;
-    this.filterOffer.selectedUser = user;
+    this.filterConversation.ownerId = user ? user.id : undefined;
+    this.filterConversation.selectedUser = user;
   }
 
 
@@ -105,7 +131,7 @@ export class ConversationFilterComponent {
     this.store.dispatch(
       changeConversationFilter({
         filterConversation: {
-          ...this.filterOffer,
+          ...this.filterConversation,
           title: undefined,
         },
       })

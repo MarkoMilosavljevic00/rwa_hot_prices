@@ -1,4 +1,4 @@
 export enum ReactionType {
-  Hot = 'Hot',
-  Cold = 'Cold'
+  HOT = 'Hot',
+  COLD = 'Cold'
 }

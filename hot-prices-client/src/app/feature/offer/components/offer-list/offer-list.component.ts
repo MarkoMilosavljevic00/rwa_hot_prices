@@ -51,7 +51,7 @@ export class OfferListComponent implements OnInit, OnDestroy {
       this.store.select(selectFilterOffer),
       this.store.select(selectCurrentUser)
     ]).subscribe(([filter, user]) => {
-      if (user!.role === Role.Admin) {
+      if (user!.role === Role.ADMIN) {
         this.store.dispatch(loadOffersAdmin({ filterOfferDto: filter ? filter : {} }));
       } else {
         this.store.dispatch(loadOffers({ filterOfferDto: filter ? filter : {} }));

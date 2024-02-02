@@ -67,7 +67,7 @@ export class PostDetailComponent implements OnInit {
     ]).subscribe(([url, user, post]) => {
       this.user = user;
       this.post = post!;
-      this.isAdmin = user?.role === Role.Admin;
+      this.isAdmin = user?.role === Role.ADMIN;
       if (post) {
         this.isOwner = user?.id === post.owner.id;
       }

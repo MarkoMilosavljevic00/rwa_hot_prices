@@ -69,7 +69,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    return this.user?.role === Role.Admin;
+    return this.user?.role === Role.ADMIN;
   }
 
   formatDate(date: Date): Date {

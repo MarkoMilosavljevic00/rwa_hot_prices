@@ -32,7 +32,7 @@
     <label> Owner: </label>
     <mat-divider></mat-divider>
     <p-autoComplete
-      [ngModel]="filterOffer.selectedUser"
+      [ngModel]="filterConversation.selectedUser"
       (ngModelChange)="onOwnerChanged($event)"
       [suggestions]="filteredUsersSuggestions"
       [completeOnFocus]="true"
@@ -44,7 +44,7 @@
       placeholder="All owners..."
     ></p-autoComplete>
     <!-- <p-autoComplete
-      [(ngModel)]="filterOffer.ownerId"
+      [(ngModel)]="filterConversation.ownerId"
       [suggestions]="filteredOwners"
       (completeMethod)="filterOwner($event)"
       field="name"
@@ -57,7 +57,7 @@
     <label> Sort: </label>
     <mat-divider></mat-divider>
     <p-dropdown
-      [(ngModel)]="filterOffer.sortBy"
+      [(ngModel)]="filterConversation.sortBy"
       [options]="sortByOptions"
       [showClear]="true"
       [style]="DROPDOWN_STYLE"
@@ -65,7 +65,7 @@
     ></p-dropdown>
     <mat-divider></mat-divider>
     <p-dropdown
-      [(ngModel)]="filterOffer.sortType"
+      [(ngModel)]="filterConversation.sortType"
       [options]="sortTypesOptions"
       [showClear]="true"
       placeholder="Sort Type"
