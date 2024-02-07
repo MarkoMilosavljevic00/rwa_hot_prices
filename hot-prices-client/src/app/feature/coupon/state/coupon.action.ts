@@ -30,6 +30,15 @@ export const updateCoupon = createAction(
   props<{ id: number; formCouponDto: FormCouponDto }>()
 );
 
+export const restrictCoupon = createAction(
+  '[Coupon] Restrict Coupon',
+  props<{ id: number }>()
+);
+
+export const restrictCouponSuccess = createAction(
+  '[Coupon] Restrict Coupon success'
+);
+
 export const updateCouponSuccess = createAction(
   '[Coupon] Update Coupon success',
   props<{ coupon: Coupon }>()
@@ -63,6 +72,11 @@ export const loadCoupons = createAction(
   props<{ filterCouponDto: FilterCouponDto }>()
 );
 
+export const loadCouponsAdmin = createAction(
+  '[Coupon] Load Coupons Admin',
+  props<{ filterCouponDto: FilterCouponDto }>()
+);
+
 export const loadCouponsSuccess = createAction(
   '[Coupon] Load Coupons success',
   props<{ coupons: Coupon[]; length: number }>()
@@ -77,6 +91,11 @@ export const loadCouponsFailure = createAction(
 
 export const loadDetailedCoupon = createAction(
   '[Coupon] Load detailed Coupon',
+  props<{ id: number }>()
+);
+
+export const loadDetailedCouponAdmin = createAction(
+  '[Coupon] Load detailed Coupon admin ',
   props<{ id: number }>()
 );
 

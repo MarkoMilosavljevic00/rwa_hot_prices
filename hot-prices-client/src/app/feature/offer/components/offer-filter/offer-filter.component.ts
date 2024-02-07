@@ -41,7 +41,7 @@ export class OfferFilterComponent implements OnInit {
 
   filterOffer: FilterOffer;
 
-  user: User;
+  user?: User;
 
   categoriesOptions: TreeNode<Category>[];
   users: User[];
@@ -175,7 +175,7 @@ export class OfferFilterComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    return this.user.role === Role.ADMIN;
+    return (!!this.user && this.user.role === Role.ADMIN);
   }
 
   applyFilter() {

@@ -28,8 +28,8 @@ export class ReactionComponent {
   isColdReaction: boolean = false;
 
   // reaction: ReactionDto;
-  userId: number = -1;
-  postId: number = -1;
+  userId: number = DEFAULT.USER.ID;
+  postId: number = DEFAULT.POST.ID;
 
   reactionSubscribe: Subscription;
 
@@ -42,7 +42,6 @@ export class ReactionComponent {
         filter(isNotUndefined),
         switchMap((id) => {
           this.postId = +id;
-          this.userId = DEFAULT.USER.ID;
           this.store.dispatch(
             loadReaction({ postId: this.postId, userId: this.userId })
           );

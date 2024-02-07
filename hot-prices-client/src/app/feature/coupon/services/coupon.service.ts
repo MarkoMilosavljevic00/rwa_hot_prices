@@ -28,7 +28,15 @@ export class CouponService {
   }
 
   getCouponById(id: number) {
-    return this.http.get<Coupon>(`${environment.api}/post/${PostType.COUPON}/${id}`);
+    return this.http.get<Coupon>(
+      `${environment.api}/post/${PostType.COUPON}/${id}`
+    );
+  }
+
+  getCouponByIdAdmin(id: number) {
+    return this.http.get<Coupon>(
+      `${environment.api}/post/admin/${PostType.COUPON}/${id}`
+    );
   }
 
   getCouponsByFilter(filterCouponDto: FilterCouponDto) {
@@ -45,6 +53,24 @@ export class CouponService {
 
     return this.http.get<{ posts: Coupon[]; length: number }>(
       `${environment.api}/post/get-posts-by-filter`,
+      { params }
+    );
+  }
+
+  getCouponsByFilterAdmin(filterCouponDto: FilterCouponDto) {
+    let params = new HttpParams();
+
+    Object.keys(filterCouponDto).forEach((key: string) => {
+      const value = filterCouponDto[key as keyof FilterCouponDto];
+      if (value != undefined) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    params = params.set('postType', PostType.COUPON);
+
+    return this.http.get<{ posts: Coupon[]; length: number }>(
+      `${environment.api}/post/admin/get-posts-by-filter`,
       { params }
     );
   }
@@ -77,5 +103,9 @@ export class CouponService {
       `${environment.api}/post/distinct-property-filter/${key}`,
       { params }
     );
+  }
+
+  restrictCoupon(id: number) {
+    return this.http.patch<Coupon>(`${environment.api}/post/restrict/${id}`, {});
   }
 }

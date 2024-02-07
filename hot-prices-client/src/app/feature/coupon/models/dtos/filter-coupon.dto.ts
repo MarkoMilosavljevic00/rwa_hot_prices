@@ -17,4 +17,5 @@ export class FilterCouponDto {
   sortType?: SortType;
   pageSize?: number;
   pageIndex?: number;
+  restricted?: boolean;
 }

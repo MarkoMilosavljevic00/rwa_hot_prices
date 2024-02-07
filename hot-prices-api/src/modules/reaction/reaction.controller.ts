@@ -22,13 +22,14 @@ export class ReactionController {
   getReactionByPostAndUserId(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('postId', ParseIntPipe) postId: number,
+    @Req() req
   ): Promise<{
     reaction: Reaction;
     numOfHotReactions: number;
     numOfColdReactions: number;
     numOfDegrees: number;
   }> {
-    return this.reactionService.getReactionAndNumbers(userId, postId);
+    return this.reactionService.getReactionAndNumbers(req.user.id, postId);
   }
 
   @UseGuards(AuthGuard('jwt'))

@@ -16,7 +16,10 @@ import { MessageService } from 'primeng/api';
 import { KEYS, PAGE } from 'src/app/common/constants';
 import { CommentService } from '../../comment/services/comment.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { NotificationSeverity, NotificationSummary } from 'src/app/common/enums/message.enum';
+import {
+  NotificationSeverity,
+  NotificationSummary,
+} from 'src/app/common/enums/message.enum';
 import { CouponService } from '../services/coupon.service';
 import { FilterCouponDto } from '../models/dtos/filter-coupon.dto';
 
@@ -46,20 +49,46 @@ export class CouponEffects {
     this.action$.pipe(
       ofType(CouponActions.updateCoupon),
       switchMap(({ id, formCouponDto }) =>
-        this.couponService
-          .updateCoupon(id, formCouponDto)
-          .pipe(
-            concatMap((coupon) => {
-              return [
-                CouponActions.updateCouponSuccess({ coupon }),
-              ];
-            }),
-            catchError((error) =>
-              of(CouponActions.updateCouponFailure({ error }))
-            )
+        this.couponService.updateCoupon(id, formCouponDto).pipe(
+          concatMap((coupon) => {
+            return [CouponActions.updateCouponSuccess({ coupon })];
+          }),
+          catchError((error) =>
+            of(CouponActions.updateCouponFailure({ error }))
           )
+        )
       )
     )
+  );
+
+  restrictCoupon$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(CouponActions.restrictCoupon),
+      switchMap(({ id }) =>
+        this.couponService.restrictCoupon(id).pipe(
+          map(() => CouponActions.restrictCouponSuccess()),
+          catchError((error) =>
+            of(CouponActions.updateCouponFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  restrictCouponSuccess$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(CouponActions.restrictCouponSuccess),
+        tap(() => {
+          this.router.navigate(['/posts/coupons']);
+          this.notificationService.showMessage(
+            NotificationSeverity.SUCCESS,
+            NotificationSummary.SUCCESS,
+            'You have toggle restricted tag to the Coupon successfully'
+          );
+        })
+      ),
+    { dispatch: false }
   );
 
   submittedCouponSuccess$ = createEffect(
@@ -70,9 +99,7 @@ export class CouponEffects {
           CouponActions.updateCouponSuccess
         ),
         tap(({ coupon }) => {
-          this.router.navigate([
-            '/posts/details/coupon/' + coupon.id,
-          ]);
+          this.router.navigate(['/posts/details/coupon/' + coupon.id]);
           this.notificationService.showMessage(
             NotificationSeverity.SUCCESS,
             NotificationSummary.SUCCESS,
@@ -137,40 +164,66 @@ export class CouponEffects {
       ofType(CouponActions.loadCoupons),
       switchMap(({ filterCouponDto }) => {
         // const filterCouponDto: FilterCouponDto = filterCoupon;
-        return this.couponService
-          .getCouponsByFilter(filterCouponDto)
-          .pipe(
-            // tap(({ posts }) => console.log(posts)),
-            tap(({ posts }) => console.log('COUPONS Loading...')),
-            map(({ posts, length }) => {
-              // console.log(posts);
-              return CouponActions.loadCouponsSuccess({
-                coupons: posts,
-                length,
-              });
-            }),
-            catchError((error) =>
-              of(CouponActions.loadCouponsFailure({ error }))
-            )
-          );
+        return this.couponService.getCouponsByFilter(filterCouponDto).pipe(
+          // tap(({ posts }) => console.log(posts)),
+          tap(({ posts }) => console.log('COUPONS Loading...')),
+          map(({ posts, length }) => {
+            // console.log(posts);
+            return CouponActions.loadCouponsSuccess({
+              coupons: posts,
+              length,
+            });
+          }),
+          catchError((error) => of(CouponActions.loadCouponsFailure({ error })))
+        );
       })
     )
   );
+
+  loadCouponsAdmin$ = createEffect(() =>
+  this.action$.pipe(
+    ofType(CouponActions.loadCouponsAdmin),
+    switchMap(({ filterCouponDto }) => {
+      return this.couponService.getCouponsByFilterAdmin(filterCouponDto).pipe(
+        tap((posts) => console.log('OFFERS ADMIN Loading...', posts)),
+        map(({ posts, length }) =>
+          CouponActions.loadCouponsSuccess({ coupons: posts, length })
+        ),
+        catchError((error) => of(CouponActions.loadCouponsFailure({ error })))
+      );
+    })
+  )
+);
 
   loadDetailedCoupon$ = createEffect(() =>
     this.action$.pipe(
       ofType(CouponActions.loadDetailedCoupon),
       switchMap(({ id }) =>
         this.couponService.getCouponById(id).pipe(
-          map(
-            (coupon) =>
-              CouponActions.loadDetailedCouponSuccess({
-                coupon,
-              }),
+          map((coupon) =>
+            CouponActions.loadDetailedCouponSuccess({
+              coupon,
+            })
           ),
           catchError((error) =>
-          of(CouponActions.loadDetailedCouponFailure({ error }))
+            of(CouponActions.loadDetailedCouponFailure({ error }))
+          )
         )
+      )
+    )
+  );
+
+  loadDetailedCouponAdmin$ = createEffect(() =>
+    this.action$.pipe(
+      ofType(CouponActions.loadDetailedCouponAdmin),
+      switchMap(({ id: couponId }) =>
+        this.couponService.getCouponByIdAdmin(couponId).pipe(
+          map((coupon) => {
+            return CouponActions.loadDetailedCouponSuccess({ coupon });
+          }),
+          catchError((error) =>
+            of(CouponActions.loadDetailedCouponFailure({ error }))
+          )
         )
       )
     )
@@ -181,9 +234,7 @@ export class CouponEffects {
       ofType(CouponActions.loadEditingCoupon),
       switchMap(({ id }) =>
         this.couponService.getCouponById(id).pipe(
-          map((coupon) =>
-            CouponActions.loadEditingCouponSuccess({ coupon })
-          ),
+          map((coupon) => CouponActions.loadEditingCouponSuccess({ coupon })),
           catchError((error) =>
             of(CouponActions.loadEditingCouponFailure({ error }))
           )
@@ -237,37 +288,18 @@ export class CouponEffects {
 
   loadAvailableTitles$ = createEffect(() =>
     this.action$.pipe(
-      ofType(
-        CouponActions.changeCouponFilter,
-        CouponActions.loadCouponTitles
-      ),
+      ofType(CouponActions.changeCouponFilter, CouponActions.loadCouponTitles),
       switchMap(({ filterCoupon: filter }) => {
-        const { selectedCategory, selectedUser, ...filterOfferDto } = filter;
+        const { selectedCategory, selectedUser, ...filterCouponDto } = filter;
         return this.couponService
-          .getCouponsDistinctPropertyByFilter(KEYS.TITLE, filterOfferDto)
+          .getCouponsDistinctPropertyByFilter(KEYS.TITLE, filterCouponDto)
           .pipe(
-            map((titles) =>
-              CouponActions.loadCouponTitlesSuccess({ titles })
-            ),
+            map((titles) => CouponActions.loadCouponTitlesSuccess({ titles })),
             catchError(() => of())
           );
       })
     )
   );
-
-  // // loadAllCommentsFromOffer$ = createEffect(() =>
-  // //   this.action$.pipe(
-  // //     ofType(OfferActions.loadAllCommentsFromOffer),
-  // //     switchMap(({ offerId }) => {
-  // //       return this.commentService.getAllCommentsByPostId(offerId).pipe(
-  // //         map((comments) =>
-  // //           OfferActions.loadAllCommentsFromOfferSuccess({ comments })
-  // //         ),
-  // //         catchError(() => of())
-  // //       );
-  // //     })
-  // //   )
-  // // );
 
   constructor(
     private action$: Actions,

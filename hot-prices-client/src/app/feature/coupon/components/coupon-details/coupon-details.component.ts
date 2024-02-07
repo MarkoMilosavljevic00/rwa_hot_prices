@@ -3,7 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PostStatus } from 'src/app/common/enums/post-status.enum';
 import { Coupon } from '../../models/coupon.model';
 import { SaleType } from 'src/app/common/enums/sale-type.enum';
-import { Subscription, filter, skip, switchMap } from 'rxjs';
+import { Subscription, combineLatest, filter, skip, switchMap } from 'rxjs';
 import { MenuItem } from 'primeng/api';
 import { MatTableDataSource, MatTableDataSourcePaginator } from '@angular/material/table';
 import { AppState } from 'src/app/state/app.state';
@@ -11,11 +11,13 @@ import { Store } from '@ngrx/store';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { selectIdFromRouteParams } from 'src/app/state/app.selectors';
 import { isNotUndefined } from 'src/app/common/type-guards';
-import { clearDetailedCoupon, loadDetailedCoupon } from '../../state/coupon.action';
-import { selectDetailedCoupon } from '../../state/coupon.selector';
+import { clearDetailedCoupon, loadDetailedCoupon, loadDetailedCouponAdmin } from '../../state/coupon.action';
 import { Category } from 'src/app/feature/post/models/category.model';
 import { DEFAULT, IMAGES_URL } from 'src/app/common/constants';
 import { ImageType } from 'src/app/common/enums/image-type.enum';
+import { selectCurrentUser } from 'src/app/feature/user/state/user.selector';
+import { Role } from 'src/app/common/enums/role.enum';
+import { selectDetailedCoupon } from 'src/app/feature/coupon/state/coupon.selector';
 
 export interface ImageInfo {
   itemImageSrc: string;
@@ -45,21 +47,26 @@ export class CouponDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.couponSubscription = this.store
-      .select(selectIdFromRouteParams)
+    this.couponSubscription = combineLatest([
+      this.store.select(selectIdFromRouteParams),
+      this.store.select(selectCurrentUser),
+    ])
       .pipe(
         filter(isNotUndefined),
-        switchMap((couponId) => {
-          if (couponId) {
-            this.store.dispatch(loadDetailedCoupon({ id: +couponId }));
+        switchMap(([couponId, user]) => {
+          if (couponId && user) {
+            if(user.role === Role.ADMIN)
+              this.store.dispatch(loadDetailedCouponAdmin({ id: +couponId }));
+            else
+              this.store.dispatch(loadDetailedCoupon({ id: +couponId }));
           }
           return this.store.select(selectDetailedCoupon);
         }),
-        skip(1)
+        // skip(1)
       )
       .subscribe((coupon) => {
         if (coupon) {
-          this.coupon = {...coupon};
+          this.coupon = coupon;
           console.log(this.coupon);
           this.setGalleryImages(coupon.imgPaths);
           this.setDiscountsDataSource(coupon.discounts);

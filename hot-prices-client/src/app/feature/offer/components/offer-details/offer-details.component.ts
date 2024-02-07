@@ -86,7 +86,7 @@ export class OfferDetailsComponent implements OnInit {
           }
           return this.store.select(selectDetailedOffer);
         }),
-        skip(1)
+        // skip(1)
       )
       .subscribe((offer) => {
         if (offer) {

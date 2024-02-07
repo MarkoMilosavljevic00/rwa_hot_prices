@@ -7,7 +7,7 @@
       [nameFirst]="false"
     ></app-user-avatar>
     <div fxLayoutAlign="end start" fxFlex>
-      <mat-icon (click)="onDeleteComment()" class="clickable">delete</mat-icon>
+      <mat-icon *ngIf="isOwner" (click)="onDeleteComment()" class="clickable">delete</mat-icon>
     </div>
   </mat-toolbar>
   <mat-card-content fxLayout="column">

@@ -28,7 +28,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class FileController {
   constructor(private fileService: FileService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Get('image/:imageType/:imageName')
   getImage(
     @Param('imageType') imageType: ImageType,
@@ -38,7 +38,7 @@ export class FileController {
     return this.fileService.getImage(imageType, imageName, res);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Post('uploadImages/:imageType')
   @UseInterceptors(
     FilesInterceptor('images[]', 10, new FileService().createMulterOptions()),
@@ -50,7 +50,7 @@ export class FileController {
     return this.fileService.getFilenamesFromUploadedFiles(files);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Delete('deleteImage/:imageType/:imageName')
   deleteImage(
     @Param('imageType') imageType: ImageType,

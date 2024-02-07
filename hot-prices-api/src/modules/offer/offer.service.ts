@@ -78,7 +78,7 @@ export class OfferService {
     try {
       await this.offerRepository.update(id, updateOfferDto);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       throw new InternalServerErrorException('Failed to update the offer');
     }
 
@@ -194,7 +194,7 @@ export class OfferService {
       expired,
     } = filterOfferDto;
 
-    console.log(title);
+    // console.log(title);
 
     if (title) {
       query.andWhere('LOWER(post.title) LIKE LOWER(:title)', {

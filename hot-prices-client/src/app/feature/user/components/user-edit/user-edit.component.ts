@@ -63,6 +63,7 @@ export class UserEditComponent implements OnInit {
 
   onUploadProfilePicture(event: any) {
     const serverFilename = event.originalEvent.body[0];
+    console.log(serverFilename);
     this.store.dispatch(
       updateProfilePicture({
         id: this.user!.id,

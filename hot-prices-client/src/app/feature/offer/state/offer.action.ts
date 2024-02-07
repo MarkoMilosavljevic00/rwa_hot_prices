@@ -29,11 +29,6 @@ export const updateOffer = createAction(
   props<{ id: number; formOfferDto: FormOfferDto }>()
 );
 
-export const restrictOffer = createAction(
-  '[Offer] Restrict offer',
-  props<{ id: number }>()
-);
-
 export const updateOfferSuccess = createAction(
   '[Offer] Update offer success',
   props<{ offer: Offer }>()
@@ -47,6 +42,15 @@ export const updateOfferFailure = createAction(
 export const submittedOfferSuccess = createAction(
   '[Offer] Submitted Offer success',
   props<{ offer: Offer }>()
+);
+
+export const restrictOffer = createAction(
+  '[Offer] Restrict offer',
+  props<{ id: number }>()
+);
+
+export const restrictOfferSuccess = createAction(
+  '[Offer] Restrict Offer success'
 );
 
 // Delete Offer

@@ -12,17 +12,21 @@ import { AppState } from 'src/app/state/app.state';
 import { CategoryService } from 'src/app/feature/post/services/category.service';
 import { CouponService } from '../../services/coupon.service';
 import { UserService } from 'src/app/feature/user/service/user.service';
-import { selectCurrentUser, selectCurrentUserId } from 'src/app/feature/user/state/user.selector';
+import {
+  selectCurrentUser,
+  selectCurrentUserId,
+} from 'src/app/feature/user/state/user.selector';
 import { Subscription, take } from 'rxjs';
 import { FilterCouponDto } from '../../models/dtos/filter-coupon.dto';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { selectFilterCoupon } from '../../state/coupon.selector';
 import { changeCouponFilter } from '../../state/coupon.action';
+import { Role } from 'src/app/common/enums/role.enum';
 
 @Component({
   selector: 'app-coupon-filter',
   templateUrl: './coupon-filter.component.html',
-  styleUrls: ['./coupon-filter.component.css']
+  styleUrls: ['./coupon-filter.component.css'],
 })
 export class CouponFilterComponent {
   @Input() sidenavControl: MatSidenav;
@@ -93,7 +97,9 @@ export class CouponFilterComponent {
   initValues() {
     this.filterCoupon = new FilterCouponDto();
     this.saleTypesOptions = Object.values(SaleType);
-    this.sortByOptions = Object.values(SortBy).filter((sort) => sort !== SortBy.PRICE);
+    this.sortByOptions = Object.values(SortBy).filter(
+      (sort) => sort !== SortBy.PRICE
+    );
     this.sortTypesOptions = Object.values(SortType);
 
     if (!this.isUserPosts) {
@@ -148,6 +154,14 @@ export class CouponFilterComponent {
 
   onShowExpiredChanged(showExpired: boolean) {
     this.filterCoupon.expired = showExpired;
+  }
+
+  onShowRestrictedChanged(showRestricted: boolean) {
+    this.filterCoupon.restricted = showRestricted;
+  }
+
+  isAdmin(): boolean {
+    return !!this.user && this.user.role === Role.ADMIN;
   }
 
   applyFilter() {

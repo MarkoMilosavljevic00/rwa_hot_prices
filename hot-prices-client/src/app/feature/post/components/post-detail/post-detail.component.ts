@@ -21,7 +21,7 @@ import { selectUrl } from 'src/app/state/app.selectors';
 import { selectDetailedConversation } from 'src/app/feature/conversation/state/conversation.selector';
 import { deleteConversation } from 'src/app/feature/conversation/state/conversation.action';
 import { selectDetailedCoupon } from 'src/app/feature/coupon/state/coupon.selector';
-import { deleteCoupon } from 'src/app/feature/coupon/state/coupon.action';
+import { deleteCoupon, restrictCoupon } from 'src/app/feature/coupon/state/coupon.action';
 import { User } from 'src/app/feature/user/models/user.model';
 import { selectCurrentUser } from 'src/app/feature/user/state/user.selector';
 import { Role } from 'src/app/common/enums/role.enum';
@@ -64,7 +64,7 @@ export class PostDetailComponent implements OnInit {
           } else return of(null);
         })
       )
-    ]).subscribe(([url, user, post]) => {
+    ]).subscribe(([_, user, post]) => {
       this.user = user;
       this.post = post!;
       this.isAdmin = user?.role === Role.ADMIN;
@@ -93,6 +93,10 @@ export class PostDetailComponent implements OnInit {
   onRestrictPost() {
     if (this.postType === PostType.OFFER) {
       this.store.dispatch(restrictOffer({ id: this.post?.id! }));
+    }else if(this.postType === PostType.CONVERSATION){
+      // this.store.dispatch(restrictOffer({ id: this.post?.id! }));
+    }else if(this.postType === PostType.COUPON){
+      this.store.dispatch(restrictCoupon({ id: this.post?.id! }));
     }
   }
 }

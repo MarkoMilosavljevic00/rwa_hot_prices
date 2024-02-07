@@ -76,11 +76,27 @@ export class OfferEffects {
       ofType(OfferActions.restrictOffer),
       switchMap(({ id }) =>
         this.offerService.restrictOffer(id).pipe(
-          map((offer) => OfferActions.updateOfferSuccess({ offer })),
+          map((offer) => OfferActions.restrictOfferSuccess()),
           catchError((error) => of(OfferActions.updateOfferFailure({ error })))
         )
       )
     )
+  );
+
+  restrictOfferSuccess$ = createEffect(
+    () =>
+      this.action$.pipe(
+        ofType(OfferActions.restrictOfferSuccess),
+        tap(() => {
+          this.router.navigate(['/posts/offers']);
+          this.notificationService.showMessage(
+            NotificationSeverity.SUCCESS,
+            NotificationSummary.SUCCESS,
+            'You have toggle restricted tag to the Offer successfully'
+          );
+        })
+      ),
+    { dispatch: false }
   );
 
   submittedOfferSucces$ = createEffect(

@@ -32,11 +32,12 @@ export const STYLE = {
 export const DEFAULT = {
   POST:{
     IMAGE: '../../../assets/default-product.png',
+    ID: -1
   },
   EDITORS_NUM_OF_CHARS: 1000,
   USER: {
     IMAGE: '../../../assets/default-user.jpg',
-    ID: 5,
+    ID: -1,
   },
 }
 
